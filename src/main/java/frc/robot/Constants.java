@@ -20,7 +20,7 @@ public final class Constants {
 
     public final class ControllerConstants
     {
-        public static final int kControllerPort = 5;
+        public static final int kControllerPort = 0;
     }
 
     public final class DriveTrainConstants
