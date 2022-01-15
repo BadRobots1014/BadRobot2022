@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class PrototypeSubsystem extends SubsystemBase {
 
-    private final CANSparkMax m_motor1 = new CANSparkMax(0, MotorType.kBrushless); // TODO: Change the device number
-    private final TalonFX m_motor2 = new TalonFX(1); // TODO: Change the device number
-    private final TalonFX m_motor3 = new TalonFX(2); // TODO: Change the device number
-    private final TalonFX m_motor4 = new TalonFX(3); // TODO: Change the device number
+    private final CANSparkMax m_motor1 = new CANSparkMax(7, MotorType.kBrushless);
+    private final TalonFX m_motor2 = new TalonFX(11);
+    private final TalonFX m_motor3 = new TalonFX(13);
+    private final TalonFX m_motor4 = new TalonFX(14);
 
     /**
      * Constructor.

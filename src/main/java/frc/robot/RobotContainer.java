@@ -53,10 +53,10 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_prototypeChooser.addOption("1 (SPARK MAX)", m_prototypeControlCommands[1]);
-    m_prototypeChooser.addOption("2 (TalonFX)", m_prototypeControlCommands[2]);
-    m_prototypeChooser.addOption("3 (TalonFX)", m_prototypeControlCommands[3]);
-    m_prototypeChooser.addOption("4 (TalonFX)", m_prototypeControlCommands[4]);
+    m_prototypeChooser.addOption("SPARK MAX", m_prototypeControlCommands[1]);
+    m_prototypeChooser.addOption("TalonFX (Port 11)", m_prototypeControlCommands[2]);
+    m_prototypeChooser.addOption("TalonFX (Port 13))", m_prototypeControlCommands[3]);
+    m_prototypeChooser.addOption("TalonFX (Port 14))", m_prototypeControlCommands[4]);
 
     m_prototypeTab.add(m_prototypeChooser);
 
