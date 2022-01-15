@@ -45,7 +45,7 @@ public class RobotContainer {
       new PrototypeControlCommand(m_prototypeSubsystem,
           m_prototypeJoystick, 4) };
 
-  SendableChooser<Command> m_prototypeChooser = new SendableChooser<Command>();
+  SendableChooser<Command> m_prototypeCommandChooser = new SendableChooser<Command>();
 
   private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
 
@@ -53,12 +53,12 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_prototypeChooser.addOption("SPARK MAX", m_prototypeControlCommands[1]);
-    m_prototypeChooser.addOption("TalonFX (Port 11)", m_prototypeControlCommands[2]);
-    m_prototypeChooser.addOption("TalonFX (Port 13))", m_prototypeControlCommands[3]);
-    m_prototypeChooser.addOption("TalonFX (Port 14))", m_prototypeControlCommands[4]);
+    m_prototypeCommandChooser.addOption("SPARK MAX", m_prototypeControlCommands[0]);
+    m_prototypeCommandChooser.addOption("TalonFX (Port 11)", m_prototypeControlCommands[1]);
+    m_prototypeCommandChooser.addOption("TalonFX (Port 13)", m_prototypeControlCommands[2]);
+    m_prototypeCommandChooser.addOption("TalonFX (Port 14)", m_prototypeControlCommands[3]);
 
-    m_prototypeTab.add(m_prototypeChooser);
+    m_prototypeTab.add(m_prototypeCommandChooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -92,6 +92,6 @@ public class RobotContainer {
    * @return The appropriate {@code PrototypeControlCommand}.
    */
   public Command getPrototypeCommand() {
-    return m_prototypeChooser.getSelected();
+    return m_prototypeCommandChooser.getSelected();
   }
 }
