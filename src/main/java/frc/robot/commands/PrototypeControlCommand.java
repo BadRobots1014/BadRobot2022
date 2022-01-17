@@ -1,6 +1,6 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
+import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.PrototypeSubsystem;
 
@@ -15,22 +15,22 @@ public class PrototypeControlCommand extends CommandBase {
 
     private final PrototypeSubsystem m_subsystem;
 
-    private final Joystick m_joystick;
-
     private final int m_motorID;
+
+    private final DoubleSupplier m_speedSupplier;
 
     /**
      * Constructs a new {@code PrototypeControlCommand}. Each
      * {@code PrototypeControlCommand} can control one motor.
      * 
-     * @param subsystem The {@code PrototypeSubsystem}
-     * @param joystick  The {@code Joystick} object associated with the joystick
-     *                  that controls the motor.
-     * @param motor     The id of the motor to control
+     * @param subsystem     The {@code PrototypeSubsystem}
+     * @param motor         The id of the motor to control
+     * @param speedSupplier The double-valued method that provides a speed value
+     *                      [-1, 1]
      */
-    public PrototypeControlCommand(PrototypeSubsystem subsystem, Joystick joystick, int motor) {
+    public PrototypeControlCommand(PrototypeSubsystem subsystem, int motor, DoubleSupplier speedSupplier) {
         m_subsystem = subsystem;
-        m_joystick = joystick;
+        m_speedSupplier = speedSupplier;
         m_motorID = motor;
 
         // This line required for WPILib.
@@ -47,13 +47,13 @@ public class PrototypeControlCommand extends CommandBase {
     public void execute() {
         switch (m_motorID) {
             case 1:
-                m_subsystem.runMotor1(m_joystick.getY());
+                m_subsystem.runMotor1(m_speedSupplier.getAsDouble());
             case 2:
-                m_subsystem.runMotor2(m_joystick.getY());
+                m_subsystem.runMotor2(m_speedSupplier.getAsDouble());
             case 3:
-                m_subsystem.runMotor3(m_joystick.getY());
+                m_subsystem.runMotor3(m_speedSupplier.getAsDouble());
             case 4:
-                m_subsystem.runMotor4(m_joystick.getY());
+                m_subsystem.runMotor4(m_speedSupplier.getAsDouble());
         }
     }
 
