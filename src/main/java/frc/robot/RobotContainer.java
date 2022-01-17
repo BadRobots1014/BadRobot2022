@@ -45,9 +45,10 @@ public class RobotContainer {
     new PrototypeControlCommand(m_prototypeSubsystem, 4, this::getPrototypePowerOutput),
   };
 
-  private final SendableChooser<Command> m_prototypeCommandChooser = new SendableChooser<Command>();
-  private final SendableChooser<Boolean> m_prototypeInputChooser = new SendableChooser<Boolean>();
-  private final SendableChooser<Double> m_prototypePowerChooser = new SendableChooser<Double>();
+  private final SendableChooser<Command> m_prototypeCommandChooser = new SendableChooser<>();
+  private final SendableChooser<Boolean> m_prototypeInputChooser = new SendableChooser<>();
+  private final SendableChooser<Double> m_prototypePowerChooser = new SendableChooser<>();
+  private final SendableChooser<Boolean> m_prototypeInvertOutputChooser = new SendableChooser<>();
 
   private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
 
@@ -69,6 +70,9 @@ public class RobotContainer {
     m_prototypePowerChooser.addOption("80%", 0.8);
     m_prototypePowerChooser.addOption("90%", 0.9);
     m_prototypePowerChooser.addOption("100%", 1.0);
+
+    m_prototypeInvertOutputChooser.setDefaultOption("Not Inverted", false);
+    m_prototypeInvertOutputChooser.addOption("Inverted", true);
 
     m_prototypeTab.add(m_prototypeCommandChooser);
     m_prototypeTab.add(m_prototypeInputChooser);
@@ -117,10 +121,12 @@ public class RobotContainer {
   }
 
   private double getPrototypePowerOutput() {
+    int inversionConstant = m_prototypeInvertOutputChooser.getSelected() ? 1 : -1;
+
     if (m_prototypeInputChooser.getSelected()) {
-      return m_prototypeJoystick.getY();
+      return inversionConstant * m_prototypeJoystick.getY();
     } else {
-      return m_prototypePowerChooser.getSelected();
+      return inversionConstant * m_prototypePowerChooser.getSelected();
     }
   }
 }
