@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import java.util.Map;
+
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -39,16 +44,17 @@ public class RobotContainer {
   private final PrototypeSubsystem m_prototypeSubsystem = new PrototypeSubsystem();
 
   private final PrototypeControlCommand[] m_prototypeControlCommands = {
-    new PrototypeControlCommand(m_prototypeSubsystem, 1, this::getPrototypePowerOutput),
-    new PrototypeControlCommand(m_prototypeSubsystem, 2, this::getPrototypePowerOutput),
-    new PrototypeControlCommand(m_prototypeSubsystem, 3, this::getPrototypePowerOutput),
-    new PrototypeControlCommand(m_prototypeSubsystem, 4, this::getPrototypePowerOutput),
+      new PrototypeControlCommand(m_prototypeSubsystem, 1, this::getPrototypePowerOutput),
+      new PrototypeControlCommand(m_prototypeSubsystem, 2, this::getPrototypePowerOutput),
+      new PrototypeControlCommand(m_prototypeSubsystem, 3, this::getPrototypePowerOutput),
+      new PrototypeControlCommand(m_prototypeSubsystem, 4, this::getPrototypePowerOutput),
   };
 
   private final SendableChooser<Command> m_prototypeCommandChooser = new SendableChooser<>();
   private final SendableChooser<Boolean> m_prototypeInputChooser = new SendableChooser<>();
-  private final SendableChooser<Double> m_prototypePowerChooser = new SendableChooser<>();
-  private final SendableChooser<Boolean> m_prototypeInvertOutputChooser = new SendableChooser<>();
+
+  private final NetworkTableEntry m_prototypePower;
+  private final NetworkTableEntry m_prototypeOutputIsInverted;
 
   private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
 
@@ -64,19 +70,11 @@ public class RobotContainer {
     m_prototypeInputChooser.setDefaultOption("Joystick", true);
     m_prototypeInputChooser.addOption("Discrete Value", false);
 
-    m_prototypePowerChooser.addOption("50%", 0.5);
-    m_prototypePowerChooser.addOption("60%", 0.6);
-    m_prototypePowerChooser.addOption("70%", 0.7);
-    m_prototypePowerChooser.addOption("80%", 0.8);
-    m_prototypePowerChooser.addOption("90%", 0.9);
-    m_prototypePowerChooser.addOption("100%", 1.0);
-
-    m_prototypeInvertOutputChooser.setDefaultOption("Not Inverted", false);
-    m_prototypeInvertOutputChooser.addOption("Inverted", true);
-
-    m_prototypeTab.add(m_prototypeCommandChooser);
-    m_prototypeTab.add(m_prototypeInputChooser);
-    m_prototypeTab.add(m_prototypePowerChooser);
+    m_prototypeTab.add("Output", m_prototypeCommandChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
+    m_prototypeTab.add("Input Source", m_prototypeInputChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
+    m_prototypePower = m_prototypeTab.add("Power Output (Discrete)", 0).withWidget(BuiltInWidgets.kNumberSlider)
+        .withProperties(Map.of("min", -1, "max", 1)).getEntry();
+    m_prototypeOutputIsInverted = m_prototypeTab.add("Invert Output", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -121,12 +119,12 @@ public class RobotContainer {
   }
 
   private double getPrototypePowerOutput() {
-    int inversionConstant = m_prototypeInvertOutputChooser.getSelected() ? 1 : -1;
+    int inversionConstant = m_prototypeOutputIsInverted.getBoolean(false) ? 1 : -1;
 
     if (m_prototypeInputChooser.getSelected()) {
       return inversionConstant * m_prototypeJoystick.getY();
     } else {
-      return inversionConstant * m_prototypePowerChooser.getSelected();
+      return inversionConstant * m_prototypePower.getDouble(0);
     }
   }
 }
