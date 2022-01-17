@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.ShooterSubsystem.RangeConfig;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -17,9 +19,35 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public final class ShooterConstants {
+    /**
+     * Constants related to the shooter.
+     */
+    public static final class ShooterConstants {
         public static final int kShooterPort = 7;
 
+        /**
+         * The range of the ball from the target that determines which configuration is used, in
+         * meters.
+         * 
+         * If the actual range is less than this value, then use {@link #kRangeConfigClose}.
+         * Otherwise, if it is higher than this value, then use {@link #kRangeConfigFar}.
+         */
+        public static final double kInitialAngleDeterminantRange = 3.0;
+
+        public static final RangeConfig kRangeConfigClose = new RangeConfig(65.0, -1.0);
+        public static final RangeConfig kRangeConfigFar = new RangeConfig(75.0, 1.0);
+    
+        /**
+         * The acceleration of gravity, in m/s/s.
+         */
+        public static final double kGravityAcceleration = 9.8;
+
+        /**
+         * The maximum initial velocity of a ball, in m/s.
+         * 
+         * This was measured with the flywheel motor running at full speed.
+         */
+        public static final double kMaxInitialBallVelocity = 32.8;
     }
 
     /**
@@ -59,5 +87,4 @@ public final class Constants {
          */
         public static final int kSpeedController4 = 14;
     }
-
 }
