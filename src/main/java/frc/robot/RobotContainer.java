@@ -6,7 +6,6 @@ package frc.robot;
 
 import java.util.Map;
 
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -73,7 +72,7 @@ public class RobotContainer {
     m_prototypeTab.add("Output", m_prototypeCommandChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
     m_prototypeTab.add("Input Source", m_prototypeInputChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
     m_prototypePower = m_prototypeTab.add("Power Output (Discrete)", 0).withWidget(BuiltInWidgets.kNumberSlider)
-        .withProperties(Map.of("min", -1, "max", 1)).getEntry();
+        .withProperties(Map.of("min", 0, "max", 1)).getEntry();
     m_prototypeOutputIsInverted = m_prototypeTab.add("Invert Output", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
     // Configure the button bindings
@@ -91,7 +90,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     JoystickButton prototypeButton = new JoystickButton(m_prototypeJoystick, 1);
 
-    prototypeButton.whenHeld(new RunCommand(this::schedulePrototypeCommand, m_prototypeSubsystem));
+    prototypeButton.whenHeld(new RunCommand(this::schedulePrototypeCommand, m_prototypeSubsystem))
+    .whenReleased(new RunCommand(this::deschedulePrototypeCommmand));
   }
 
   /**
@@ -114,8 +114,12 @@ public class RobotContainer {
     return m_prototypeCommandChooser.getSelected();
   }
 
-  public void schedulePrototypeCommand() {
+  private void schedulePrototypeCommand() {
     CommandScheduler.getInstance().schedule(this.getPrototypeCommand());
+  }
+
+  private void deschedulePrototypeCommmand() {
+    CommandScheduler.getInstance().cancelAll();
   }
 
   private double getPrototypePowerOutput() {
