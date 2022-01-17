@@ -103,15 +103,15 @@ public class RobotContainer {
     return m_autoCommand;
   }
 
-  /**
-   * Returns a {@code PrototypeControlCommand} for the motor selected in
-   * Shuffleboard.
-   * 
-   * @return The appropriate {@code PrototypeControlCommand}.
-   */
-  public Command getPrototypeCommand() {
-    return m_prototypeCommandChooser.getSelected();
-  }
+  // /**
+  //  * Returns a {@code PrototypeControlCommand} for the motor selected in
+  //  * Shuffleboard.
+  //  * 
+  //  * @return The appropriate {@code PrototypeControlCommand}.
+  //  */
+  // public Command getPrototypeCommand() {
+  //   return m_prototypeCommandChooser.getSelected();
+  // }
 
   private double getPrototypePowerOutput() {
     if (m_prototypeInputChooser.getSelected()) {
