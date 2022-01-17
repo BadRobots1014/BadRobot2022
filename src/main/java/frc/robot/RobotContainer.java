@@ -72,6 +72,7 @@ public class RobotContainer {
 
     m_prototypeTab.add(m_prototypeCommandChooser);
     m_prototypeTab.add(m_prototypeInputChooser);
+    m_prototypeTab.add(m_prototypePowerChooser);
 
     // Configure the button bindings
     configureButtonBindings();
