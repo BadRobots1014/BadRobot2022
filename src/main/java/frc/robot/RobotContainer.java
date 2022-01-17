@@ -15,6 +15,8 @@ import frc.robot.commands.PrototypeControlCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PrototypeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -36,18 +38,15 @@ public class RobotContainer {
 
   private final PrototypeSubsystem m_prototypeSubsystem = new PrototypeSubsystem();
 
-  // private final PrototypeControlCommand[] m_prototypeControlCommands = {
-  //   new PrototypeControlCommand(m_prototypeSubsystem, 1, this::getPrototypePowerOutput),
-  //   new PrototypeControlCommand(m_prototypeSubsystem, 2, this::getPrototypePowerOutput),
-  //   new PrototypeControlCommand(m_prototypeSubsystem, 3, this::getPrototypePowerOutput),
-  //   new PrototypeControlCommand(m_prototypeSubsystem, 4, this::getPrototypePowerOutput),
-  // };
+  private final PrototypeControlCommand[] m_prototypeControlCommands = {
+    new PrototypeControlCommand(m_prototypeSubsystem, 1, this::getPrototypePowerOutput),
+    new PrototypeControlCommand(m_prototypeSubsystem, 2, this::getPrototypePowerOutput),
+    new PrototypeControlCommand(m_prototypeSubsystem, 3, this::getPrototypePowerOutput),
+    new PrototypeControlCommand(m_prototypeSubsystem, 4, this::getPrototypePowerOutput),
+  };
 
-  private final PrototypeControlCommand m_prototypeControlCommand = new PrototypeControlCommand(m_prototypeSubsystem, 4, this::getPrototypePowerOutput);
-
-  // private final SendableChooser<Command> m_prototypeCommandChooser = new SendableChooser<Command>();
+  private final SendableChooser<Command> m_prototypeCommandChooser = new SendableChooser<Command>();
   private final SendableChooser<Boolean> m_prototypeInputChooser = new SendableChooser<Boolean>();
-
   private final SendableChooser<Double> m_prototypePowerChooser = new SendableChooser<Double>();
 
   private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
@@ -56,10 +55,10 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // m_prototypeCommandChooser.addOption("SPARK MAX", m_prototypeControlCommands[0]);
-    // m_prototypeCommandChooser.addOption("TalonFX (Port 11)", m_prototypeControlCommands[1]);
-    // m_prototypeCommandChooser.addOption("TalonFX (Port 13)", m_prototypeControlCommands[2]);
-    // m_prototypeCommandChooser.addOption("TalonFX (Port 14)", m_prototypeControlCommands[3]);
+    m_prototypeCommandChooser.addOption("SPARK MAX", m_prototypeControlCommands[0]);
+    m_prototypeCommandChooser.addOption("TalonFX (Port 11)", m_prototypeControlCommands[1]);
+    m_prototypeCommandChooser.addOption("TalonFX (Port 13)", m_prototypeControlCommands[2]);
+    m_prototypeCommandChooser.addOption("TalonFX (Port 14)", m_prototypeControlCommands[3]);
 
     m_prototypeInputChooser.setDefaultOption("Joystick", true);
     m_prototypeInputChooser.addOption("Discrete Value", false);
@@ -71,7 +70,7 @@ public class RobotContainer {
     m_prototypePowerChooser.addOption("90%", 0.9);
     m_prototypePowerChooser.addOption("100%", 1.0);
 
-    // m_prototypeTab.add(m_prototypeCommandChooser);
+    m_prototypeTab.add(m_prototypeCommandChooser);
     m_prototypeTab.add(m_prototypeInputChooser);
     m_prototypeTab.add(m_prototypePowerChooser);
 
@@ -90,7 +89,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     JoystickButton prototypeButton = new JoystickButton(m_prototypeJoystick, 1);
 
-    prototypeButton.whenHeld(m_prototypeControlCommand);
+    prototypeButton.whenHeld(new RunCommand(this::schedulePrototypeCommand, m_prototypeSubsystem));
   }
 
   /**
@@ -103,15 +102,19 @@ public class RobotContainer {
     return m_autoCommand;
   }
 
-  // /**
-  //  * Returns a {@code PrototypeControlCommand} for the motor selected in
-  //  * Shuffleboard.
-  //  * 
-  //  * @return The appropriate {@code PrototypeControlCommand}.
-  //  */
-  // public Command getPrototypeCommand() {
-  //   return m_prototypeCommandChooser.getSelected();
-  // }
+  /**
+   * Returns a {@code PrototypeControlCommand} for the motor selected in
+   * Shuffleboard.
+   * 
+   * @return The appropriate {@code PrototypeControlCommand}.
+   */
+  public Command getPrototypeCommand() {
+    return m_prototypeCommandChooser.getSelected();
+  }
+
+  public void schedulePrototypeCommand() {
+    CommandScheduler.getInstance().schedule(this.getPrototypeCommand());
+  }
 
   private double getPrototypePowerOutput() {
     if (m_prototypeInputChooser.getSelected()) {
