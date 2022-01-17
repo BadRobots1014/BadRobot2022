@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -36,16 +38,16 @@ public class RobotContainer {
   private final PrototypeSubsystem m_prototypeSubsystem = new PrototypeSubsystem();
 
   private final PrototypeControlCommand[] m_prototypeControlCommands = {
-      new PrototypeControlCommand(m_prototypeSubsystem,
-          m_prototypeJoystick, 1),
-      new PrototypeControlCommand(m_prototypeSubsystem,
-          m_prototypeJoystick, 2),
-      new PrototypeControlCommand(m_prototypeSubsystem,
-          m_prototypeJoystick, 3),
-      new PrototypeControlCommand(m_prototypeSubsystem,
-          m_prototypeJoystick, 4) };
+    new PrototypeControlCommand(m_prototypeSubsystem, 1, this::getPrototypePowerOutput),
+    new PrototypeControlCommand(m_prototypeSubsystem, 2, this::getPrototypePowerOutput),
+    new PrototypeControlCommand(m_prototypeSubsystem, 3, this::getPrototypePowerOutput),
+    new PrototypeControlCommand(m_prototypeSubsystem, 4, this::getPrototypePowerOutput),
+  };
 
-  SendableChooser<Command> m_prototypeCommandChooser = new SendableChooser<Command>();
+  private final SendableChooser<Command> m_prototypeCommandChooser = new SendableChooser<Command>();
+  private final SendableChooser<Boolean> m_prototypeInputChooser = new SendableChooser<Boolean>();
+
+  private final SendableChooser<Double> m_prototypePowerChooser = new SendableChooser<Double>();
 
   private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
 
@@ -58,7 +60,18 @@ public class RobotContainer {
     m_prototypeCommandChooser.addOption("TalonFX (Port 13)", m_prototypeControlCommands[2]);
     m_prototypeCommandChooser.addOption("TalonFX (Port 14)", m_prototypeControlCommands[3]);
 
+    m_prototypeInputChooser.setDefaultOption("Joystick", true);
+    m_prototypeInputChooser.addOption("Discrete Value", false);
+
+    m_prototypePowerChooser.addOption("50%", 0.5);
+    m_prototypePowerChooser.addOption("60%", 0.6);
+    m_prototypePowerChooser.addOption("70%", 0.7);
+    m_prototypePowerChooser.addOption("80%", 0.8);
+    m_prototypePowerChooser.addOption("90%", 0.9);
+    m_prototypePowerChooser.addOption("100%", 1.0);
+
     m_prototypeTab.add(m_prototypeCommandChooser);
+    m_prototypeTab.add(m_prototypeInputChooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -93,5 +106,13 @@ public class RobotContainer {
    */
   public Command getPrototypeCommand() {
     return m_prototypeCommandChooser.getSelected();
+  }
+
+  private double getPrototypePowerOutput() {
+    if (m_prototypeInputChooser.getSelected()) {
+      return m_prototypeJoystick.getY();
+    } else {
+      return m_prototypePowerChooser.getSelected();
+    }
   }
 }
