@@ -33,6 +33,10 @@ public final class Constants {
     public final class DriveTrainConstants {
         public static final int kDriveTrainLeftPort = 9;
         public static final int kDriveTrainRightPort = 8;
+
+        public static final double kP = .5;
+        public static final double kI = 0;
+        public static final double kD = 0;
     }
 
     /**

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.DriveStraightCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
@@ -45,8 +46,8 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
-  private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(m_driveTrainSubsystem,
-      m_xboxController);
+  private final DriveStraightCommand m_driveStraightCommand = new DriveStraightCommand(m_driveTrainSubsystem, m_xboxController);
+  private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(m_driveTrainSubsystem, m_xboxController);
 
   /**
    * The joystick used for prototyping controls.
@@ -124,8 +125,8 @@ public class RobotContainer {
     final JoystickButton buttonY = new JoystickButton(m_xboxController, XboxController.Button.kY.value);
     buttonY.whileHeld(m_shootCommand);
 
-    JoystickButton prototypeButton = new JoystickButton(m_prototypeJoystick, 1);
-    prototypeButton.whenHeld(m_prototypeControlCommand);
+    final JoystickButton buttonA = new JoystickButton(m_xboxController, XboxController.Button.kA.value);
+    buttonA.whileHeld(m_driveStraightCommand);
   }
 
   /**
@@ -140,7 +141,7 @@ public class RobotContainer {
 
   /**
    * Calculates the speed value to drive the prototype speed controller at.
-   * 
+   *
    * @return the speed [-1, 1] to drive the prototype speed controller at.
    */
   private double getPrototypePowerOutput() {
