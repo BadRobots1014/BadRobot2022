@@ -13,6 +13,10 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    /**
+     * Constants used for prototyping.
+     */
     public final class PrototypeConstants {
         /**
          * The CAN ID of the unattached SPARK MAX.
@@ -33,5 +37,12 @@ public final class Constants {
          * The CAN ID of one of the unattached Talon FXs.
          */
         public static final int kSpeedController4 = 14; 
+    }
+
+    /**
+     * Constants relating to driver controls.
+     */
+    public final class ControllerConstants {
+        public static final int kPrototypePort = 1;
     }
 }

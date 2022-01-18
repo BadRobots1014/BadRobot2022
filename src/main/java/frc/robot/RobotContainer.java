@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.PrototypeControlCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -106,7 +107,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton prototypeButton = new JoystickButton(m_prototypeJoystick, 1);
+    JoystickButton prototypeButton = new JoystickButton(m_prototypeJoystick, ControllerConstants.kPrototypePort);
     prototypeButton.whenHeld(m_prototypeControlCommand);
   }
 
