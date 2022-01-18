@@ -13,10 +13,15 @@ import frc.robot.subsystems.PrototypeSubsystem;
  */
 public class PrototypeControlCommand extends CommandBase {
 
+    /**
+     * A reference to the {@code PrototypeSubsystem}.
+     */
     private final PrototypeSubsystem m_subsystem;
 
-    private final int m_motorID;
-
+    /**
+     * The double-valued function that supplies the speed value [-1, 1] to run
+     * the speed controller at.
+     */
     private final DoubleSupplier m_speedSupplier;
 
     /**
@@ -24,14 +29,12 @@ public class PrototypeControlCommand extends CommandBase {
      * {@code PrototypeControlCommand} can control one motor.
      * 
      * @param subsystem     The {@code PrototypeSubsystem}
-     * @param motor         The id of the motor to control
      * @param speedSupplier The double-valued method that provides a speed value
      *                      [-1, 1]
      */
-    public PrototypeControlCommand(PrototypeSubsystem subsystem, int motor, DoubleSupplier speedSupplier) {
+    public PrototypeControlCommand(PrototypeSubsystem subsystem, DoubleSupplier speedSupplier) {
         m_subsystem = subsystem;
         m_speedSupplier = speedSupplier;
-        m_motorID = motor;
 
         // This line required for WPILib.
         addRequirements(subsystem);
@@ -45,31 +48,13 @@ public class PrototypeControlCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        switch (m_motorID) {
-            case 1:
-                m_subsystem.runMotor1(m_speedSupplier.getAsDouble());
-            case 2:
-                m_subsystem.runMotor2(m_speedSupplier.getAsDouble());
-            case 3:
-                m_subsystem.runMotor3(m_speedSupplier.getAsDouble());
-            case 4:
-                m_subsystem.runMotor4(m_speedSupplier.getAsDouble());
-        }
+        m_subsystem.run(m_speedSupplier.getAsDouble());
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        switch (m_motorID) {
-            case 1:
-                m_subsystem.runMotor1(0);
-            case 2:
-                m_subsystem.runMotor2(0);
-            case 3:
-                m_subsystem.runMotor3(0);
-            case 4:
-                m_subsystem.runMotor4(0);
-        }
+        m_subsystem.run(0);
     }
 
     // Returns true when the command should end.

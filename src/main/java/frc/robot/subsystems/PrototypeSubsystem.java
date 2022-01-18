@@ -1,11 +1,17 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.prototype.PrototypeCANSparkMax;
+import frc.robot.prototype.PrototypeSpeedController;
+import frc.robot.prototype.PrototypeTalonFX;
 
 /**
  * Do not use this in production! This subsystem creates bindings to control
@@ -18,56 +24,47 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  */
 public class PrototypeSubsystem extends SubsystemBase {
 
-    private final CANSparkMax m_motor1 = new CANSparkMax(7, MotorType.kBrushless);
-    private final TalonFX m_motor2 = new TalonFX(11);
-    private final TalonFX m_motor3 = new TalonFX(13);
-    private final TalonFX m_motor4 = new TalonFX(14);
+    /**
+     * A reference to the "Prototype" tab object in Shuffleboard.
+     */
+    private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
+
+    /**
+     * The speed controllers used for prototyping.
+     */
+    private final PrototypeSpeedController[] m_speedControllers = {
+        new PrototypeCANSparkMax(new CANSparkMax(7, MotorType.kBrushless)),
+        new PrototypeTalonFX(new TalonFX(11)),
+        new PrototypeTalonFX(new TalonFX(13)),
+        new PrototypeTalonFX(new TalonFX(14))
+    };
+
+    /**
+     * The {@code SendableChooser} for selecting the speed controller to use.
+     */
+    private final SendableChooser<PrototypeSpeedController> m_speedControllerChooser = new SendableChooser<>();
 
     /**
      * Constructor.
      */
     public PrototypeSubsystem() {
+        // Configure speed controller chooser
+        m_speedControllerChooser.addOption("SPARK MAX (ID 7)", m_speedControllers[0]);
+        m_speedControllerChooser.addOption("TalonFX (ID 11)", m_speedControllers[1]);
+        m_speedControllerChooser.addOption("TalonFX (ID 13)", m_speedControllers[2]);
+        m_speedControllerChooser.addOption("TalonFX (ID 14)", m_speedControllers[3]);
 
+        m_prototypeTab.add("Speed Controller", m_speedControllerChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
     }
 
     /**
-     * Runs motor 1, the SPARK MAX, at the set {@code speed}, which is a value
-     * between [-1, 1].
+     * Runs the motor selected in the output chooser at the set {@code speed}, which
+     * is a value between [-1, 1].
      * 
      * @param speed the speed to run the motor at
      */
-    public void runMotor1(double speed) {
-        m_motor1.set(speed);
-    }
-
-    /**
-     * Runs motor 2, a TalonFX, at the set {@code speed}, which is a value between
-     * [-1, 1].
-     * 
-     * @param speed the speed to run the motor at
-     */
-    public void runMotor2(double speed) {
-        m_motor2.set(TalonFXControlMode.PercentOutput, speed);
-    }
-
-    /**
-     * Runs motor 3, a TalonFX, at the set {@code speed}, which is a value between
-     * [-1, 1].
-     * 
-     * @param speed the speed to run the motor at
-     */
-    public void runMotor3(double speed) {
-        m_motor3.set(TalonFXControlMode.PercentOutput, speed);
-    }
-
-    /**
-     * Runs motor 4, a TalonFX, at the set {@code speed}, which is a value between
-     * [-1, 1].
-     * 
-     * @param speed the speed to run the motor at
-     */
-    public void runMotor4(double speed) {
-        m_motor4.set(TalonFXControlMode.PercentOutput, speed);
+    public void run(double speed) {
+        m_speedControllerChooser.getSelected().set(speed);
     }
 
 }

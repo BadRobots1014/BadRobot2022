@@ -19,8 +19,6 @@ import frc.robot.commands.PrototypeControlCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.PrototypeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -38,42 +36,62 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
+  /**
+   * The joystick used for prototyping controls.
+   */
   private final Joystick m_prototypeJoystick = new Joystick(0);
 
+  /**
+   * The {@code PrototypeSubsystem} used for prototyping.
+   */
   private final PrototypeSubsystem m_prototypeSubsystem = new PrototypeSubsystem();
 
-  private final PrototypeControlCommand[] m_prototypeControlCommands = {
-      new PrototypeControlCommand(m_prototypeSubsystem, 1, this::getPrototypePowerOutput),
-      new PrototypeControlCommand(m_prototypeSubsystem, 2, this::getPrototypePowerOutput),
-      new PrototypeControlCommand(m_prototypeSubsystem, 3, this::getPrototypePowerOutput),
-      new PrototypeControlCommand(m_prototypeSubsystem, 4, this::getPrototypePowerOutput),
-  };
+  /**
+   * The {@code PrototypeControlCommand} used to control the
+   * {@code PrototypeSubsystem}.
+   */
+  private final PrototypeControlCommand m_prototypeControlCommand = new PrototypeControlCommand(m_prototypeSubsystem,
+      this::getPrototypePowerOutput);
 
-  private final SendableChooser<Command> m_prototypeCommandChooser = new SendableChooser<>();
+  /**
+   * The chooser for the input to drive the prototyping speed controllers.
+   * Configured to accept input from the joystick or from a discrete value entered
+   * into Shuffleboard.
+   */
   private final SendableChooser<Boolean> m_prototypeInputChooser = new SendableChooser<>();
 
+  /**
+   * The speed [0, 1] to drive the prototyping speed controllers at.
+   */
   private final NetworkTableEntry m_prototypePower;
+
+  /**
+   * Whether or not the output to the speed controllers should be inverted.
+   */
   private final NetworkTableEntry m_prototypeOutputIsInverted;
 
+  /**
+   * A reference to the "Prototype" Shuffleboard tab object.
+   */
   private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_prototypeCommandChooser.addOption("SPARK MAX", m_prototypeControlCommands[0]);
-    m_prototypeCommandChooser.addOption("TalonFX (Port 11)", m_prototypeControlCommands[1]);
-    m_prototypeCommandChooser.addOption("TalonFX (Port 13)", m_prototypeControlCommands[2]);
-    m_prototypeCommandChooser.addOption("TalonFX (Port 14)", m_prototypeControlCommands[3]);
-
+    // Configure the prototype input chooser
     m_prototypeInputChooser.setDefaultOption("Joystick", true);
     m_prototypeInputChooser.addOption("Discrete Value", false);
 
-    m_prototypeTab.add("Output", m_prototypeCommandChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
     m_prototypeTab.add("Input Source", m_prototypeInputChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
+
+    // Configure the discrete power output chooser
     m_prototypePower = m_prototypeTab.add("Power Output (Discrete)", 0).withWidget(BuiltInWidgets.kNumberSlider)
         .withProperties(Map.of("min", 0, "max", 1)).getEntry();
-    m_prototypeOutputIsInverted = m_prototypeTab.add("Invert Output", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+
+    // Configure the invert output chooser
+    m_prototypeOutputIsInverted = m_prototypeTab.add("Invert Output", false).withWidget(BuiltInWidgets.kToggleSwitch)
+        .getEntry();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -89,9 +107,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton prototypeButton = new JoystickButton(m_prototypeJoystick, 1);
-
-    prototypeButton.whenHeld(new RunCommand(this::schedulePrototypeCommand, m_prototypeSubsystem))
-    .whenReleased(new RunCommand(this::deschedulePrototypeCommmand));
+    prototypeButton.whenHeld(m_prototypeControlCommand);
   }
 
   /**
@@ -105,23 +121,10 @@ public class RobotContainer {
   }
 
   /**
-   * Returns a {@code PrototypeControlCommand} for the motor selected in
-   * Shuffleboard.
+   * Calculates the speed value to drive the prototype speed controller at.
    * 
-   * @return The appropriate {@code PrototypeControlCommand}.
+   * @return the speed [-1, 1] to drive the prototype speed controller at.
    */
-  public Command getPrototypeCommand() {
-    return m_prototypeCommandChooser.getSelected();
-  }
-
-  private void schedulePrototypeCommand() {
-    CommandScheduler.getInstance().schedule(this.getPrototypeCommand());
-  }
-
-  private void deschedulePrototypeCommmand() {
-    CommandScheduler.getInstance().cancelAll();
-  }
-
   private double getPrototypePowerOutput() {
     int inversionConstant = m_prototypeOutputIsInverted.getBoolean(false) ? 1 : -1;
 
