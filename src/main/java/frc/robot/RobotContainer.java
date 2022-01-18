@@ -51,7 +51,7 @@ public class RobotContainer {
   /**
    * The joystick used for prototyping controls.
    */
-  private final Joystick m_prototypeJoystick = new Joystick(0);
+  private final Joystick m_prototypeJoystick = new Joystick(ControllerConstants.kPrototypePort);
 
   /**
    * The {@code PrototypeSubsystem} used for prototyping.
@@ -124,7 +124,7 @@ public class RobotContainer {
     final JoystickButton buttonY = new JoystickButton(m_xboxController, XboxController.Button.kY.value);
     buttonY.whileHeld(m_shootCommand);
 
-    JoystickButton prototypeButton = new JoystickButton(m_prototypeJoystick, ControllerConstants.kPrototypePort);
+    JoystickButton prototypeButton = new JoystickButton(m_prototypeJoystick, 1);
     prototypeButton.whenHeld(m_prototypeControlCommand);
   }
 
