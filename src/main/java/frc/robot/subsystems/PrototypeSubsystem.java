@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.PrototypeConstants;
 import frc.robot.prototype.PrototypeCANSparkMax;
 import frc.robot.prototype.PrototypeSpeedController;
 import frc.robot.prototype.PrototypeTalonFX;
@@ -33,10 +34,10 @@ public class PrototypeSubsystem extends SubsystemBase {
      * The speed controllers used for prototyping.
      */
     private final PrototypeSpeedController[] m_speedControllers = {
-        new PrototypeCANSparkMax(new CANSparkMax(7, MotorType.kBrushless)),
-        new PrototypeTalonFX(new TalonFX(11)),
-        new PrototypeTalonFX(new TalonFX(13)),
-        new PrototypeTalonFX(new TalonFX(14))
+        new PrototypeCANSparkMax(new CANSparkMax(PrototypeConstants.kSpeedController1, MotorType.kBrushless)),
+        new PrototypeTalonFX(new TalonFX(PrototypeConstants.kSpeedController2)),
+        new PrototypeTalonFX(new TalonFX(PrototypeConstants.kSpeedController3)),
+        new PrototypeTalonFX(new TalonFX(PrototypeConstants.kSpeedController4))
     };
 
     /**

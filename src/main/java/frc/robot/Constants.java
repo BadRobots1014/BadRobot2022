@@ -12,4 +12,26 @@ package frc.robot;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {}
+public final class Constants {
+    public final class PrototypeConstants {
+        /**
+         * The CAN ID of the unattached SPARK MAX.
+         */
+        public static final int kSpeedController1 = 7;
+
+        /**
+         * The CAN ID of one of the unattached Talon FXs.
+         */
+        public static final int kSpeedController2 = 11;
+
+        /**
+         * The CAN ID of one of the unattached Talon FXs.
+         */
+        public static final int kSpeedController3 = 13;
+
+        /**
+         * The CAN ID of one of the unattached Talon FXs.
+         */
+        public static final int kSpeedController4 = 14; 
+    }
+}
