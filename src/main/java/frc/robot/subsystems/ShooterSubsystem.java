@@ -12,15 +12,26 @@ public class ShooterSubsystem extends SubsystemBase {
         /**
          * The initial angle of the shooter, in degrees.
          */
-        public double initialAngle;
+        public final double initialAngle;
         /**
-         * A coefficient that scales the output of {@link ShooterSubsystem#powerToHitTarget}.
+         * The maximum initial velocity of a ball launched in this configuration, in m/s.
+         * 
+         * This is measured with the flywheel motor running at full speed.
          */
-        public double powerCoefficient;
+        public final double maxInitialVelocity;
+        /**
+         * Whether or not the motor power should be multiplied by -1.
+         */
+        public final boolean motorIsInverted;
 
-        public RangeConfig(double initialAngle, double powerCoefficient) {
+        public RangeConfig(
+            double initialAngle,
+            double maxInitialVelocity,
+            boolean motorIsInverted
+        ) {
             this.initialAngle = initialAngle;
-            this.powerCoefficient = powerCoefficient;
+            this.maxInitialVelocity = maxInitialVelocity;
+            this.motorIsInverted = motorIsInverted;
         }
     }
 
@@ -30,10 +41,19 @@ public class ShooterSubsystem extends SubsystemBase {
 
     }
 
+    /**
+     * Sets the flywheel motor to the given power.
+     * 
+     * @param power The motor power, as a percentage. This is positive for the forward direction and
+     *              negative otherwise.
+     */
     public void run(double power) {
         this.speedController.set(power);
     }
 
+    /**
+     * Stops the flywheel motor.
+     */
     public void stop() {
         this.speedController.stopMotor();
     }
@@ -41,12 +61,11 @@ public class ShooterSubsystem extends SubsystemBase {
     /**
      * Returns the motor power necessary to hit a target point.
      * 
-     * This value is intended as an input to {@link #run}.
+     * The output of this method is intended as an input to {@link #run}.
      * 
      * @param targetX The target range, in meters.
      * @param targetY The target height, in meters.
-     * @return        The power, as a percentage. This is positive for the forward direction and
-     *                negative otherwise.
+     * @return        The power, as a percentage.
      */
     public double powerToHitTarget(double targetX, double targetY) {
         RangeConfig config;
@@ -57,9 +76,12 @@ public class ShooterSubsystem extends SubsystemBase {
         }
 
         double initialVelocity = initialVelocityToHitTarget(config.initialAngle, targetX, targetY);
-        double power = initialVelocity / ShooterConstants.kMaxInitialBallVelocity;
+        double power = initialVelocity / config.maxInitialVelocity;
+        if(config.motorIsInverted) {
+            power *= -1.0;
+        }
         
-        return power * config.powerCoefficient;
+        return power;
     }
 
     /**
@@ -71,7 +93,8 @@ public class ShooterSubsystem extends SubsystemBase {
      * @return              The initial velocity, in m/s.
      */
     private double initialVelocityToHitTarget(double initialAngle, double targetX, double targetY) {
-        // This function solves the following system of equations for `initVel`:
+        // This function solves the following system of equations for `initVel` by substituting
+        // `time`:
         //   { x =  cos(initAngle) * initVel * time
         //   { y = (sin(initAngle) * initVel * time) - ((1/2) * gravityAccel * (time^2))
 
@@ -81,15 +104,5 @@ public class ShooterSubsystem extends SubsystemBase {
             ((-1.0 * targetY) + (targetX * Math.tan(initialAngle)));
         
         return Math.sqrt(numerator / denominator);
-    }
-
-    @Override
-    public void periodic() {
-        // This method will be called once per scheduler run
-    }
-
-    @Override
-    public void simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
     }
 }

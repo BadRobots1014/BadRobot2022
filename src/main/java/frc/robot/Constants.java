@@ -32,22 +32,15 @@ public final class Constants {
          * If the actual range is less than this value, then use {@link #kRangeConfigClose}.
          * Otherwise, if it is higher than this value, then use {@link #kRangeConfigFar}.
          */
-        public static final double kInitialAngleDeterminantRange = 3.0;
+        public static final double kInitialAngleDeterminantRange = 2.0;
 
-        public static final RangeConfig kRangeConfigClose = new RangeConfig(65.0, -1.0);
-        public static final RangeConfig kRangeConfigFar = new RangeConfig(75.0, 1.0);
+        public static final RangeConfig kRangeConfigClose = new RangeConfig(65.0, 32.8, false);
+        public static final RangeConfig kRangeConfigFar = new RangeConfig(75.0, 32.8, true);
     
         /**
          * The acceleration of gravity, in m/s/s.
          */
         public static final double kGravityAcceleration = 9.8;
-
-        /**
-         * The maximum initial velocity of a ball, in m/s.
-         * 
-         * This was measured with the flywheel motor running at full speed.
-         */
-        public static final double kMaxInitialBallVelocity = 32.8;
     }
 
     /**
