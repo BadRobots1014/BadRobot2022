@@ -46,7 +46,10 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
-  private final DriveStraightCommand m_driveStraightCommand = new DriveStraightCommand(m_driveTrainSubsystem, m_xboxController);
+  private final DriveStraightCommand m_driveStraightCommand = new DriveStraightCommand(
+    m_driveTrainSubsystem,
+    m_xboxController::getLeftY
+  );
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(m_driveTrainSubsystem, m_xboxController);
 
   /**
