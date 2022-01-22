@@ -26,23 +26,25 @@ public class AnchorCommand extends CommandBase {
         this.gyro = gyro;
         super.addRequirements(this.drive);
 
-        this.angularController.setSetpoint(gyro.getAngle());
         this.angularController.enableContinuousInput(-180, 180);
-
-        this.displacementController.setSetpoint(gyro.getDisplacementX());
     }
 
     @Override
     public void initialize() {
         this.angularController.reset();
         this.displacementController.reset();
+
+        this.angularController.setSetpoint(gyro.getAngle());
+        this.displacementController.setSetpoint(gyro.getDisplacementX());
+
+        this.gyro.resetDisplacement();
     }
 
     @Override
     public void execute() {
         final double angularOutput = this.angularController.calculate(this.gyro.getAngle());
         final double linearOutput = this.displacementController.calculate(this.gyro.getDisplacementX());
-        this.drive.tankDrive(linearOutput + angularOutput, linearOutput - angularOutput);
+        this.drive.tankDrive(linearOutput - angularOutput, linearOutput + angularOutput);
     }
 
     @Override
