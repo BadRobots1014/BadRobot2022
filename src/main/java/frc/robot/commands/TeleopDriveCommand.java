@@ -1,20 +1,26 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.XboxController;
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class TeleopDriveCommand extends CommandBase {
     
-    private final DriveTrainSubsystem m_subsystem;
-    private final XboxController m_xboxController;
+    private final DriveTrainSubsystem m_drive;
+    private final Supplier<Double> m_leftPower;
+    private final Supplier<Double> m_rightPower;
 
-    public TeleopDriveCommand(DriveTrainSubsystem subsystem, XboxController controller){
-        
-        m_subsystem = subsystem;
-        m_xboxController = controller;
+    public TeleopDriveCommand(
+        DriveTrainSubsystem drive,
+        Supplier<Double> leftPower,
+        Supplier<Double> rightPower
+    ) {
+        m_drive = drive;
+        m_leftPower = leftPower;
+        m_rightPower = rightPower;
 
-        addRequirements(subsystem);
+        addRequirements(m_drive);
     }
 
     // Called when the command is initially scheduled.
@@ -26,20 +32,12 @@ public class TeleopDriveCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        
-        m_subsystem.tankDrive(m_xboxController.getLeftY(), m_xboxController.getRightY());
+        m_drive.tankDrive(m_leftPower.get(), m_rightPower.get());
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_subsystem.stop();
+        m_drive.stop();
     }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
-    
 }

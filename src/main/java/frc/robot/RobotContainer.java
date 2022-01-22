@@ -13,10 +13,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriveStraightCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.AnchorCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.util.GyroProvider;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -39,6 +41,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final XboxController m_xboxController = new XboxController(ControllerConstants.kControllerPort);
+  private final GyroProvider m_gyro = new GyroProvider();
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
@@ -48,9 +51,18 @@ public class RobotContainer {
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
   private final DriveStraightCommand m_driveStraightCommand = new DriveStraightCommand(
     m_driveTrainSubsystem,
+    m_gyro,
     m_xboxController::getLeftY
   );
-  private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(m_driveTrainSubsystem, m_xboxController);
+  private final AnchorCommand m_anchorCommand = new AnchorCommand(
+    m_driveTrainSubsystem,
+    m_gyro
+  );
+  private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
+    m_driveTrainSubsystem,
+    m_xboxController::getLeftY,
+    m_xboxController::getRightY
+  );
 
   /**
    * The joystick used for prototyping controls.
@@ -124,12 +136,14 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
     final JoystickButton buttonY = new JoystickButton(m_xboxController, XboxController.Button.kY.value);
     buttonY.whileHeld(m_shootCommand);
 
     final JoystickButton buttonA = new JoystickButton(m_xboxController, XboxController.Button.kA.value);
     buttonA.whileHeld(m_driveStraightCommand);
+
+    final JoystickButton buttonB = new JoystickButton(m_xboxController, XboxController.Button.kB.value);
+    buttonB.whileHeld(m_anchorCommand);
   }
 
   /**
@@ -148,7 +162,7 @@ public class RobotContainer {
    * @return the speed [-1, 1] to drive the prototype speed controller at.
    */
   private double getPrototypePowerOutput() {
-    int inversionConstant = m_prototypeOutputIsInverted.getBoolean(false) ? 1 : -1;
+    double inversionConstant = m_prototypeOutputIsInverted.getBoolean(false) ? 1 : -1;
 
     if (m_prototypeInputChooser.getSelected()) {
       return inversionConstant * m_prototypeJoystick.getY();

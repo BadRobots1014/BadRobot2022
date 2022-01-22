@@ -3,9 +3,13 @@ package frc.robot.util;
 import com.kauailabs.navx.frc.AHRS;
 
 public class GyroProvider {
-    private static final AHRS m_gyro = new AHRS();
+    private final AHRS m_gyro = new AHRS();
 
-    public static double getAngle(){
+    public double getAngle() {
         return Math.IEEEremainder(m_gyro.getAngle(), 360);
+    }
+
+    public double getDisplacementX() {
+        return m_gyro.getDisplacementX();
     }
 }

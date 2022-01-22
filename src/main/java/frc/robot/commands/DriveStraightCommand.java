@@ -16,33 +16,31 @@ import frc.robot.util.GyroProvider;
 public class DriveStraightCommand extends PIDCommand {
     private final DriveTrainSubsystem drive;
 
-    public DriveStraightCommand(DriveTrainSubsystem drive, Supplier<Double> basePowerSupplier) {
+    public DriveStraightCommand(
+        DriveTrainSubsystem drive,
+        GyroProvider gyro,
+        Supplier<Double> power
+    ) {
         super(
             new PIDController(
                 DriveTrainConstants.kP,
                 DriveTrainConstants.kI,
                 DriveTrainConstants.kD
             ),
-            GyroProvider::getAngle,
+            gyro::getAngle,
             // Maintain the initial yaw angle while driving (hence "drive straight").
-            GyroProvider.getAngle(),
+            gyro.getAngle(),
             correction -> {
-                final double basePower = basePowerSupplier.get();
-                drive.tankDrive(
-                    constrainPower(basePower + correction),
-                    constrainPower(basePower - correction)
-                );
+                final double basePower = power.get();
+                drive.tankDrive(basePower + correction, basePower - correction);
             },
             drive
         );
 
-        getController().enableContinuousInput(-180, 180);
-
         this.drive = drive;
-    }
+        super.addRequirements(this.drive);
 
-    private static double constrainPower(double power) {
-        return MathUtil.clamp(power, -1.0, 1.0);
+        super.getController().enableContinuousInput(-180, 180);
     }
 
     @Override

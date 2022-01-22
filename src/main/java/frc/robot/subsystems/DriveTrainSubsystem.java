@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.math.MathUtil;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -23,7 +24,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
-        m_driveTrain.tankDrive(leftSpeed, rightSpeed);
+        m_driveTrain.tankDrive(clampPower(leftSpeed), clampPower(rightSpeed));
+    }
+
+    private static double clampPower(double power) {
+        return MathUtil.clamp(power, -1.0, 1.0);
     }
 
     public void stop() {
