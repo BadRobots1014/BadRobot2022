@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 /**
  * Wrapper class for TalonFX speed controllers used for prototyping.
  * 
- * @author Victor Chen <victorc.1@outlook.com
+ * @author Victor Chen <victorc.1@outlook.com>
  */
 public class PrototypeTalonFX implements PrototypeSpeedController {
 

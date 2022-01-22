@@ -18,25 +18,30 @@ public final class Constants {
      * Constants used for prototyping.
      */
     public final class PrototypeConstants {
-        /**
-         * The CAN ID of the unattached SPARK MAX.
-         */
-        public static final int kSpeedController1 = 7;
+        // /**
+        //  * The CAN ID of the unattached SPARK MAX.
+        //  */
+        // public static final int kSpeedController1 = 7;
+
+        // /**
+        //  * The CAN ID of one of the unattached Talon FXs.
+        //  */
+        // public static final int kSpeedController2 = 11;
+
+        // /**
+        //  * The CAN ID of one of the unattached Talon FXs.
+        //  */
+        // public static final int kSpeedController3 = 13;
+
+        // /**
+        //  * The CAN ID of one of the unattached Talon FXs.
+        //  */
+        // public static final int kSpeedController4 = 14; 
 
         /**
-         * The CAN ID of one of the unattached Talon FXs.
+         * The CAN ID of the unattached Talon SRX on RoboRIO 3
          */
-        public static final int kSpeedController2 = 11;
-
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController3 = 13;
-
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController4 = 14; 
+        public static final int kSpeedController1 = 21;
     }
 
     /**
