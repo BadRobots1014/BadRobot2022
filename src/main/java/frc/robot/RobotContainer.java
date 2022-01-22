@@ -52,7 +52,13 @@ public class RobotContainer {
   private final DriveStraightCommand m_driveStraightCommand = new DriveStraightCommand(
     m_driveTrainSubsystem,
     m_gyro,
-    m_xboxController::getLeftY
+    () -> {
+      double basePower = m_xboxController.getLeftY();
+      if(m_xboxController.getRightTriggerAxis() > 0.5) {
+        basePower *= 0.25;
+      }
+      return basePower;
+    }
   );
   private final AnchorCommand m_anchorCommand = new AnchorCommand(
     m_driveTrainSubsystem,
