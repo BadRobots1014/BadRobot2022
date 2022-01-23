@@ -20,9 +20,9 @@ public class DriveStraightCommand extends CommandBase {
      * A PID controller whose process variable is the current yaw angle of the robot.
      */
     private final PIDController angularPid = new PIDController(
-        DriveTrainConstants.kP,
-        DriveTrainConstants.kI,
-        DriveTrainConstants.kD
+        DriveTrainConstants.kAngularP,
+        DriveTrainConstants.kAngularI,
+        DriveTrainConstants.kAngularD
     );
 
     /**

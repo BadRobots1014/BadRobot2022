@@ -1,55 +1,51 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.util.GyroProvider;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class AnchorCommand extends CommandBase {
-    private final DriveTrainSubsystem drive;
+public class AnchorCommand extends DriveStraightCommand {
     private final GyroProvider gyro;
-    private final PIDController angularController = new PIDController(
-        DriveTrainConstants.kP,
-        DriveTrainConstants.kI,
-        DriveTrainConstants.kD
-    );
-    private final PIDController displacementController = new PIDController(
-        DriveTrainConstants.kP,
-        DriveTrainConstants.kI,
-        DriveTrainConstants.kD
+    /**
+     * A PID controller whose process variable is the current displacement in the X-axis.
+     */
+    private final PIDController displacementPid = new PIDController(
+        DriveTrainConstants.kDisplacementP,
+        DriveTrainConstants.kDisplacementI,
+        DriveTrainConstants.kDisplacementD
     );
 
+    /**
+     * Constructs a new {@link AnchorCommand}.
+     *
+     * @param drive The {@link DriveTrainSubsystem}.
+     * @param gyro  The {@link GyroProvider}.
+     */
     public AnchorCommand(DriveTrainSubsystem drive, GyroProvider gyro) {
-        this.drive = drive;
-        this.gyro = gyro;
-        super.addRequirements(this.drive);
+        // Conceptually, anchoring is driving straight with a base power that is usually 0 but
+        // adjusts according to displacement. This allows us to reuse the angular PID controller
+        // code from 'DriveStraightCommand'.
+        super(drive, gyro, () -> 0.0);
+        // This comes after the superclass constructor as it necessarily references the displacement
+        // PID controller instance field.
+        super.setPowerSource(() -> this.displacementPid.calculate(gyro.getDisplacementX()));
 
-        this.angularController.enableContinuousInput(-180, 180);
+        this.gyro = gyro;
     }
 
     @Override
     public void initialize() {
-        this.angularController.reset();
-        this.displacementController.reset();
+        super.initialize();
 
-        this.angularController.setSetpoint(gyro.getAngle());
-        this.displacementController.setSetpoint(gyro.getDisplacementX());
-
+        // According to 'AHRS::getDisplacementX' (upon which 'GyroProvider::getDisplacementX' is
+        // based), displacement measurement quickly becomes inaccurate over time. Resetting
+        // displacment upon every invocation of this command attempts to mitigate this.
         this.gyro.resetDisplacement();
-    }
 
-    @Override
-    public void execute() {
-        final double angularOutput = this.angularController.calculate(this.gyro.getAngle());
-        final double linearOutput = this.displacementController.calculate(this.gyro.getDisplacementX());
-        this.drive.tankDrive(linearOutput - angularOutput, linearOutput + angularOutput);
-    }
-
-    @Override
-    public void end(boolean interrupted)
-    {
-        this.drive.stop();
+        this.displacementPid.reset();
+        // Note that 'gyro.getDisplacementX()' should return approximately 0.
+        this.displacementPid.setSetpoint(this.gyro.getDisplacementX());
     }
 }
