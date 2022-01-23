@@ -3,11 +3,11 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 
 import frc.robot.Constants.DriveTrainConstants;
-import frc.robot.util.GyroProvider;
+import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 public class AnchorCommand extends DriveStraightCommand {
-    private final GyroProvider gyro;
+    private final GyroSubsystem gyro;
     /**
      * A PID controller whose process variable is the current displacement in the X-axis.
      */
@@ -23,7 +23,7 @@ public class AnchorCommand extends DriveStraightCommand {
      * @param drive The {@link DriveTrainSubsystem}.
      * @param gyro  The {@link GyroProvider}.
      */
-    public AnchorCommand(DriveTrainSubsystem drive, GyroProvider gyro) {
+    public AnchorCommand(DriveTrainSubsystem drive, GyroSubsystem gyro) {
         // Conceptually, anchoring is driving straight with a base power that is usually 0 but
         // adjusts according to displacement. This allows us to reuse the angular PID controller
         // code from 'DriveStraightCommand'.

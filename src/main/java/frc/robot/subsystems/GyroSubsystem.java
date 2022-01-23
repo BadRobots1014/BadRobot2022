@@ -1,22 +1,27 @@
-package frc.robot.util;
+package frc.robot.subsystems;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.kauailabs.navx.frc.AHRS;
 
-public class GyroProvider {
-    private final AHRS m_gyro = new AHRS();
+public class GyroSubsystem extends SubsystemBase {
+    private final AHRS gyro = new AHRS();
+
+    /** Constructs a new {@link GyroSubsystem}. */
+    public GyroSubsystem() {}
 
     /**
      * Resets the accumulated yaw.
      */
     public void resetYaw() {
-        m_gyro.reset();
+        this.gyro.reset();
     }
 
     /**
      * Zeroes the measured displacement in all axes, i.e., the position of the robot.
      */
     public void resetDisplacement() {
-        m_gyro.resetDisplacement();
+        this.gyro.resetDisplacement();
     }
 
     /**
@@ -25,7 +30,7 @@ public class GyroProvider {
      * @return  The current yaw, in degrees, in the range [0, 360].
      */
     public double getYaw() {
-        return Math.IEEEremainder(m_gyro.getAngle(), 360);
+        return Math.IEEEremainder(this.gyro.getAngle(), 360);
     }
 
     /**
@@ -34,6 +39,6 @@ public class GyroProvider {
      * @return  The current X displacement, in meters.
      */
     public double getDisplacementX() {
-        return m_gyro.getDisplacementX();
+        return this.gyro.getDisplacementX();
     }
 }

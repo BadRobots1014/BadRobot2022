@@ -10,6 +10,13 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DriveStraightCommand;
 import frc.robot.commands.ExampleCommand;
@@ -17,17 +24,12 @@ import frc.robot.commands.AnchorCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.util.GyroProvider;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.PrototypeControlCommand;
 import frc.robot.subsystems.PrototypeSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -41,17 +43,17 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final XboxController m_xboxController = new XboxController(ControllerConstants.kControllerPort);
-  private final GyroProvider m_gyro = new GyroProvider();
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem();
+  private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
   private final DriveStraightCommand m_driveStraightCommand = new DriveStraightCommand(
     m_driveTrainSubsystem,
-    m_gyro,
+    m_gyroSubsystem,
     () -> {
       double basePower = m_xboxController.getLeftY();
       if(m_xboxController.getRightTriggerAxis() > 0.5) {
@@ -62,12 +64,13 @@ public class RobotContainer {
   );
   private final AnchorCommand m_anchorCommand = new AnchorCommand(
     m_driveTrainSubsystem,
-    m_gyro
+    m_gyroSubsystem
   );
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
     m_driveTrainSubsystem,
-    m_xboxController::getLeftY,
-    m_xboxController::getRightY
+    m_gyroSubsystem,
+    m_xboxController::getLeftX,
+    m_xboxController::getLeftY
   );
 
   /**
@@ -113,6 +116,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    // We use an arcade-drive system with controller deadzones that select specialized commands.
     m_driveTrainSubsystem.setDefaultCommand(m_teleopDriveCommand);
 
     // Configure the prototype input chooser

@@ -28,6 +28,10 @@ public final class Constants {
     public final class ControllerConstants {
         public static final int kControllerPort = 0;
         public static final int kPrototypePort = 1;
+
+        public static final double kAnchorDeadzoneRadius = .15;
+        public static final double kDriveStraightDeadzoneBaseLength = .2;
+        public static final double kPivotTurnDeadzoneBaseLength = .2;
     }
 
     public final class DriveTrainConstants {

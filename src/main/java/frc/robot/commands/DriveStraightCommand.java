@@ -7,14 +7,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.util.GyroProvider;
+import frc.robot.subsystems.GyroSubsystem;
 
 /**
  * A command that tank-drives with a supplied power while maintaining the initial yaw angle.
  */
 public class DriveStraightCommand extends CommandBase {
     private final DriveTrainSubsystem drive;
-    private final GyroProvider gyro;
+    private final GyroSubsystem gyro;
     private Supplier<Double> powerSource;
     /**
      * A PID controller whose process variable is the current yaw angle of the robot.
@@ -29,20 +29,20 @@ public class DriveStraightCommand extends CommandBase {
      * Constructs a new {@link DriveStraightCommand}.
      *
      * @param drive         The {@link DriveTrainSubsystem}.
-     * @param gyro          The {@link GyroProvider}.
+     * @param gyro          The {@link GyroSubsystem}.
      * @param powerSource   A supplier whose output value is in [-1.0, 1.0].
      */
     public DriveStraightCommand(
         DriveTrainSubsystem drive,
-        GyroProvider gyro,
+        GyroSubsystem gyro,
         Supplier<Double> powerSource
     ) {
         this.drive = drive;
         this.gyro = gyro;
         this.powerSource = powerSource;
 
-        // Use addRequirements() here to declare subsystem dependencies.
-        super.addRequirements(this.drive);
+        super.addRequirements(drive, gyro);
+
         this.angularPid.enableContinuousInput(-180, 180);
     }
 
