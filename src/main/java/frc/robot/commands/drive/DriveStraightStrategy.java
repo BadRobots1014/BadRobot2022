@@ -42,7 +42,7 @@ public class DriveStraightStrategy implements DriveStrategy {
 
     @Override
     public void execute(double x, double y) {
-        final double correction = this.m_controller.calculate(this.m_gyro.getYaw());
+        double correction = this.m_controller.calculate(this.m_gyro.getYaw());
         m_drive.tankDrive(y - correction, y + correction);
     }
 
