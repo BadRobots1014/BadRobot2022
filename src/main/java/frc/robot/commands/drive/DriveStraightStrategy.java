@@ -34,6 +34,10 @@ public class DriveStraightStrategy implements DriveStrategy {
      */
     private DriveStrategyContext m_context;
 
+    /*
+     * DriveStrategy interface methods ----------------------------------------
+     */
+
     @Override
     public void reset() {
         this.m_gyro.resetYaw();
@@ -58,6 +62,10 @@ public class DriveStraightStrategy implements DriveStrategy {
     public void setContext(DriveStrategyContext context) {
         this.m_context = context;
     }
+
+    /*
+     * Constructors -----------------------------------------------------------
+     */
 
     /**
      * Constructs a new {@code DriveStraightStrategy} that controls the given

@@ -21,6 +21,10 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
      */
     private DriveStrategyContext m_context;
 
+    /*
+     * DriveStrategy interface methods ----------------------------------------
+     */
+
     @Override
     public void reset() {
         // Do nothing.
@@ -43,6 +47,10 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
     public void setContext(DriveStrategyContext context) {
         this.m_context = context;
     }
+
+    /*
+     * Constructors -----------------------------------------------------------
+     */
 
     /**
      * Constructs a new {@code ArcadeDriveStrategy} to control the given
