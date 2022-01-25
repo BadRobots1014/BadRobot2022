@@ -17,6 +17,11 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
     private final DriveTrainSubsystem m_subsystem;
 
     @Override
+    public void reset() {
+        // Do nothing.
+    }
+
+    @Override
     public void execute(double x, double y) {
         m_subsystem.arcadeDrive(y, x);
     }

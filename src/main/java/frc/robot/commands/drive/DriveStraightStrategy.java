@@ -19,6 +19,12 @@ public class DriveStraightStrategy implements DriveStrategy {
     private final PIDController m_controller;
 
     @Override
+    public void reset() {
+        this.m_gyro.resetYaw();
+        this.m_controller.setSetpoint(this.m_gyro.getYaw());
+    }
+
+    @Override
     public void execute(double x, double y) {
         final double correction = this.m_controller.calculate(this.m_gyro.getYaw());
         m_drive.tankDrive(y - correction, y + correction);
@@ -35,8 +41,7 @@ public class DriveStraightStrategy implements DriveStrategy {
                 DriveTrainConstants.kAngularD);
         this.m_controller.enableContinuousInput(-180, 180);
 
-        this.m_gyro.resetYaw();
-        this.m_controller.setSetpoint(this.m_gyro.getYaw());
+        this.reset();
     }
 
 }
