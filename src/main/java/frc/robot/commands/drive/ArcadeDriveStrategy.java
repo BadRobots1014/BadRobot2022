@@ -28,7 +28,15 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
 
     @Override
     public void execute(double x, double y) {
-        m_subsystem.arcadeDrive(y, x);
+        /*
+         * Depending on what the current joystick input is, we may want to execute a
+         * state change.
+         */
+        if (DriveStrategyResolutionUtil.isInputForArcadeDrive(x, y)) {
+            this.m_subsystem.arcadeDrive(y, x);
+        } else {
+            this.m_context.setStrategy(this.m_context.getNextDriveStrategy());
+        }
     }
 
     @Override

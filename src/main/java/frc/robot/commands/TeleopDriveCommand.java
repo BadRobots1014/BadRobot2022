@@ -6,6 +6,7 @@ import frc.robot.commands.drive.ArcadeDriveStrategy;
 import frc.robot.commands.drive.DriveStraightStrategy;
 import frc.robot.commands.drive.DriveStrategy;
 import frc.robot.commands.drive.DriveStrategyContext;
+import frc.robot.commands.drive.DriveStrategyResolutionUtil;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
@@ -17,6 +18,8 @@ public class TeleopDriveCommand extends CommandBase implements DriveStrategyCont
 
     public final DriveStrategy m_arcadeStrategy;
     public final DriveStrategy m_driveStraightStrategy;
+    public final DriveStrategy m_pivotTurnStrategy;
+    public final DriveStrategy m_holdPlaceStrategy;
 
     private DriveStrategy m_strategy;
 
@@ -30,6 +33,12 @@ public class TeleopDriveCommand extends CommandBase implements DriveStrategyCont
 
         m_arcadeStrategy = new ArcadeDriveStrategy(m_drive);
         m_driveStraightStrategy = new DriveStraightStrategy(m_drive, m_gyro);
+
+        // TODO: Create PivotTurnStrategy and HoldPlaceStrategy.
+
+        // These lines to make the program compatible.
+        m_pivotTurnStrategy = null;
+        m_holdPlaceStrategy = null;
 
         addRequirements(drive);
         addRequirements(gyro);
@@ -50,6 +59,31 @@ public class TeleopDriveCommand extends CommandBase implements DriveStrategyCont
         strategy.reset();
         this.m_strategy = strategy;
     }
+
+    public DriveStrategy getNextDriveStrategy() {
+        /*
+         * For now, let's just default to ArcadeDriveStrategy.
+         */
+        DriveStrategy next = this.m_arcadeStrategy;
+
+        if (DriveStrategyResolutionUtil.isInputForDriveStraight(this.m_xSource.get(), this.m_ySource.get())) {
+            next = this.m_driveStraightStrategy;
+        }
+
+        if (DriveStrategyResolutionUtil.isInputForPivotTurn(this.m_xSource.get(), this.m_ySource.get())) {
+            next = this.m_pivotTurnStrategy;
+        }
+
+        if (DriveStrategyResolutionUtil.isInputForHoldPlace(this.m_xSource.get(), this.m_ySource.get())) {
+            next = this.m_holdPlaceStrategy;
+        }
+
+        return next;
+    }
+
+    /*
+     * Command methods --------------------------------------------------------
+     */
 
     @Override
     public void execute() {

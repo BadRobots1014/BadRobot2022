@@ -16,4 +16,13 @@ public interface DriveStrategyContext {
      * @author Victor Chen <victorc.1@outlook.com>
      */
     public void setStrategy(DriveStrategy strategy);
+
+    /**
+     * Returns the next {@link DriveStrategy} to use.
+     * 
+     * @return The next {@link DriveStrategy} to use.
+     * @author Victor Chen <victorc.1@outlook.com>
+     */
+    public DriveStrategy getNextDriveStrategy();
+
 }

@@ -42,8 +42,16 @@ public class DriveStraightStrategy implements DriveStrategy {
 
     @Override
     public void execute(double x, double y) {
-        double correction = this.m_controller.calculate(this.m_gyro.getYaw());
-        m_drive.tankDrive(y - correction, y + correction);
+        /*
+         * Depending on what the current joystick input is, we may want to execute a
+         * state change.
+         */
+        if (DriveStrategyResolutionUtil.isInputForDriveStraight(x, y)) {
+            double correction = this.m_controller.calculate(this.m_gyro.getYaw());
+            m_drive.tankDrive(y - correction, y + correction);
+        } else {
+            this.m_context.setStrategy(this.m_context.getNextDriveStrategy());
+        }
     }
 
     @Override
