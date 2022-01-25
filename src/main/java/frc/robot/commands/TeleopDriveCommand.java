@@ -5,10 +5,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.commands.drive.ArcadeDriveStrategy;
 import frc.robot.commands.drive.DriveStraightStrategy;
 import frc.robot.commands.drive.DriveStrategy;
+import frc.robot.commands.drive.DriveStrategyContext;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
-public class TeleopDriveCommand extends CommandBase {
+public class TeleopDriveCommand extends CommandBase implements DriveStrategyContext {
     private final DriveTrainSubsystem m_drive;
     private final GyroSubsystem m_gyro;
     private final Supplier<Double> m_xSource;
@@ -39,7 +40,7 @@ public class TeleopDriveCommand extends CommandBase {
      * {@code strategy}.
      * 
      * @param strategy The new strategy to use
-     * @author Victor Chen <victorc.1@outlook.com
+     * @author Victor Chen <victorc.1@outlook.com>
      */
     public void setStrategy(DriveStrategy strategy) {
         /*

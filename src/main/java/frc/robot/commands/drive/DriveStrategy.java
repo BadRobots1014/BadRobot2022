@@ -23,4 +23,15 @@ public interface DriveStrategy {
      */
     public void execute(double x, double y);
 
+    /**
+     * Sets the {@link DriveStrategyContext} use with the {@link DriveStrategy}.
+     * This can be useful for changing the state of the {@link DriveStrategyContext}
+     * from within a {@link DriveStrategy}.
+     * 
+     * @param context The {@link DriveStrategyContext} associated with this
+     *                {@link DriveStrategy}.
+     * @author Victor Chen <victorc.1@outlook.com>
+     */
+    public void setContext(DriveStrategyContext context);
+
 }

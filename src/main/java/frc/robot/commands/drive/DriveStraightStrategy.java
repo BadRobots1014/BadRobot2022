@@ -29,6 +29,11 @@ public class DriveStraightStrategy implements DriveStrategy {
      */
     private final PIDController m_controller;
 
+    /**
+     * The {@link DriveStrategyContext} associated with {@code this}.
+     */
+    private DriveStrategyContext m_context;
+
     @Override
     public void reset() {
         this.m_gyro.resetYaw();
@@ -39,6 +44,11 @@ public class DriveStraightStrategy implements DriveStrategy {
     public void execute(double x, double y) {
         final double correction = this.m_controller.calculate(this.m_gyro.getYaw());
         m_drive.tankDrive(y - correction, y + correction);
+    }
+
+    @Override
+    public void setContext(DriveStrategyContext context) {
+        this.m_context = context;
     }
 
     /**

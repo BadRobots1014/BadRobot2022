@@ -16,6 +16,11 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
      */
     private final DriveTrainSubsystem m_subsystem;
 
+    /**
+     * The {@link DriveStrategyContext} associated with {@code this}.
+     */
+    private DriveStrategyContext m_context;
+
     @Override
     public void reset() {
         // Do nothing.
@@ -24,6 +29,11 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
     @Override
     public void execute(double x, double y) {
         m_subsystem.arcadeDrive(y, x);
+    }
+
+    @Override
+    public void setContext(DriveStrategyContext context) {
+        this.m_context = context;
     }
 
     /**
