@@ -47,6 +47,10 @@ public class TeleopDriveCommand extends CommandBase implements DriveStrategyCont
         addRequirements(gyro);
     }
 
+    /*
+     * DriveStrategyContext methods -------------------------------------------
+     */
+
     /**
      * Sets the strategy that will be used to interpret controls to the given
      * {@code strategy}.
