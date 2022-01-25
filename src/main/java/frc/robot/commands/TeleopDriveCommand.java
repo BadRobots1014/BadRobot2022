@@ -14,8 +14,10 @@ public class TeleopDriveCommand extends CommandBase {
     private final Supplier<Double> m_xSource;
     private final Supplier<Double> m_ySource;
 
-    private final DriveStrategy m_arcadeStrategy;
-    private final DriveStrategy m_driveStraightStrategy;
+    public final DriveStrategy m_arcadeStrategy;
+    public final DriveStrategy m_driveStraightStrategy;
+
+    private DriveStrategy m_strategy;
 
     public TeleopDriveCommand(DriveTrainSubsystem drive, GyroSubsystem gyro, Supplier<Double> xSource,
             Supplier<Double> ySource) {
@@ -32,9 +34,28 @@ public class TeleopDriveCommand extends CommandBase {
         addRequirements(gyro);
     }
 
+    /**
+     * Sets the strategy that will be used to interpret controls to the given
+     * {@code strategy}.
+     * 
+     * @param strategy The new strategy to use
+     * @author Victor Chen <victorc.1@outlook.com
+     */
+    public void setStrategy(DriveStrategy strategy) {
+        /*
+         * When we change strategies, we want to reset the new strategy object to an
+         * initial state.
+         */
+        strategy.reset();
+        this.m_strategy = strategy;
+    }
+
     @Override
     public void execute() {
-        m_arcadeStrategy.execute(m_xSource.get(), m_ySource.get());
+        /*
+         * Execute the strategy set in m_strategy.
+         */
+        m_strategy.execute(m_xSource.get(), m_ySource.get());
     }
 
     @Override

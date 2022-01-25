@@ -14,8 +14,19 @@ import frc.robot.subsystems.GyroSubsystem;
  */
 public class DriveStraightStrategy implements DriveStrategy {
 
+    /**
+     * The {@link DriveTrainSubsystem} to control.
+     */
     private final DriveTrainSubsystem m_drive;
+
+    /**
+     * The {@link GyroSubsystem} to obtain gyroscope readings from.
+     */
     private final GyroSubsystem m_gyro;
+
+    /**
+     * The {@link PIDController} used to perform PID calculations.
+     */
     private final PIDController m_controller;
 
     @Override
@@ -30,6 +41,16 @@ public class DriveStraightStrategy implements DriveStrategy {
         m_drive.tankDrive(y - correction, y + correction);
     }
 
+    /**
+     * Constructs a new {@code DriveStraightStrategy} that controls the given
+     * {@code drive} using gyroscope readings from {@code gyro} for straight
+     * driving.
+     * 
+     * @param drive
+     * @param gyro
+     * @author Victor Chen <victorc.1@outlook.com>
+     * @author Will Blankemeyer
+     */
     public DriveStraightStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
 
         this.m_drive = drive;
