@@ -32,7 +32,10 @@ public class TeleopDriveCommand extends CommandBase implements DriveStrategyCont
         m_ySource = ySource;
 
         m_arcadeStrategy = new ArcadeDriveStrategy(m_drive);
+        m_arcadeStrategy.setContext(this);
+
         m_driveStraightStrategy = new DriveStraightStrategy(m_drive, m_gyro);
+        m_driveStraightStrategy.setContext(this);
 
         // TODO: Create PivotTurnStrategy and HoldPlaceStrategy.
 
