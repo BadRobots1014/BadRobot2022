@@ -60,6 +60,7 @@ public class TeleopDriveCommand extends CommandBase {
             "Current Strategy",
             () -> m_strategy.map(DriveStrategy::getName).orElse("None")
         );
+        m_tab.addNumber("Throttle (%)", m_throttleSource::get);
 
         /**
          * Although {@link TeleopDriveCommand} doesn't use the drivetrain or gyroscope directly, its

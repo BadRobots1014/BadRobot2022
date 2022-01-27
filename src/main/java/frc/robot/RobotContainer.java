@@ -96,8 +96,6 @@ public class RobotContainer {
    */
   private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
 
-  private final ShuffleboardTab m_throttleTab = Shuffleboard.getTab("Throttle");
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -118,8 +116,6 @@ public class RobotContainer {
     // Configure the invert output chooser
     m_prototypeOutputIsInverted = m_prototypeTab.add("Invert Output", false).withWidget(BuiltInWidgets.kToggleSwitch)
         .getEntry();
-
-    m_throttleTab.addNumber("Percentage", this::throttleOutput);
 
     // Configure the button bindings
     configureButtonBindings();
