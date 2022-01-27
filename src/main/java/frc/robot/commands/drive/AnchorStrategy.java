@@ -12,7 +12,7 @@ import frc.robot.subsystems.GyroSubsystem;
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Will Blankemeyer
  */
-public class DriveStraightStrategy implements DriveStrategy {
+public class AnchorStrategy implements DriveStrategy {
 
     /**
      * The {@link DriveTrainSubsystem} to control.
@@ -27,26 +27,41 @@ public class DriveStraightStrategy implements DriveStrategy {
     /**
      * The {@link PIDController} used to perform PID calculations.
      */
-    private final PIDController m_controller;
+    private final PIDController m_angularPid;
+
+    /**
+     * The {@link PIDController} used to perform PID calculations.
+     */
+    private final PIDController m_displacementPid;
 
     /*
      * DriveStrategy interface methods ----------------------------------------
      */
 
     public String getName() {
-        return "Drive Straight";
+        return "Anchor";
     }
 
     @Override
     public void reset() {
         this.m_gyro.resetYaw();
-        this.m_controller.setSetpoint(this.m_gyro.getYaw());
+        this.m_angularPid.setSetpoint(this.m_gyro.getYaw());
+
+        // According to 'AHRS::getDisplacementX' (upon which 'GyroProvider::getDisplacementX' is
+        // based), displacement measurement quickly becomes inaccurate over time. Resetting
+        // displacment upon every invocation of this command attempts to mitigate this.
+        this.m_gyro.resetDisplacement();
+
+        this.m_displacementPid.reset();
+        // Note that 'gyro.getDisplacementX()' should return approximately 0.
+        this.m_displacementPid.setSetpoint(this.m_gyro.getDisplacementX());
     }
 
     @Override
     public void execute(double x, double y) {
-        double correction = this.m_controller.calculate(this.m_gyro.getYaw());
-        m_drive.tankDrive(y - correction, y + correction);
+        double power = this.m_displacementPid.calculate(m_gyro.getDisplacementX());
+        double correction = this.m_angularPid.calculate(this.m_gyro.getYaw());
+        m_drive.tankDrive(power - correction, power + correction);
     }
 
     /*
@@ -63,16 +78,22 @@ public class DriveStraightStrategy implements DriveStrategy {
      * @author Victor Chen <victorc.1@outlook.com>
      * @author Will Blankemeyer
      */
-    public DriveStraightStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
+    public AnchorStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
 
         this.m_drive = drive;
         this.m_gyro = gyro;
 
-        this.m_controller = new PIDController(
+        this.m_angularPid = new PIDController(
                 DriveTrainConstants.kAngularP,
                 DriveTrainConstants.kAngularI,
                 DriveTrainConstants.kAngularD);
-        this.m_controller.enableContinuousInput(-180, 180);
+        this.m_angularPid.enableContinuousInput(-180, 180);
+
+        this.m_displacementPid = new PIDController(
+            DriveTrainConstants.kDisplacementP,
+            DriveTrainConstants.kDisplacementI,
+            DriveTrainConstants.kDisplacementD
+        );
 
         this.reset();
     }

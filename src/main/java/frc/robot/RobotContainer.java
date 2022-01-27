@@ -18,9 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.commands.DriveStraightCommand;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.AnchorCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -42,7 +40,7 @@ import frc.robot.subsystems.PrototypeSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final XboxController m_xboxController = new XboxController(ControllerConstants.kControllerPort);
+  private final Joystick m_driverStick = new Joystick(ControllerConstants.kControllerPort);
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
@@ -51,26 +49,12 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
-  private final DriveStraightCommand m_driveStraightCommand = new DriveStraightCommand(
-    m_driveTrainSubsystem,
-    m_gyroSubsystem,
-    () -> {
-      double basePower = m_xboxController.getLeftY();
-      if(m_xboxController.getRightTriggerAxis() > 0.5) {
-        basePower *= 0.25;
-      }
-      return basePower;
-    }
-  );
-  private final AnchorCommand m_anchorCommand = new AnchorCommand(
-    m_driveTrainSubsystem,
-    m_gyroSubsystem
-  );
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
     m_driveTrainSubsystem,
     m_gyroSubsystem,
-    m_xboxController::getLeftX,
-    m_xboxController::getLeftY
+    m_driverStick::getX,
+    m_driverStick::getY,
+    this::throttleOutput
   );
 
   /**
@@ -112,6 +96,8 @@ public class RobotContainer {
    */
   private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
 
+  private final ShuffleboardTab m_throttleTab = Shuffleboard.getTab("Throttle");
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -133,8 +119,14 @@ public class RobotContainer {
     m_prototypeOutputIsInverted = m_prototypeTab.add("Invert Output", false).withWidget(BuiltInWidgets.kToggleSwitch)
         .getEntry();
 
+    m_throttleTab.addNumber("Percentage", this::throttleOutput);
+
     // Configure the button bindings
     configureButtonBindings();
+  }
+
+  private double throttleOutput() {
+    return 0.5 * (1.0 + (-1.0 * m_driverStick.getZ()));
   }
 
   /**
@@ -146,14 +138,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    final JoystickButton buttonY = new JoystickButton(m_xboxController, XboxController.Button.kY.value);
+    final JoystickButton buttonY = new JoystickButton(m_driverStick, XboxController.Button.kY.value);
     buttonY.whileHeld(m_shootCommand);
-
-    final JoystickButton buttonA = new JoystickButton(m_xboxController, XboxController.Button.kA.value);
-    buttonA.whileHeld(m_driveStraightCommand);
-
-    final JoystickButton buttonB = new JoystickButton(m_xboxController, XboxController.Button.kB.value);
-    buttonB.whileHeld(m_anchorCommand);
   }
 
   /**

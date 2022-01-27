@@ -9,7 +9,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Will Blankemeyer
  */
-public final class ArcadeDriveStrategy implements DriveStrategy {
+public final class PivotTurnStrategy implements DriveStrategy {
 
     /**
      * The DriveTrainSubsystem to control.
@@ -22,7 +22,7 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
 
     @Override
     public String getName() {
-        return "Arcade-drive";
+        return "Pivot-turn";
     }
 
     @Override
@@ -32,7 +32,7 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
 
     @Override
     public void execute(double x, double y) {
-        this.m_subsystem.arcadeDrive(y, x);
+        this.m_subsystem.arcadeDrive(0.0, x);
     }
 
     /*
@@ -40,12 +40,12 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
      */
 
     /**
-     * Constructs a new {@code ArcadeDriveStrategy} to control the given
+     * Constructs a new {@code PivotTurnStrategy} to control the given
      * {@code subsystem}.
      * 
      * @param subsystem The {@link DriveTrainSubsystem} to control.
      */
-    public ArcadeDriveStrategy(DriveTrainSubsystem subsystem) {
+    public PivotTurnStrategy(DriveTrainSubsystem subsystem) {
         m_subsystem = subsystem;
     }
 
