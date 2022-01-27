@@ -47,7 +47,7 @@ public class PrototypeSubsystem extends SubsystemBase {
      */
     public PrototypeSubsystem() {
         // Configure speed controller chooser
-        m_speedControllerChooser.addOption("TalonSRX (ID 16)", m_speedControllers[0]);
+        m_speedControllerChooser.setDefaultOption("TalonSRX (ID 16)", m_speedControllers[0]);
         // m_speedControllerChooser.addOption("TalonFX (ID 11)", m_speedControllers[1]);
         // m_speedControllerChooser.addOption("TalonFX (ID 13)", m_speedControllers[2]);
         // m_speedControllerChooser.addOption("TalonFX (ID 14)", m_speedControllers[3]);
