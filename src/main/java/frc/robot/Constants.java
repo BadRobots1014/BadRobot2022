@@ -30,8 +30,8 @@ public final class Constants {
         public static final int kPrototypePort = 1;
 
         public static final double kDeadzoneRadius = .25;
-        public static final double kDriveStraightRegionBaseLength = .2;
-        public static final double kPivotTurnRegionBaseLength = .2;
+        public static final double kDriveStraightRegionHalfBaseLength = .2;
+        public static final double kPivotTurnRegionHalfBaseLength = .2;
     }
 
     public final class DriveTrainConstants {

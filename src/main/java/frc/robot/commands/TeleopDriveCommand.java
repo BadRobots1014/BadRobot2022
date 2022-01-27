@@ -172,7 +172,7 @@ public class TeleopDriveCommand extends CommandBase {
          */
 
         final Function<Double, Double> pivotTurnLinearFunction = (input) -> {
-            final double maximumOutput = ControllerConstants.kPivotTurnRegionBaseLength * 0.5;
+            final double maximumOutput = ControllerConstants.kPivotTurnRegionHalfBaseLength;
             return maximumOutput * input;
         };
 
@@ -189,7 +189,7 @@ public class TeleopDriveCommand extends CommandBase {
          */
 
         final Function<Double, Double> driveStraightLinearFunction = (input) -> {
-            final double maximumOutput = ControllerConstants.kDriveStraightRegionBaseLength * 0.5;
+            final double maximumOutput = ControllerConstants.kDriveStraightRegionHalfBaseLength;
             return maximumOutput * input;
         };
 
