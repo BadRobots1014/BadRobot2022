@@ -61,7 +61,7 @@ public class AnchorStrategy implements DriveStrategy {
     public void execute(double x, double y) {
         double power = this.m_displacementPid.calculate(m_gyro.getDisplacementX());
         double correction = this.m_angularPid.calculate(this.m_gyro.getYaw());
-        m_drive.tankDrive(power - correction, power + correction);
+        // m_drive.tankDrive(power - correction, power + correction);
     }
 
     /*

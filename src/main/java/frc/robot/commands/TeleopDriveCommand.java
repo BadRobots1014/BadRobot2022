@@ -50,17 +50,19 @@ public class TeleopDriveCommand extends CommandBase {
         /**
          * Initialize teleop. driving without a current strategy.
          *
-         * This will display in the "Teleop. Drive: Current Strategy" Shuffleboard widget as "None"
+         * This will display in the "Teleop. Drive: Strategy" Shuffleboard widget as "None"
          * until a strategy is selected.
          */
         m_strategy = Optional.empty();
 
         m_tab = Shuffleboard.getTab("Teleop. Drive");
         m_tab.addString(
-            "Current Strategy",
+            "Strategy",
             () -> m_strategy.map(DriveStrategy::getName).orElse("None")
         );
         m_tab.addNumber("Throttle (%)", m_throttleSource::get);
+        m_tab.addNumber("X", m_xSource::get);
+        m_tab.addNumber("Y", m_ySource::get);
 
         /**
          * Although {@link TeleopDriveCommand} doesn't use the drivetrain or gyroscope directly, its
@@ -116,7 +118,7 @@ public class TeleopDriveCommand extends CommandBase {
     }
 
     private boolean coordinateIsValid(final double coord) {
-        return (coord >= -1.0) && (coord <= 1.0);
+        return (coord <= 1.0) && (coord >= -1.0);
     }
 
     private DriveStrategy getNextDriveStrategy(final double x, final double y) {
@@ -206,7 +208,7 @@ public class TeleopDriveCommand extends CommandBase {
     }
 
     private boolean throttleIsValid(final double throttle) {
-        return (throttle >= 0.0) && (throttle <= 1.0);
+        return (throttle <= 1.0) && (throttle >= 0.0);
     }
 
     private double scaleCoordinate(double coord, final double throttle) {
@@ -229,8 +231,10 @@ public class TeleopDriveCommand extends CommandBase {
          * This process *must* occur before throttle scaling. Otherwise, the zeroing step may flip
          * the sign of the coordinate!
          */
-        coord -= Math.signum(coord) * ControllerConstants.kDeadzoneRadius;
-        coord *= 1.0 / (1.0 - ControllerConstants.kDeadzoneRadius);
+        if (Math.abs(coord) >= ControllerConstants.kDeadzoneRadius) {
+            coord -= Math.signum(coord) * ControllerConstants.kDeadzoneRadius;
+            coord *= 1.0 / (1.0 - ControllerConstants.kDeadzoneRadius);
+        }
 
         /**
          * Scale the coordinate by the throttle power.

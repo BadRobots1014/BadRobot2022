@@ -29,7 +29,7 @@ public final class Constants {
         public static final int kControllerPort = 0;
         public static final int kPrototypePort = 1;
 
-        public static final double kDeadzoneRadius = .25;
+        public static final double kDeadzoneRadius = .5;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
         public static final double kPivotTurnRegionHalfBaseLength = .2;
     }

@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.ControllerConstants;
@@ -52,9 +53,15 @@ public class RobotContainer {
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
     m_driveTrainSubsystem,
     m_gyroSubsystem,
-    m_driverStick::getX,
+    () -> -1.0 * m_driverStick.getX(),
     m_driverStick::getY,
-    this::throttleOutput
+    () -> {
+      if (m_driverStick.getRawButton(1)) {
+        return 0.25;
+      } else {
+        return 0.50;
+      }
+    }
   );
 
   /**
@@ -121,10 +128,6 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  private double throttleOutput() {
-    return 0.5 * (1.0 + (-1.0 * m_driverStick.getZ()));
-  }
-
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -136,6 +139,26 @@ public class RobotContainer {
   private void configureButtonBindings() {
     final JoystickButton buttonY = new JoystickButton(m_driverStick, XboxController.Button.kY.value);
     buttonY.whileHeld(m_shootCommand);
+
+    final JoystickButton killButton = new JoystickButton(m_driverStick, 3);
+    final CommandScheduler sched = CommandScheduler.getInstance();
+    sched.addButton(new Runnable() {
+      private boolean schedIsEnabled = true;
+
+      @Override
+      public void run() {
+        if (killButton.get()) {
+          if (schedIsEnabled) {
+            sched.cancelAll();
+            sched.disable();
+          } else {
+            sched.enable();
+          }
+
+          this.schedIsEnabled = !this.schedIsEnabled;
+        }
+      }
+    });
   }
 
   /**
