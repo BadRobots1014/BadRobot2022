@@ -61,6 +61,10 @@ public class TeleopDriveCommand extends CommandBase {
             () -> m_strategy.map(DriveStrategy::getName).orElse("None")
         );
 
+        /**
+         * Although {@link TeleopDriveCommand} doesn't use the drivetrain or gyroscope directly, its
+         * strategies do.
+         */
         addRequirements(drive, gyro);
     }
 
@@ -73,47 +77,48 @@ public class TeleopDriveCommand extends CommandBase {
         final double x = m_xSource.get();
         final double y = m_ySource.get();
 
+        assert this.coordinateIsValid(x) : "X-coordinate is out-of-range";
+        assert this.coordinateIsValid(y) : "Y-coordinate is out-of-range";
+
         /**
          * Note: Strategy selection must use the *original* position of the joystick for deadzone
          * detection. Do not scale 'x' and 'y' by the throttle power yet!
          */
         final DriveStrategy nextStrategy = this.getNextDriveStrategy(x, y);
 
-        m_strategy.ifPresentOrElse(
-            (current) -> {
-                if (nextStrategy != current) {
-                    /**
-                     * If a current strategy exists, and the current strategy is *not* the new
-                     * strategy, then we must update it.
-                     */
-                    current = nextStrategy;
+        /**
+         * Determine if the current stategy is nonexistent or differs from the new strategy.
+         */
+        if (m_strategy.filter(nextStrategy::equals).isEmpty()) {
+            /**
+             * Update the current strategy.
+             */
+            m_strategy = Optional.of(nextStrategy);
 
-                    /**
-                     * The new strategy was not used last, so its state is likely stale. We will
-                     * reset it to a normalized state.
-                     */
-                    nextStrategy.reset();
-                }
-            },
-            () -> {
-                /**
-                 * No current strategy exists, so we will set it now.
-                 */
-                m_strategy = Optional.of(nextStrategy);
-            }
-        );
+            /**
+             * The new strategy wasn't used last, so its state is likely stale. We will reset it to
+             * a normalized state.
+             */
+            nextStrategy.reset();
+        }
 
         final double throttle = m_throttleSource.get();
+        assert this.throttleIsValid(throttle) : "Throttle is out-of-range";
 
         /*
          * Execute the strategy set in {@link this::m_strategy}.
-         *
-         * This scales 'x' and 'y' by the throttle power.
          */
-        nextStrategy.execute(throttle * x, throttle * y);
+        nextStrategy.execute(
+            this.scaleCoordinate(x, throttle),
+            this.scaleCoordinate(y, throttle)
+        );
     }
 
-    public DriveStrategy getNextDriveStrategy(final double x, final double y) {
+    private boolean coordinateIsValid(final double coord) {
+        return (coord >= -1.0) && (coord <= 1.0);
+    }
+
+    private DriveStrategy getNextDriveStrategy(final double x, final double y) {
         /**
          * 'x' and 'y' represent a Cartesian point in the plane of possible joystick positions.
          * There are certain regions in this plane that correspond to certain drive strategies.
@@ -197,6 +202,41 @@ public class TeleopDriveCommand extends CommandBase {
          * Default to arcade-driving.
          */
         return m_arcadeStrategy;
+    }
+
+    private boolean throttleIsValid(final double throttle) {
+        return (throttle >= 0.0) && (throttle <= 1.0);
+    }
+
+    private double scaleCoordinate(double coord, final double throttle) {
+        /**
+         * Redefine the coordinate such that it smoothly approaches 0 at the edge of the deadzone.
+         *
+         * A naive deadzone implementation simply filters-out coordinates below a threshold. A major
+         * flaw in this approach is that the coordinates *outside* the deadzone are not scaled
+         * accordingly; in other words, if 0.29 is filtered-out but 0.30 isn't, then the driver will
+         * notice that the robot 'jerks' when crossing the deadzone boundary as it toggles between 0
+         * and 0.30 without any smooth transition.
+         *
+         * Instead, we want the coordinates outside the deadzone to be defined relative to the edge
+         * of the deadzone rather than the origin. This is done by first zeroing these coordinates
+         * to the deadzone radius (i.e., adding or subtracting the deadzone radius, depending on the
+         * sign of the coordinate) and then scaling by the ratio of the range of possible
+         * coordinates including the deadzone, to the range not including the deadzone. (This is
+         * essentially dimensional analysis.)
+         *
+         * This process *must* occur before throttle scaling. Otherwise, the zeroing step may flip
+         * the sign of the coordinate!
+         */
+        coord -= Math.signum(coord) * ControllerConstants.kDeadzoneRadius;
+        coord *= 1.0 / (1.0 - ControllerConstants.kDeadzoneRadius);
+
+        /**
+         * Scale the coordinate by the throttle power.
+         */
+        coord *= throttle;
+
+        return coord;
     }
 
     @Override
