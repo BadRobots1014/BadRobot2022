@@ -55,9 +55,11 @@ public class TeleopDriveCommand extends CommandBase {
 
         m_tab = Shuffleboard.getTab("Teleop. Drive");
         m_tab.addString("Strategy", () -> m_strategy.map(DriveStrategy::getName).orElse("None"));
-        m_tab.addNumber("Throttle (%)", m_throttleSource::get);
         m_tab.addNumber("X", m_xSource::get);
         m_tab.addNumber("Y", m_ySource::get);
+        m_tab.addNumber("Throttle (%)", m_throttleSource::get);
+        m_tab.addNumber("Yaw (deg.)", gyro::getYaw);
+        m_tab.addNumber("Rotational PID", gyro::getRotationalPid);
 
         // Although {@link TeleopDriveCommand} doesn't use the gyroscope directly, some of its
         // strategies do, and they cannot add requirements themselves.
@@ -129,6 +131,7 @@ public class TeleopDriveCommand extends CommandBase {
             nextStrategy.reset();
 
             if (nextStrategy.shouldLockPosition()) {
+                System.out.println("Locking position by stopping drivetrain");
                 m_drive.stop();
             }
         }
@@ -255,6 +258,8 @@ public class TeleopDriveCommand extends CommandBase {
         // killing the motors when this command is paused.
         m_drive.stop();
 
+        // TODO: Try to remove this. It should be unnecessary as this statement is also present in
+        // {@link #initialize}.
         m_strategy.ifPresent(DriveStrategy::reset);
     }
 }

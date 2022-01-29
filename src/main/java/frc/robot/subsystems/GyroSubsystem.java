@@ -72,9 +72,7 @@ public class GyroSubsystem extends SubsystemBase {
      * @return  The PID output.
      */
     public double getRotationalPid() {
-        final double output = this.rotationalPid.calculate(this.getYaw());
-        System.out.println("Rotational PID output: " + output);
-        return output;
+        return this.rotationalPid.calculate(this.getYaw());
     }
 
     /**
@@ -83,9 +81,7 @@ public class GyroSubsystem extends SubsystemBase {
      * @return  The PID output.
      */
     public double getPositionalPid() {
-        final double output = this.positionalPid.calculate(this.getDisplacementX());
-        System.out.println("Positional PID output: " + output);
-        return output;
+        return this.positionalPid.calculate(this.getDisplacementX());
     }
 
     /**
@@ -94,9 +90,7 @@ public class GyroSubsystem extends SubsystemBase {
      * @return  The current yaw, in degrees, in the range [-180, 180].
      */
     public double getYaw() {
-        final double yaw = this.gyro.getYaw();
-        System.out.println("Yaw: " + yaw);
-        return yaw;
+        return this.gyro.getYaw();
     }
 
     /**
@@ -105,8 +99,6 @@ public class GyroSubsystem extends SubsystemBase {
      * @return  The current X displacement, in meters.
      */
     public double getDisplacementX() {
-        final double x = this.gyro.getDisplacementX();
-        System.out.println("X: " + x);
-        return x;
+        return this.gyro.getDisplacementX();
     }
 }
