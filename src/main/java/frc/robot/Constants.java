@@ -38,13 +38,13 @@ public final class Constants {
         public static final int kDriveTrainLeftPort = 9;
         public static final int kDriveTrainRightPort = 8;
 
-        public static final double kAngularP = .01;
-        public static final double kAngularI = 0;
-        public static final double kAngularD = 0;
+        public static final double kRotationalP = .01;
+        public static final double kRotationalI = 0;
+        public static final double kRotationalD = 0;
 
-        public static final double kDisplacementP = 1.0;
-        public static final double kDisplacementI = 0;
-        public static final double kDisplacementD = 0;
+        public static final double kPositionalP = 1.0;
+        public static final double kPositionalI = 0;
+        public static final double kPositionalD = 0;
     }
 
     /**
