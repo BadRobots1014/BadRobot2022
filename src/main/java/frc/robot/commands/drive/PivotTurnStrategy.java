@@ -1,20 +1,14 @@
 package frc.robot.commands.drive;
 
-import frc.robot.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 
 /**
- * A {@link DriveStrategy} that contains the algorithm to drive with arcade
- * drive.
- * 
+ * A {@link DriveStrategy} for pivot-turning.
+ *
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Will Blankemeyer
  */
-public final class PivotTurnStrategy implements DriveStrategy {
-
-    /**
-     * The DriveTrainSubsystem to control.
-     */
-    private final DriveTrainSubsystem m_subsystem;
+public class PivotTurnStrategy extends ArcadeDriveStrategy {
 
     /*
      * DriveStrategy interface methods ----------------------------------------
@@ -26,13 +20,8 @@ public final class PivotTurnStrategy implements DriveStrategy {
     }
 
     @Override
-    public void reset() {
-        // Do nothing.
-    }
-
-    @Override
-    public void execute(double x, double y) {
-        this.m_subsystem.arcadeDrive(0.0, x);
+    public WheelSpeeds execute(double rotation, double y) {
+        return super.execute(rotation, 0);
     }
 
     /*
@@ -40,13 +29,8 @@ public final class PivotTurnStrategy implements DriveStrategy {
      */
 
     /**
-     * Constructs a new {@code PivotTurnStrategy} to control the given
-     * {@code subsystem}.
-     * 
-     * @param subsystem The {@link DriveTrainSubsystem} to control.
+     * Constructs a new {@link PivotTurnStrategy}.
      */
-    public PivotTurnStrategy(DriveTrainSubsystem subsystem) {
-        m_subsystem = subsystem;
-    }
+    public PivotTurnStrategy() {}
 
 }

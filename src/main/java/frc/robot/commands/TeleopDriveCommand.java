@@ -7,6 +7,8 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 
 import frc.robot.commands.drive.ArcadeDriveStrategy;
 import frc.robot.commands.drive.DriveStraightStrategy;
@@ -40,11 +42,10 @@ public class TeleopDriveCommand extends CommandBase {
         m_ySource = ySource;
         m_throttleSource = throttleSource;
 
-        m_arcadeStrategy = new ArcadeDriveStrategy(drive);
-        m_driveStraightStrategy = new DriveStraightStrategy(drive, gyro);
-        m_pivotTurnStrategy = new PivotTurnStrategy(drive);
-        m_anchorStrategy = new AnchorStrategy(drive, gyro);
-
+        m_arcadeStrategy = new ArcadeDriveStrategy();
+        m_driveStraightStrategy = new DriveStraightStrategy(gyro);
+        m_pivotTurnStrategy = new PivotTurnStrategy();
+        m_anchorStrategy = new AnchorStrategy(gyro);
 
         // Initialize teleop. driving without a current strategy.
         //
@@ -53,16 +54,13 @@ public class TeleopDriveCommand extends CommandBase {
         m_strategy = Optional.empty();
 
         m_tab = Shuffleboard.getTab("Teleop. Drive");
-        m_tab.addString(
-            "Strategy",
-            () -> m_strategy.map(DriveStrategy::getName).orElse("None")
-        );
+        m_tab.addString("Strategy", () -> m_strategy.map(DriveStrategy::getName).orElse("None"));
         m_tab.addNumber("Throttle (%)", m_throttleSource::get);
         m_tab.addNumber("X", m_xSource::get);
         m_tab.addNumber("Y", m_ySource::get);
 
-        // Although {@link TeleopDriveCommand} doesn't use the drivetrain or gyroscope directly, its
-        // strategies do.
+        // Although {@link TeleopDriveCommand} doesn't use the gyroscope directly, some of its
+        // strategies do, and they cannot add requirements themselves.
         addRequirements(drive, gyro);
     }
 
@@ -72,18 +70,52 @@ public class TeleopDriveCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        // HACK:
+        //
+        // TL;DR: Without this line of code, the robot may go berserk once it is enabled *in a
+        // different position or angle* than when it was previously disabled.
+        //
+        // When {@link TeleopDriveCommand} is interrupted (i.e., when another command that requires
+        // {@link DriveTrainSubsystem} is queued, or when the robot is disabled from the driver
+        // station)---and, by extension, when the current drive strategy is interrupted---the only
+        // clean-up code executed is {@link #end}. Therefore, if this drive strategy depends on some
+        // external data that is modified while {@link TeleopDriveCommand} is paused, then it must
+        // be notified or normalized somehow upon resumption.
+        //
+        // There are two drive strategies like this---{@link AnchorStrategy} and
+        // {@link DriveStraightStrategy}---both of which rely on yaw and/or disposition measurements
+        // from an external {@link GyroscopeSubsystem}. Now, imagine the following hypothetical:
+        //
+        //   1. The driver moves the joystick into the deadzone.
+        //   2. The anchor strategy is selected, which sets the gyroscope's rotational and
+        //      positional PID setpoints to the current angle and displacement.
+        //   3. The driver disables the robot from the driver station.
+        //   4. The robot is rotated or displaced while disabled.
+        //   5. The driver enables the robot from the driver station with the joystick still in the
+        //      deadzone.
+        //   6. The anchor strategy is re-selected. Because the last strategy was also to anchor,
+        //      the anchor strategy is *not* reset.
+        //   7. The anchor strategy resumes using the setpoints from *before the robot was
+        //      disabled*.
+        //   8. Without any driver interaction since enabling, the robot immediately drives the
+        //      motors in an attempt to return to its original rotation and displacement, possibly
+        //      endangering bystanders or the driver in the process.
+        //
+        // Now, imagine that this hypothetical isn't a hypothetical... and you can see why this line
+        // of code is important.
         m_strategy.ifPresent(DriveStrategy::reset);
     }
 
     @Override
     public void execute() {
+        // Poll the current joystick position.
         final double x = m_xSource.get();
         final double y = m_ySource.get();
 
         assert this.coordinateIsValid(x) : "X-coordinate is out-of-range";
         assert this.coordinateIsValid(y) : "Y-coordinate is out-of-range";
 
-        // Note: Strategy selection must use the *original* position of the joystick for deadzone
+        // Note: Strategy selection must use the *original* position of the joystick for region
         // detection. Do not scale 'x' and 'y' by the throttle power yet!
         final DriveStrategy nextStrategy = this.getNextDriveStrategy(x, y);
 
@@ -100,11 +132,13 @@ public class TeleopDriveCommand extends CommandBase {
         final double throttle = m_throttleSource.get();
         assert this.throttleIsValid(throttle) : "Throttle is out-of-range";
 
-        // Execute the strategy set in {@link #m_strategy}.
-        nextStrategy.execute(
+        // Execute the next strategy.
+        final WheelSpeeds wheelSpeeds = nextStrategy.execute(
             this.scaleCoordinate(x, throttle),
             this.scaleCoordinate(y, throttle)
         );
+
+        m_drive.tankDrive(wheelSpeeds.left, wheelSpeeds.right);
     }
 
     private boolean coordinateIsValid(final double coord) {
@@ -117,7 +151,7 @@ public class TeleopDriveCommand extends CommandBase {
         //
         // The simplest of these, and which also serves as a general joystick deadzone, is the
         // anchor region. This region is a circle of radius
-        // {@link ControllerConstants.kDeadzoneRadius} centered at the origin. If the joystick
+        // {@link ControllerConstants#kDeadzoneRadius} centered at the origin. If the joystick
         // position is within the anchor region, then the robot *must* anchor---this region takes
         // precedence over all others.
         //
@@ -171,6 +205,7 @@ public class TeleopDriveCommand extends CommandBase {
         // This follows the same principle as that of the pivot-turn region *except* that the drive-
         // straight linear function is *the inverse of* the pivot-turn linear function, so X and Y
         // must be swapped.
+
         final Function<Double, Double> driveStraightLinearFunction = (input) -> {
             final double maximumOutput = ControllerConstants.kDriveStraightRegionHalfBaseLength;
             return maximumOutput * input;
@@ -185,6 +220,7 @@ public class TeleopDriveCommand extends CommandBase {
     }
 
     private boolean throttleIsValid(final double throttle) {
+        // Throttle is a percentage.
         return (throttle <= 1.0) && (throttle >= 0.0);
     }
 
@@ -198,18 +234,10 @@ public class TeleopDriveCommand extends CommandBase {
         // and 0.30 without any smooth transition.
         //
         // Instead, we want the coordinates outside the deadzone to be defined relative to the edge
-        // of the deadzone rather than the origin. This is done by first zeroing these coordinates
-        // to the deadzone radius (i.e., adding or subtracting the deadzone radius, depending on the
-        // sign of the coordinate) and then scaling by the ratio of the range of possible
-        // coordinates including the deadzone, to the range not including the deadzone. (This is
-        // essentially dimensional analysis.)
+        // of the deadzone rather than the origin.
         //
-        // This process *must* occur before throttle scaling. Otherwise, the zeroing step may flip
-        // the sign of the coordinate!
-        if (Math.abs(coord) >= ControllerConstants.kDeadzoneRadius) {
-            coord -= Math.signum(coord) * ControllerConstants.kDeadzoneRadius;
-            coord *= 1.0 / (1.0 - ControllerConstants.kDeadzoneRadius);
-        }
+        // Note: This process *must* occur before throttle scaling.
+        coord = MathUtil.applyDeadband(coord, ControllerConstants.kDeadzoneRadius);
 
         // Scale the coordinate by the throttle power.
         coord *= throttle;
@@ -219,6 +247,8 @@ public class TeleopDriveCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        // The strategies themselves can't access the drivetrain directly, so we are responsible for
+        // killing the motors when this command is paused.
         m_drive.stop();
     }
 }

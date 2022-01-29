@@ -1,21 +1,15 @@
 package frc.robot.commands.drive;
 
-import frc.robot.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 import frc.robot.subsystems.GyroSubsystem;
 
 /**
- * A {@link DriveStrategy} that contains the algorithm to drive straight using
- * PID.
+ * A {@link DriveStrategy} for driving straight using PID.
  *
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Will Blankemeyer
  */
 public class DriveStraightStrategy implements DriveStrategy {
-
-    /**
-     * The {@link DriveTrainSubsystem} to control.
-     */
-    private final DriveTrainSubsystem m_drive;
 
     /**
      * The {@link GyroSubsystem} to obtain gyroscope readings from.
@@ -37,9 +31,9 @@ public class DriveStraightStrategy implements DriveStrategy {
     }
 
     @Override
-    public void execute(double x, double y) {
+    public WheelSpeeds execute(double x, double power) {
         final double correction = m_gyro.getRotationalPid();
-        m_drive.tankDrive(y - correction, y + correction);
+        return new WheelSpeeds(power - correction, power + correction);
     }
 
     /*
@@ -56,8 +50,7 @@ public class DriveStraightStrategy implements DriveStrategy {
      * @author Victor Chen <victorc.1@outlook.com>
      * @author Will Blankemeyer
      */
-    public DriveStraightStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
-        m_drive = drive;
+    public DriveStraightStrategy(GyroSubsystem gyro) {
         m_gyro = gyro;
     }
 

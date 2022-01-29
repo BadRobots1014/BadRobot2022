@@ -1,20 +1,15 @@
 package frc.robot.commands.drive;
 
-import frc.robot.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 
 /**
- * A {@link DriveStrategy} that contains the algorithm to drive with arcade
- * drive.
- * 
+ * A {@link DriveStrategy} for arcade-driving.
+ *
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Will Blankemeyer
  */
-public final class ArcadeDriveStrategy implements DriveStrategy {
-
-    /**
-     * The DriveTrainSubsystem to control.
-     */
-    private final DriveTrainSubsystem m_subsystem;
+public class ArcadeDriveStrategy implements DriveStrategy {
 
     /*
      * DriveStrategy interface methods ----------------------------------------
@@ -31,8 +26,8 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
     }
 
     @Override
-    public void execute(double x, double y) {
-        this.m_subsystem.arcadeDrive(y, x);
+    public WheelSpeeds execute(double rotation, double power) {
+        return DifferentialDrive.arcadeDriveIK(power, rotation, false);
     }
 
     /*
@@ -40,13 +35,8 @@ public final class ArcadeDriveStrategy implements DriveStrategy {
      */
 
     /**
-     * Constructs a new {@code ArcadeDriveStrategy} to control the given
-     * {@code subsystem}.
-     * 
-     * @param subsystem The {@link DriveTrainSubsystem} to control.
+     * Constructs a new {@link ArcadeDriveStrategy}.
      */
-    public ArcadeDriveStrategy(DriveTrainSubsystem subsystem) {
-        m_subsystem = subsystem;
-    }
+    public ArcadeDriveStrategy() {}
 
 }

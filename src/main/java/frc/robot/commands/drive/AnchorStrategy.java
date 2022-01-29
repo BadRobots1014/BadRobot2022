@@ -1,11 +1,12 @@
 package frc.robot.commands.drive;
 
-import frc.robot.subsystems.DriveTrainSubsystem;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+
 import frc.robot.subsystems.GyroSubsystem;
 
 /**
- * A {@link DriveStrategy} that contains the algorithm to drive straight using
- * PID.
+ * A {@link DriveStrategy} for anchoring the robot, or mainting the current angle and position,
+ * using PID.
  *
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Will Blankemeyer
@@ -33,8 +34,8 @@ public class AnchorStrategy extends DriveStraightStrategy {
     }
 
     @Override
-    public void execute(double x, double y) {
-        super.execute(0, m_gyro.getPositionalPid());
+    public WheelSpeeds execute(double x, double y) {
+        return super.execute(0, m_gyro.getPositionalPid());
     }
 
     /*
@@ -51,8 +52,8 @@ public class AnchorStrategy extends DriveStraightStrategy {
      * @author Victor Chen <victorc.1@outlook.com>
      * @author Will Blankemeyer
      */
-    public AnchorStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
-        super(drive, gyro);
+    public AnchorStrategy(GyroSubsystem gyro) {
+        super(gyro);
         m_gyro = gyro;
     }
 
