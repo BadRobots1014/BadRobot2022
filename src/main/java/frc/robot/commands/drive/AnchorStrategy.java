@@ -13,11 +13,6 @@ import frc.robot.subsystems.GyroSubsystem;
  */
 public class AnchorStrategy extends DriveStraightStrategy {
 
-    /**
-     * The {@link GyroSubsystem} to obtain gyroscope readings from.
-     */
-    private final GyroSubsystem m_gyro;
-
     /*
      * DriveStrategy interface methods ----------------------------------------
      */
@@ -53,7 +48,6 @@ public class AnchorStrategy extends DriveStraightStrategy {
      */
     public AnchorStrategy(GyroSubsystem gyro) {
         super(gyro);
-        m_gyro = gyro;
     }
 
 }
