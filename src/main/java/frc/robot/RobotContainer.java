@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.ControllerConstants;
@@ -137,28 +136,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    final JoystickButton buttonY = new JoystickButton(m_driverStick, XboxController.Button.kY.value);
-    buttonY.whileHeld(m_shootCommand);
-
-    final JoystickButton killButton = new JoystickButton(m_driverStick, 3);
-    final CommandScheduler sched = CommandScheduler.getInstance();
-    sched.addButton(new Runnable() {
-      private boolean schedIsEnabled = true;
-
-      @Override
-      public void run() {
-        if (killButton.get()) {
-          if (schedIsEnabled) {
-            sched.cancelAll();
-            sched.disable();
-          } else {
-            sched.enable();
-          }
-
-          this.schedIsEnabled = !this.schedIsEnabled;
-        }
-      }
-    });
+    final JoystickButton shootButton = new JoystickButton(m_driverStick, 0);
+    shootButton.whileHeld(m_shootCommand);
   }
 
   /**
