@@ -2,9 +2,14 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+
 
 public class DriveTrainSubsystem extends SubsystemBase {
     private final CANSparkMax m_frontRight = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -17,12 +22,21 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     private final DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
+    private final ShuffleboardTab m_tab = Shuffleboard.getTab("Drivetrain");
+
     public DriveTrainSubsystem() {
         m_leftMotors.setInverted(true);
+
+        m_tab.addNumber("Left Power", m_leftMotors::get);
+        m_tab.addNumber("Right Power", m_rightMotors::get);
     }
 
     public void tankDrive(double leftSpeed, double rightSpeed) {
-        m_driveTrain.tankDrive(leftSpeed, rightSpeed);
+        m_driveTrain.tankDrive(clampPower(leftSpeed), clampPower(rightSpeed), true);
+    }
+
+    private static double clampPower(double power) {
+        return MathUtil.clamp(power, -1.0, 1.0);
     }
 
     public void stop() {

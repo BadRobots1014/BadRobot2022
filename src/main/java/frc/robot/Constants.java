@@ -49,11 +49,26 @@ public final class Constants {
     public final class ControllerConstants {
         public static final int kControllerPort = 0;
         public static final int kPrototypePort = 1;
+
+        public static final int kThrottleButton = 1;
+        public static final int kShootButton = 2;
+
+        public static final double kDeadzoneRadius = .2;
+        public static final double kDriveStraightRegionHalfBaseLength = .2;
+        public static final double kPivotTurnRegionHalfBaseLength = .2;
     }
 
     public final class DriveTrainConstants {
         public static final int kDriveTrainLeftPort = 9;
         public static final int kDriveTrainRightPort = 8;
+
+        public static final double kRotationalP = .03;
+        public static final double kRotationalI = 0;
+        public static final double kRotationalD = 0;
+
+        public static final double kPositionalP = 1.0;
+        public static final double kPositionalI = 0;
+        public static final double kPositionalD = 0;
     }
 
     /**
