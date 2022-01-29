@@ -52,12 +52,17 @@ public class RobotContainer {
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
     m_driveTrainSubsystem,
     m_gyroSubsystem,
-    () -> -1.0 * m_driverStick.getX(),
+    () -> {
+      // Invert the X-axis.
+      return -1.0 * m_driverStick.getX();
+    },
     m_driverStick::getY,
     () -> {
-      if (m_driverStick.getRawButton(1)) {
+      if (m_driverStick.getRawButton(ControllerConstants.kThrottleButton)) {
         return 0.25;
       } else {
+        // The default throttle is 50%. In practice, however, the maximum motor power is 25%, as the
+        // {@link DriveTrainSubsystem#tankDrive} currently squares inputs.
         return 0.50;
       }
     }
@@ -106,7 +111,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // We use an arcade-drive system with controller deadzones that select specialized commands.
+    // We use an arcade-drive system with joystick regions that select specialized drive strategies.
     m_driveTrainSubsystem.setDefaultCommand(m_teleopDriveCommand);
 
     // Configure the prototype input chooser
@@ -136,7 +141,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    final JoystickButton shootButton = new JoystickButton(m_driverStick, 0);
+    final JoystickButton shootButton = new JoystickButton(m_driverStick, ControllerConstants.kShootButton);
     shootButton.whileHeld(m_shootCommand);
   }
 
