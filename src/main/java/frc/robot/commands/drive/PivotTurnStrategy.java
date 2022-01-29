@@ -24,6 +24,11 @@ public class PivotTurnStrategy extends ArcadeDriveStrategy {
         return super.execute(rotation, 0);
     }
 
+    @Override
+    public boolean shouldLockPosition() {
+        return true;
+    }
+
     /*
      * Constructors -----------------------------------------------------------
      */

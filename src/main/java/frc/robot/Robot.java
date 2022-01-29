@@ -20,7 +20,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private BadLog m_logger;
+  // rivate BadLog m_logger;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -37,8 +37,8 @@ public class Robot extends TimedRobot {
   }
 
   private void initLogging() {
-    m_logger = BadLog.init("test.bag");
-    m_logger.finishInitialization();
+    // m_logger = BadLog.init("test.bag");
+    // m_logger.finishInitialization();
   }
 
   /**
@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    m_logger.log();
+    // m_logger.log();
 
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,

@@ -28,14 +28,13 @@ public class AnchorStrategy extends DriveStraightStrategy {
     }
 
     @Override
-    public void reset() {
-        super.reset();
-        m_gyro.zeroDisplacement();
+    public WheelSpeeds execute(double x, double y) {
+        return super.execute(0, 0);
     }
 
     @Override
-    public WheelSpeeds execute(double x, double y) {
-        return super.execute(0, m_gyro.getPositionalPid());
+    public boolean shouldLockPosition() {
+        return true;
     }
 
     /*

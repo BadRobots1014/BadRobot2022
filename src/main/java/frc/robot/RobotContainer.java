@@ -59,11 +59,11 @@ public class RobotContainer {
     m_driverStick::getY,
     () -> {
       if (m_driverStick.getRawButton(ControllerConstants.kThrottleButton)) {
-        return 0.25;
-      } else {
-        // The default throttle is 50%. In practice, however, the maximum motor power is 25%, as the
-        // {@link DriveTrainSubsystem#tankDrive} currently squares inputs.
         return 0.50;
+      } else {
+        // The default throttle is 75%. In practice, however, the maximum motor power is 56%, as the
+        // {@link DriveTrainSubsystem#tankDrive} currently squares inputs.
+        return 0.75;
       }
     }
   );

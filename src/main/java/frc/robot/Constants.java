@@ -32,7 +32,7 @@ public final class Constants {
         public static final int kThrottleButton = 1;
         public static final int kShootButton = 2;
 
-        public static final double kDeadzoneRadius = .5;
+        public static final double kDeadzoneRadius = .2;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
         public static final double kPivotTurnRegionHalfBaseLength = .2;
     }

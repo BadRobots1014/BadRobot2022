@@ -27,4 +27,6 @@ public interface DriveStrategy {
      */
     public WheelSpeeds execute(double x, double y);
 
+    public boolean shouldLockPosition();
+
 }

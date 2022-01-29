@@ -30,6 +30,11 @@ public class ArcadeDriveStrategy implements DriveStrategy {
         return DifferentialDrive.arcadeDriveIK(power, rotation, false);
     }
 
+    @Override
+    public boolean shouldLockPosition() {
+        return false;
+    }
+
     /*
      * Constructors -----------------------------------------------------------
      */

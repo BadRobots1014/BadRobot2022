@@ -53,6 +53,7 @@ public class GyroSubsystem extends SubsystemBase {
     public void zeroYaw() {
         this.gyro.reset();
         this.rotationalPid.setSetpoint(this.getYaw());
+        System.out.println("Zeroed rotational setpoint");
     }
 
     /**
@@ -62,6 +63,7 @@ public class GyroSubsystem extends SubsystemBase {
     public void zeroDisplacement() {
         this.gyro.resetDisplacement();
         this.positionalPid.setSetpoint(this.getDisplacementX());
+        System.out.println("Zeroed positional setpoint");
     }
 
     /**
@@ -70,7 +72,9 @@ public class GyroSubsystem extends SubsystemBase {
      * @return  The PID output.
      */
     public double getRotationalPid() {
-        return this.rotationalPid.calculate(this.getYaw());
+        final double output = this.rotationalPid.calculate(this.getYaw());
+        System.out.println("Rotational PID output: " + output);
+        return output;
     }
 
     /**
@@ -79,7 +83,9 @@ public class GyroSubsystem extends SubsystemBase {
      * @return  The PID output.
      */
     public double getPositionalPid() {
-        return this.positionalPid.calculate(this.getDisplacementX());
+        final double output = this.positionalPid.calculate(this.getDisplacementX());
+        System.out.println("Positional PID output: " + output);
+        return output;
     }
 
     /**
@@ -88,7 +94,9 @@ public class GyroSubsystem extends SubsystemBase {
      * @return  The current yaw, in degrees, in the range [-180, 180].
      */
     public double getYaw() {
-        return this.gyro.getYaw();
+        final double yaw = this.gyro.getYaw();
+        System.out.println("Yaw: " + yaw);
+        return yaw;
     }
 
     /**
@@ -97,6 +105,8 @@ public class GyroSubsystem extends SubsystemBase {
      * @return  The current X displacement, in meters.
      */
     public double getDisplacementX() {
-        return this.gyro.getDisplacementX();
+        final double x = this.gyro.getDisplacementX();
+        System.out.println("X: " + x);
+        return x;
     }
 }

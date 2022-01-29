@@ -36,6 +36,11 @@ public class DriveStraightStrategy implements DriveStrategy {
         return new WheelSpeeds(power - correction, power + correction);
     }
 
+    @Override
+    public boolean shouldLockPosition() {
+        return false;
+    }
+
     /*
      * Constructors -----------------------------------------------------------
      */

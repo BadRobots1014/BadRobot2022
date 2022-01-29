@@ -127,6 +127,10 @@ public class TeleopDriveCommand extends CommandBase {
             // The new strategy wasn't used last, so its state is likely stale. We will reset it to
             // a normalized state.
             nextStrategy.reset();
+
+            if (nextStrategy.shouldLockPosition()) {
+                m_drive.stop();
+            }
         }
 
         final double throttle = m_throttleSource.get();
@@ -250,5 +254,7 @@ public class TeleopDriveCommand extends CommandBase {
         // The strategies themselves can't access the drivetrain directly, so we are responsible for
         // killing the motors when this command is paused.
         m_drive.stop();
+
+        m_strategy.ifPresent(DriveStrategy::reset);
     }
 }
