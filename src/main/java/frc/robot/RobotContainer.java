@@ -93,6 +93,11 @@ public class RobotContainer {
   private final SendableChooser<Boolean> m_prototypeInputChooser = new SendableChooser<>();
 
   /**
+   * Chooser for the automonous routine
+   */
+  private final SendableChooser<Command> m_automonousRoutineChooser = new SendableChooser<>();
+
+  /**
    * The speed [0, 1] to drive the prototyping speed controllers at.
    */
   private final NetworkTableEntry m_prototypePower;
@@ -108,11 +113,20 @@ public class RobotContainer {
   private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
 
   /**
+   * A reference to the "Autonomous" Shuffleboard tab object.
+   */
+  private final ShuffleboardTab m_autonomousTab = Shuffleboard.getTab("Autonomous");
+
+  /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     // We use an arcade-drive system with joystick regions that select specialized drive strategies.
     m_driveTrainSubsystem.setDefaultCommand(m_teleopDriveCommand);
+
+    // Configure the autonomous routine chooser
+    //m_automonousRoutineChooser.setDefaultOption(driveBackwards);
+    m_autonomousTab.add("Routine", m_automonousRoutineChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
 
     // Configure the prototype input chooser
     m_prototypeInputChooser.setDefaultOption("Joystick", true);
@@ -152,7 +166,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return m_automonousRoutineChooser.getSelected();
   }
 
   /**
