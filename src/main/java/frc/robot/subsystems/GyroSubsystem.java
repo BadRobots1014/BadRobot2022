@@ -17,7 +17,7 @@ public class GyroSubsystem extends SubsystemBase {
      */
     private final PIDController rotationalPid;
     /**
-     * A PID controller that maintains the current X coordinate.
+     * A PID controller that maintains the current X displacement.
      *
      * The X-axis is parallel to the robot's wheels; when the robot drives straight, it moves along
      * this axis.
@@ -36,8 +36,8 @@ public class GyroSubsystem extends SubsystemBase {
         );
 
         // The robot can rotate continuously; we indicate this continuity by defining the minimum
-        // and maximum angles that should be considered equivalent. [-180, 180] is the range of
-        // outputs from {@link #getYaw}.
+        // and maximum angles that should be considered equivalent ([-180, 180] is the range of
+        // outputs from {@link #getYaw}).
         this.rotationalPid.enableContinuousInput(-180, 180);
 
         this.positionalPid = new PIDController(
@@ -64,10 +64,20 @@ public class GyroSubsystem extends SubsystemBase {
         this.positionalPid.setSetpoint(this.getDisplacementX());
     }
 
+    /**
+     * Returns the output of the rotational PID controller.
+     *
+     * @return  The PID output.
+     */
     public double getRotationalPid() {
         return this.rotationalPid.calculate(this.getYaw());
     }
 
+    /**
+     * Returns the output of the positional PID controller.
+     *
+     * @return  The PID output.
+     */
     public double getPositionalPid() {
         return this.positionalPid.calculate(this.getDisplacementX());
     }
