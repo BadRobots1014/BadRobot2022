@@ -41,7 +41,7 @@ public final class Constants {
         public static final int kDriveTrainLeftPort = 9;
         public static final int kDriveTrainRightPort = 8;
 
-        public static final double kRotationalP = .01;
+        public static final double kRotationalP = .03;
         public static final double kRotationalI = 0;
         public static final double kRotationalD = 0;
 
