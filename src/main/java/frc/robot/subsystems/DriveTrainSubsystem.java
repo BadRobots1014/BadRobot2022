@@ -31,6 +31,10 @@ public class DriveTrainSubsystem extends SubsystemBase {
         m_tab.addNumber("Right Power", m_rightMotors::get);
     }
 
+    public void arcadeDrive(double speed, double rotation) {
+        m_driveTrain.arcadeDrive(speed, rotation, true);
+    }
+
     public void tankDrive(double leftSpeed, double rightSpeed) {
         m_driveTrain.tankDrive(clampPower(leftSpeed), clampPower(rightSpeed), true);
     }

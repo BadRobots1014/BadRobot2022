@@ -1,7 +1,6 @@
 package frc.robot.commands.drive;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
-
+import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
 /**
@@ -23,8 +22,8 @@ public class AnchorStrategy extends DriveStraightStrategy {
     }
 
     @Override
-    public WheelSpeeds execute(double x, double y) {
-        return super.execute(0, 0);
+    public void execute(double x, double y) {
+        super.execute(0, 0);
     }
 
     @Override
@@ -46,8 +45,8 @@ public class AnchorStrategy extends DriveStraightStrategy {
      * @author Victor Chen <victorc.1@outlook.com>
      * @author Will Blankemeyer
      */
-    public AnchorStrategy(GyroSubsystem gyro) {
-        super(gyro);
+    public AnchorStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
+        super(drive, gyro);
     }
 
 }

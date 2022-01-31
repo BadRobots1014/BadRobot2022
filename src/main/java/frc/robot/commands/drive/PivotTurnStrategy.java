@@ -1,6 +1,6 @@
 package frc.robot.commands.drive;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
 /**
  * A {@link DriveStrategy} for pivot-turning.
@@ -20,8 +20,8 @@ public class PivotTurnStrategy extends ArcadeDriveStrategy {
     }
 
     @Override
-    public WheelSpeeds execute(double rotation, double y) {
-        return super.execute(rotation, 0);
+    public void execute(double rotation, double y) {
+        super.execute(rotation, 0);
     }
 
     @Override
@@ -36,6 +36,8 @@ public class PivotTurnStrategy extends ArcadeDriveStrategy {
     /**
      * Constructs a new {@link PivotTurnStrategy}.
      */
-    public PivotTurnStrategy() {}
+    public PivotTurnStrategy(DriveTrainSubsystem drive) {
+        super(drive);
+    }
 
 }

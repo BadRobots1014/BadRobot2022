@@ -1,6 +1,6 @@
 package frc.robot.commands.drive;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
+import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
 /**
@@ -11,6 +11,7 @@ import frc.robot.subsystems.GyroSubsystem;
  */
 public class DriveStraightStrategy implements DriveStrategy {
 
+    private final DriveTrainSubsystem m_drive;
     /**
      * The {@link GyroSubsystem} to obtain gyroscope readings from.
      */
@@ -31,9 +32,9 @@ public class DriveStraightStrategy implements DriveStrategy {
     }
 
     @Override
-    public WheelSpeeds execute(double x, double power) {
+    public void execute(double x, double power) {
         final double correction = m_gyro.getRotationalPid();
-        return new WheelSpeeds(power - correction, power + correction);
+        m_drive.tankDrive(power - correction, power + correction);
     }
 
     @Override
@@ -55,7 +56,8 @@ public class DriveStraightStrategy implements DriveStrategy {
      * @author Victor Chen <victorc.1@outlook.com>
      * @author Will Blankemeyer
      */
-    public DriveStraightStrategy(GyroSubsystem gyro) {
+    public DriveStraightStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
+        m_drive = drive;
         m_gyro = gyro;
     }
 

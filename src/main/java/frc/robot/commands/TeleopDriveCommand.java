@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 
 import frc.robot.commands.drive.ArcadeDriveStrategy;
 import frc.robot.commands.drive.DriveStraightStrategy;
@@ -42,10 +41,10 @@ public class TeleopDriveCommand extends CommandBase {
         m_ySource = ySource;
         m_throttleSource = throttleSource;
 
-        m_arcadeStrategy = new ArcadeDriveStrategy();
-        m_driveStraightStrategy = new DriveStraightStrategy(gyro);
-        m_pivotTurnStrategy = new PivotTurnStrategy();
-        m_anchorStrategy = new AnchorStrategy(gyro);
+        m_arcadeStrategy = new ArcadeDriveStrategy(drive);
+        m_driveStraightStrategy = new DriveStraightStrategy(drive, gyro);
+        m_pivotTurnStrategy = new PivotTurnStrategy(drive);
+        m_anchorStrategy = new AnchorStrategy(drive, gyro);
 
         // Initialize teleop. driving without a current strategy.
         //
@@ -140,12 +139,10 @@ public class TeleopDriveCommand extends CommandBase {
         assert this.throttleIsValid(throttle) : "Throttle is out-of-range";
 
         // Execute the next strategy.
-        final WheelSpeeds wheelSpeeds = nextStrategy.execute(
+        nextStrategy.execute(
             this.scaleCoordinate(x, throttle),
             this.scaleCoordinate(y, throttle)
         );
-
-        m_drive.tankDrive(wheelSpeeds.left, wheelSpeeds.right);
     }
 
     private boolean coordinateIsValid(final double coord) {
