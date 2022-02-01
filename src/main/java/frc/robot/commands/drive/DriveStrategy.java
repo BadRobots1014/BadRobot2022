@@ -1,7 +1,5 @@
 package frc.robot.commands.drive;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
-
 /**
  * Interface that defines strategies for driving control.
  *
@@ -25,7 +23,7 @@ public interface DriveStrategy {
      * @author Victor Chen <victorc.1@outlook.com>
      * @author Will Blankemeyer
      */
-    public WheelSpeeds execute(double x, double y);
+    public void execute(double x, double y);
 
     public boolean shouldLockPosition();
 
