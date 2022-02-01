@@ -24,6 +24,7 @@ import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.commands.PrototypeControlCommand;
 import frc.robot.subsystems.PrototypeSubsystem;
@@ -43,6 +44,7 @@ public class RobotContainer {
   private final Joystick m_driverStick = new Joystick(ControllerConstants.kControllerPort);
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem();
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();

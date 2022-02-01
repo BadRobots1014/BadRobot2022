@@ -19,6 +19,13 @@ import frc.robot.subsystems.ShooterSubsystem.RangeConfig;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final class VisionConstants {
+        // See <https://docs.limelightvision.io/en/latest/getting_started.html#basic-programming>.
+        public static final int kCamModeVisionProcessor = 0;
+
+        public static final int kPipelineId = 0;
+    }
+
     /**
      * Constants related to the shooter.
      */
