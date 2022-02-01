@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -11,12 +12,20 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants.VisionConstants;
 
 public class VisionSubsystem {
+    private final PIDController rotationalPid;
     private final NetworkTableEntry targetIsVisible;
     private final NetworkTableEntry targetX;
     private final NetworkTableEntry targetY;
     private final ShuffleboardTab tab;
 
     public VisionSubsystem() {
+        this.rotationalPid = new PIDController(
+            VisionConstants.kRotationalP,
+            VisionConstants.kRotationalI,
+            VisionConstants.kRotationalD
+        );
+        this.rotationalPid.setSetpoint(0.0);
+
         final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
         table.getEntry("camMode").setNumber(VisionConstants.kCamModeVisionProcessor);
@@ -30,6 +39,10 @@ public class VisionSubsystem {
         this.tab.addBoolean("Found Target?", this::targetIsVisible);
         this.tab.addNumber("X", this::getTargetX);
         this.tab.addNumber("Y", this::getTargetY);
+    }
+
+    public double getRotationalPid() {
+        return this.rotationalPid.calculate(this.getTargetX());
     }
 
     public boolean targetIsVisible() {

@@ -24,6 +24,10 @@ public final class Constants {
         public static final int kCamModeVisionProcessor = 0;
 
         public static final int kPipelineId = 0;
+
+        public static final double kRotationalP = 0.01;
+        public static final double kRotationalI = 0;
+        public static final double kRotationalD = 0;
     }
 
     /**
