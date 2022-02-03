@@ -21,9 +21,12 @@ import frc.robot.subsystems.ShooterSubsystem.RangeConfig;
 public final class Constants {
     public static final class VisionConstants {
         // See <https://docs.limelightvision.io/en/latest/getting_started.html#basic-programming>.
-        public static final int kCamModeVisionProcessor = 0;
+        public static final int kVisionProcessorCamMode = 0;
 
-        public static final int kPipelineId = 0;
+        public static final int kRedCargoPipelineId = 1;
+        public static final int kBlueCargoPipelineId = 2;
+        public static final int kLowerHubPipelineId = 0;
+        public static final int kUpperHubPipelineId = 0;
 
         public static final double kRotationalP = 0.01;
         public static final double kRotationalI = 0;

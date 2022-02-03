@@ -8,15 +8,20 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.VisionConstants;
 
-public class VisionSubsystem {
+public class VisionSubsystem extends SubsystemBase {
     private final PIDController rotationalPid;
+    private final NetworkTableEntry camMode;
+    private final NetworkTableEntry pipeline;
     private final NetworkTableEntry targetIsVisible;
     private final NetworkTableEntry targetX;
     private final NetworkTableEntry targetY;
     private final ShuffleboardTab tab;
+    private final SendableChooser<Integer> pipelineChooser;
 
     public VisionSubsystem() {
         this.rotationalPid = new PIDController(
@@ -28,8 +33,9 @@ public class VisionSubsystem {
 
         final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
 
-        table.getEntry("camMode").setNumber(VisionConstants.kCamModeVisionProcessor);
-        table.getEntry("pipeline").setNumber(VisionConstants.kPipelineId);
+        this.camMode = table.getEntry("camMode");
+        this.camMode.setNumber(VisionConstants.kVisionProcessorCamMode);
+        this.pipeline = table.getEntry("pipeline");
 
         this.targetIsVisible = table.getEntry("tv");
         this.targetX = table.getEntry("tx");
@@ -39,6 +45,44 @@ public class VisionSubsystem {
         this.tab.addBoolean("Found Target?", this::targetIsVisible);
         this.tab.addNumber("X", this::getTargetX);
         this.tab.addNumber("Y", this::getTargetY);
+        this.pipelineChooser = new SendableChooser<>();
+        this.pipelineChooser.setDefaultOption("Red Cargo", VisionConstants.kRedCargoPipelineId);
+        this.pipelineChooser.addOption("Red Cargo", VisionConstants.kRedCargoPipelineId);
+        this.pipelineChooser.addOption("Blue Cargo", VisionConstants.kBlueCargoPipelineId);
+        this.tab.add("Pipeline", this.pipelineChooser);
+    }
+
+    @Override
+    public void periodic() {
+        this.setPipeline(this.pipelineChooser.getSelected().intValue());
+    }
+
+    public void setPipeline(final int id) {
+        this.pipeline.setNumber(id);
+    }
+
+    public static enum PipelineKind {
+        RedCargo,
+        BlueCargo,
+        LowerHub,
+        UpperHub
+    };
+
+    public void setPipeline(final PipelineKind kind) {
+        this.pipeline.setNumber(this.getPipelineId(kind));
+    }
+
+    private int getPipelineId(final PipelineKind kind) {
+        switch (kind) {
+            case RedCargo:
+                return VisionConstants.kRedCargoPipelineId;
+            case BlueCargo:
+                return VisionConstants.kBlueCargoPipelineId;
+            case LowerHub:
+                return VisionConstants.kLowerHubPipelineId;
+            default:
+                return VisionConstants.kUpperHubPipelineId;
+        }
     }
 
     public double getRotationalPid() {

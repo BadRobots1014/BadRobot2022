@@ -13,38 +13,54 @@ import frc.robot.commands.drive.ArcadeDriveStrategy;
 import frc.robot.commands.drive.DriveStraightStrategy;
 import frc.robot.commands.drive.AnchorStrategy;
 import frc.robot.commands.drive.DriveStrategy;
+import frc.robot.commands.drive.FollowTargetStrategy;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.VisionSubsystem.PipelineKind;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.drive.PivotTurnStrategy;
 
 public class TeleopDriveCommand extends CommandBase {
     private final DriveTrainSubsystem m_drive;
+    private final VisionSubsystem m_vision;
     private final Supplier<Double> m_xSource;
     private final Supplier<Double> m_ySource;
     private final Supplier<Double> m_throttleSource;
+    private final Supplier<Optional<PipelineKind>> m_visionPipelineSource;
 
-    public final DriveStrategy m_arcadeStrategy;
-    public final DriveStrategy m_driveStraightStrategy;
-    public final DriveStrategy m_pivotTurnStrategy;
-    public final DriveStrategy m_anchorStrategy;
+    private final DriveStrategy m_arcadeStrategy;
+    private final DriveStrategy m_driveStraightStrategy;
+    private final DriveStrategy m_pivotTurnStrategy;
+    private final DriveStrategy m_anchorStrategy;
+    private final DriveStrategy m_followTargetStrategy;
 
     private Optional<DriveStrategy> m_strategy;
+    private PipelineKind m_cachedVisionPipeline;
 
     private final ShuffleboardTab m_tab;
 
-    public TeleopDriveCommand(DriveTrainSubsystem drive, GyroSubsystem gyro, Supplier<Double> xSource,
-            Supplier<Double> ySource, Supplier<Double> throttleSource) {
-
+    public TeleopDriveCommand(
+        DriveTrainSubsystem drive,
+        GyroSubsystem gyro,
+        VisionSubsystem vision,
+        Supplier<Double> xSource,
+        Supplier<Double> ySource,
+        Supplier<Double> throttleSource,
+        Supplier<Optional<PipelineKind>> visionPipelineSource
+    ) {
         m_drive = drive;
+        m_vision = vision;
         m_xSource = xSource;
         m_ySource = ySource;
         m_throttleSource = throttleSource;
+        m_visionPipelineSource = visionPipelineSource;
 
         m_arcadeStrategy = new ArcadeDriveStrategy(drive);
         m_driveStraightStrategy = new DriveStraightStrategy(drive, gyro);
         m_pivotTurnStrategy = new PivotTurnStrategy(drive);
         m_anchorStrategy = new AnchorStrategy(drive, gyro);
+        m_followTargetStrategy = new FollowTargetStrategy(drive, vision);
 
         // Initialize teleop. driving without a current strategy.
         //
@@ -120,7 +136,14 @@ public class TeleopDriveCommand extends CommandBase {
         // detection. Do not scale 'x' and 'y' by the throttle power yet!
         final DriveStrategy nextStrategy = this.getNextDriveStrategy(x, y);
 
-        // Determine if the current stategy is nonexistent or differs from the new strategy.
+        if (nextStrategy == m_followTargetStrategy) {
+            // {@link #getNextDriveStrategy} updates {@link #m_cachedVisionPipeline} when
+            // {@link #m_followTargetStrategy} is selected. It is then our responsibility to set
+            // that pipeline in the actual {@link VisionSubsystem}.
+            m_vision.setPipeline(m_cachedVisionPipeline);
+        }
+
+        // If the current stategy is nonexistent or differs from the new strategy...
         if (m_strategy.filter(nextStrategy::equals).isEmpty()) {
             // Update the current strategy.
             m_strategy = Optional.of(nextStrategy);
@@ -150,6 +173,20 @@ public class TeleopDriveCommand extends CommandBase {
     }
 
     private DriveStrategy getNextDriveStrategy(final double x, final double y) {
+        return m_visionPipelineSource.get()
+            // If {@link #m_visionPipelineSource} provides us with a vision pipeline, then select
+            // {@link #m_followTargetStrategy}.
+            .map((pipeline) -> {
+                m_cachedVisionPipeline = pipeline;
+                return m_followTargetStrategy;
+            })
+            // Otherwise, select the drive strategy based on {@code x} and {@code y}.
+            .orElseGet(() -> {
+                return this.getNextNonFollowDriveStrategy(x, y);
+            });
+    }
+
+    private DriveStrategy getNextNonFollowDriveStrategy(final double x, final double y) {
         // 'x' and 'y' represent a Cartesian point in the plane of possible joystick positions.
         // There are certain regions in this plane that correspond to certain drive strategies.
         //

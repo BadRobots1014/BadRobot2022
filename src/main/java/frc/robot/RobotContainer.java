@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.util.Map;
+import java.util.Optional;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -54,6 +55,7 @@ public class RobotContainer {
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
     m_driveTrainSubsystem,
     m_gyroSubsystem,
+    m_visionSubsystem,
     () -> {
       // Invert the X-axis.
       return -1.0 * m_driverStick.getX();
@@ -67,6 +69,10 @@ public class RobotContainer {
         // {@link DriveTrainSubsystem#tankDrive} currently squares inputs.
         return 0.75;
       }
+    },
+    () -> {
+      // TODO
+      return Optional.empty();
     }
   );
 
