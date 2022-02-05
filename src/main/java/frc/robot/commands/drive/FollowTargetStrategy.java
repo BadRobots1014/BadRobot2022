@@ -34,7 +34,7 @@ public class FollowTargetStrategy implements DriveStrategy {
     @Override
     public void execute(double x, double power) {
         final double correction = m_vision.getRotationalPid();
-        m_drive.tankDrive(power - correction, power + correction);
+        m_drive.tankDrive(power + correction, power - correction);
         // TODO: m_drive.arcadeDrive(power, correction);
     }
 
