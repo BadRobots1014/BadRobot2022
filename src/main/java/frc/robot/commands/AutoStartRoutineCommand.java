@@ -5,15 +5,16 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class AutoSampleCommand extends SequentialCommandGroup {
-    public AutoSampleCommand (
+public class AutoStartRoutineCommand extends SequentialCommandGroup {
+    public AutoStartRoutineCommand (
         DriveTrainSubsystem driveSubsystem, 
         GyroSubsystem gyro, 
         ShooterSubsystem shooterSubsystem
         ) {
         addCommands(
             new AutoShootCommand(driveSubsystem, gyro, shooterSubsystem),
-            DriveStrategyCommand.pivotTurn(driveSubsystem, () -> -35.0)
+            // TODO: set -5 to actual distance needed to get out of tarmac.
+            new DriveDistanceCommand(driveSubsystem, gyro, -5.0)
         );
     }
 }
