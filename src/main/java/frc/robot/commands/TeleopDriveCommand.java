@@ -22,7 +22,6 @@ import frc.robot.commands.drive.PivotTurnStrategy;
 
 public class TeleopDriveCommand extends CommandBase {
     private final DriveTrainSubsystem m_drive;
-    private final VisionSubsystem m_vision;
     private final Supplier<Double> m_xSource;
     private final Supplier<Double> m_ySource;
     private final Supplier<Double> m_throttleSource;
@@ -48,7 +47,6 @@ public class TeleopDriveCommand extends CommandBase {
         Supplier<Boolean> shouldFollowTarget
     ) {
         m_drive = drive;
-        m_vision = vision;
         m_xSource = xSource;
         m_ySource = ySource;
         m_throttleSource = throttleSource;
@@ -73,9 +71,9 @@ public class TeleopDriveCommand extends CommandBase {
         m_tab.addNumber("Throttle (%)", m_throttleSource::get);
         m_tab.addNumber("Yaw (deg.)", gyro::getYaw);
 
-        // Although {@link TeleopDriveCommand} doesn't use the gyroscope directly, some of its
-        // strategies do, and they cannot add requirements themselves.
-        addRequirements(drive, gyro);
+        // Although {@link TeleopDriveCommand} doesn't use the gyroscope or vision subsystems
+        // directly, some of its strategies do, and they cannot add requirements themselves.
+        addRequirements(drive, gyro, vision);
     }
 
     /*
