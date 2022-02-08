@@ -15,8 +15,8 @@ import frc.robot.Constants.VisionConstants;
 
 public class VisionSubsystem extends SubsystemBase {
     private final PIDController rotationalPid;
-    private final NetworkTableEntry camMode;
-    private final NetworkTableEntry pipeline;
+    private final NetworkTableEntry pipelineSelect;
+    private final NetworkTableEntry activePipeline;
     private final NetworkTableEntry targetIsVisible;
     private final NetworkTableEntry targetX;
     private final NetworkTableEntry targetY;
@@ -28,11 +28,9 @@ public class VisionSubsystem extends SubsystemBase {
         this.rotationalPid.setSetpoint(0.0);
 
         final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-
-        this.camMode = table.getEntry("camMode");
-        this.camMode.setNumber(VisionConstants.kVisionProcessorCamMode);
-        this.pipeline = table.getEntry("pipeline");
-
+        table.getEntry("camMode").setNumber(VisionConstants.kVisionProcessorCamMode);
+        this.pipelineSelect = table.getEntry("pipeline");
+        this.activePipeline = table.getEntry("getpipe");
         this.targetIsVisible = table.getEntry("tv");
         this.targetX = table.getEntry("tx");
         this.targetY = table.getEntry("ty");
@@ -46,12 +44,25 @@ public class VisionSubsystem extends SubsystemBase {
         this.pipelineChooser.addOption("Red Cargo", VisionConstants.kRedCargoPipelineId);
         this.pipelineChooser.addOption("Blue Cargo", VisionConstants.kBlueCargoPipelineId);
         this.pipelineChooser.addOption("Hub", VisionConstants.kHubPipelineId);
-        this.tab.add("Pipeline", this.pipelineChooser);
+        this.tab.add("Chosen Pipeline", this.pipelineChooser);
+        this.tab.addNumber("Active Pipeline", this::getActivePipeline);
     }
 
-    public void applyChosenPipeline() {
+    public void activateChosenPipeline() {
         final int id = this.pipelineChooser.getSelected();
-        this.pipeline.setNumber(id);
+        this.pipelineSelect.setNumber(id);
+    }
+
+    public boolean chosenPipelineIsActive() {
+        return this.getChosenPipeline() == this.getActivePipeline();
+    }
+
+    private int getChosenPipeline() {
+        return this.pipelineChooser.getSelected();
+    }
+
+    private int getActivePipeline() {
+        return this.activePipeline.getNumber(-1).intValue();
     }
 
     public double getRotationalPid() {
