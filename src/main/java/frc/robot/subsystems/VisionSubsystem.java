@@ -42,7 +42,7 @@ public class VisionSubsystem extends SubsystemBase {
         this.tab.addNumber("X", this::getTargetX);
         this.tab.addNumber("Y", this::getTargetY);
         this.pipelineChooser = new SendableChooser<>();
-        this.pipelineChooser.setDefaultOption("Red Cargo", VisionConstants.kRedCargoPipelineId);
+        this.pipelineChooser.setDefaultOption("Blue Cargo", VisionConstants.kBlueCargoPipelineId);
         this.pipelineChooser.addOption("Red Cargo", VisionConstants.kRedCargoPipelineId);
         this.pipelineChooser.addOption("Blue Cargo", VisionConstants.kBlueCargoPipelineId);
         this.pipelineChooser.addOption("Hub", VisionConstants.kHubPipelineId);
