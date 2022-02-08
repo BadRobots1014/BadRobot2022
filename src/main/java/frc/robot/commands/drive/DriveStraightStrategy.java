@@ -61,6 +61,7 @@ public class DriveStraightStrategy implements DriveStrategy {
     public DriveStraightStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
         m_drive = drive;
         m_rotationalPid = GyroSubsystem.createRotationalPid(.02, 0, 0);
+        m_rotationalPid.setSetpoint(0);
         m_gyro = gyro;
     }
 
