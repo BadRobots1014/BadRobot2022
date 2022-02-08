@@ -25,8 +25,7 @@ public final class Constants {
 
         public static final int kRedCargoPipelineId = 1;
         public static final int kBlueCargoPipelineId = 2;
-        public static final int kLowerHubPipelineId = 0;
-        public static final int kUpperHubPipelineId = 0;
+        public static final int kHubPipelineId = 3;
     }
 
     /**

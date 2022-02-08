@@ -45,6 +45,7 @@ public class VisionSubsystem extends SubsystemBase {
         this.pipelineChooser.setDefaultOption("Red Cargo", VisionConstants.kRedCargoPipelineId);
         this.pipelineChooser.addOption("Red Cargo", VisionConstants.kRedCargoPipelineId);
         this.pipelineChooser.addOption("Blue Cargo", VisionConstants.kBlueCargoPipelineId);
+        this.pipelineChooser.addOption("Hub", VisionConstants.kHubPipelineId);
         this.tab.add("Pipeline", this.pipelineChooser);
     }
 
