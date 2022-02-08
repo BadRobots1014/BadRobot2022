@@ -24,11 +24,7 @@ public class VisionSubsystem extends SubsystemBase {
     private final SendableChooser<Integer> pipelineChooser;
 
     public VisionSubsystem() {
-        this.rotationalPid = new PIDController(
-            VisionConstants.kRotationalP,
-            VisionConstants.kRotationalI,
-            VisionConstants.kRotationalD
-        );
+        this.rotationalPid = new PIDController(.01, 0, 0);
         this.rotationalPid.setSetpoint(0.0);
 
         final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
@@ -52,37 +48,9 @@ public class VisionSubsystem extends SubsystemBase {
         this.tab.add("Pipeline", this.pipelineChooser);
     }
 
-    @Override
-    public void periodic() {
-        this.setPipeline(this.pipelineChooser.getSelected().intValue());
-    }
-
-    public void setPipeline(final int id) {
+    public void applyChosenPipeline() {
+        final int id = this.pipelineChooser.getSelected();
         this.pipeline.setNumber(id);
-    }
-
-    public static enum PipelineKind {
-        RedCargo,
-        BlueCargo,
-        LowerHub,
-        UpperHub
-    };
-
-    public void setPipeline(final PipelineKind kind) {
-        this.pipeline.setNumber(this.getPipelineId(kind));
-    }
-
-    private int getPipelineId(final PipelineKind kind) {
-        switch (kind) {
-            case RedCargo:
-                return VisionConstants.kRedCargoPipelineId;
-            case BlueCargo:
-                return VisionConstants.kBlueCargoPipelineId;
-            case LowerHub:
-                return VisionConstants.kLowerHubPipelineId;
-            default:
-                return VisionConstants.kUpperHubPipelineId;
-        }
     }
 
     public double getRotationalPid() {

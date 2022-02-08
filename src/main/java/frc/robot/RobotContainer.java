@@ -5,7 +5,6 @@
 package frc.robot;
 
 import java.util.Map;
-import java.util.Optional;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -72,7 +71,7 @@ public class RobotContainer {
     },
     () -> {
       // TODO
-      return Optional.of(VisionSubsystem.PipelineKind.BlueCargo);
+      return m_driverStick.getRawButton(ControllerConstants.kFollowTargetButton);
     }
   );
 

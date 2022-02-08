@@ -33,6 +33,7 @@ public class FollowTargetStrategy implements DriveStrategy {
 
     @Override
     public void execute(double x, double power) {
+        m_vision.applyChosenPipeline();
         final double correction = m_vision.getRotationalPid() * 1.5;
         //Only works with camera upside down; invert to have camera upright
         m_drive.tankDrive(power - correction, power + correction);

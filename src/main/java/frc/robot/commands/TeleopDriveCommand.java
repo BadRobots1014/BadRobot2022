@@ -17,7 +17,6 @@ import frc.robot.commands.drive.FollowTargetStrategy;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.VisionSubsystem.PipelineKind;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.drive.PivotTurnStrategy;
 
@@ -27,7 +26,7 @@ public class TeleopDriveCommand extends CommandBase {
     private final Supplier<Double> m_xSource;
     private final Supplier<Double> m_ySource;
     private final Supplier<Double> m_throttleSource;
-    private final Supplier<Optional<PipelineKind>> m_visionPipelineSource;
+    private final Supplier<Boolean> m_shouldFollowTarget;
 
     private final DriveStrategy m_arcadeStrategy;
     private final DriveStrategy m_driveStraightStrategy;
@@ -36,7 +35,6 @@ public class TeleopDriveCommand extends CommandBase {
     private final DriveStrategy m_followTargetStrategy;
 
     private Optional<DriveStrategy> m_strategy;
-    private PipelineKind m_cachedVisionPipeline;
 
     private final ShuffleboardTab m_tab;
 
@@ -47,14 +45,14 @@ public class TeleopDriveCommand extends CommandBase {
         Supplier<Double> xSource,
         Supplier<Double> ySource,
         Supplier<Double> throttleSource,
-        Supplier<Optional<PipelineKind>> visionPipelineSource
+        Supplier<Boolean> shouldFollowTarget
     ) {
         m_drive = drive;
         m_vision = vision;
         m_xSource = xSource;
         m_ySource = ySource;
         m_throttleSource = throttleSource;
-        m_visionPipelineSource = visionPipelineSource;
+        m_shouldFollowTarget = shouldFollowTarget;
 
         m_arcadeStrategy = new ArcadeDriveStrategy(drive);
         m_driveStraightStrategy = new DriveStraightStrategy(drive, gyro);
@@ -74,7 +72,6 @@ public class TeleopDriveCommand extends CommandBase {
         m_tab.addNumber("Y", m_ySource::get);
         m_tab.addNumber("Throttle (%)", m_throttleSource::get);
         m_tab.addNumber("Yaw (deg.)", gyro::getYaw);
-        m_tab.addNumber("Rotational PID", gyro::getRotationalPid);
 
         // Although {@link TeleopDriveCommand} doesn't use the gyroscope directly, some of its
         // strategies do, and they cannot add requirements themselves.
@@ -136,13 +133,6 @@ public class TeleopDriveCommand extends CommandBase {
         // detection. Do not scale 'x' and 'y' by the throttle power yet!
         final DriveStrategy nextStrategy = this.getNextDriveStrategy(x, y);
 
-        if (nextStrategy == m_followTargetStrategy) {
-            // {@link #getNextDriveStrategy} updates {@link #m_cachedVisionPipeline} when
-            // {@link #m_followTargetStrategy} is selected. It is then our responsibility to set
-            // that pipeline in the actual {@link VisionSubsystem}.
-            m_vision.setPipeline(m_cachedVisionPipeline);
-        }
-
         // If the current stategy is nonexistent or differs from the new strategy...
         if (m_strategy.filter(nextStrategy::equals).isEmpty()) {
             // Update the current strategy.
@@ -173,17 +163,12 @@ public class TeleopDriveCommand extends CommandBase {
     }
 
     private DriveStrategy getNextDriveStrategy(final double x, final double y) {
-        return m_visionPipelineSource.get()
-            // If {@link #m_visionPipelineSource} provides us with a vision pipeline, then select
-            // {@link #m_followTargetStrategy}.
-            .map((pipeline) -> {
-                m_cachedVisionPipeline = pipeline;
-                return m_followTargetStrategy;
-            })
+        if (m_shouldFollowTarget.get()) {
+            return m_followTargetStrategy;
+        } else {
             // Otherwise, select the drive strategy based on {@code x} and {@code y}.
-            .orElseGet(() -> {
-                return this.getNextNonFollowDriveStrategy(x, y);
-            });
+            return this.getNextNonFollowDriveStrategy(x, y);
+        }
     }
 
     private DriveStrategy getNextNonFollowDriveStrategy(final double x, final double y) {
