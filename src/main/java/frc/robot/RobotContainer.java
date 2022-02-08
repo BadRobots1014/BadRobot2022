@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.AutoStartRoutineCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
@@ -49,7 +50,11 @@ public class RobotContainer {
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem();
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  private final AutoStartRoutineCommand m_autoStartCommand = new AutoStartRoutineCommand(
+    m_driveTrainSubsystem,
+    m_gyroSubsystem,
+    m_shooterSubsystem
+  );
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
     m_driveTrainSubsystem,
@@ -127,7 +132,7 @@ public class RobotContainer {
     m_driveTrainSubsystem.setDefaultCommand(m_teleopDriveCommand);
 
     // Configure the autonomous routine chooser
-    //m_automonousRoutineChooser.setDefaultOption(driveBackwards);
+    m_automonousRoutineChooser.setDefaultOption("Start Routine", m_autoStartCommand);
     m_autonomousTab.add("Routine", m_automonousRoutineChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
 
     // Configure the prototype input chooser
