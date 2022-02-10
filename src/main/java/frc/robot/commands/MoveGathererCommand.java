@@ -1,3 +1,5 @@
+//LOWERS ARM
+
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -38,6 +40,6 @@ public class MoveGathererCommand extends CommandBase {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return m_encoder.getStopped();
+        return m_encoder.getStopped(); //m_encoder.getStopped says when the arm hits the mechanical stop
     }
 }

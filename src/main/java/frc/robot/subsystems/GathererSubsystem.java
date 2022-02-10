@@ -15,7 +15,7 @@ public class GathererSubsystem extends SubsystemBase {
     }
 
     public void stopGatherer() {
-        m_collectorMotor.stopMotor();
+        m_deployMotor.stopMotor();
     }
 
     public void startCollector() {
