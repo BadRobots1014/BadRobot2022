@@ -71,6 +71,11 @@ public final class Constants {
         public static final double kPositionalD = 0;
     }
 
+    public static final class LEDConstants{
+        public static final int kLEDPwmPort = 9;
+        public static final int kLEDStrandLength = 150;
+    }
+
     /**
      * Constants used for prototyping.
      */

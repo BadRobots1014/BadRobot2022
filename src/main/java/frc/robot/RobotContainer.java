@@ -16,15 +16,20 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.LEDConstants;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.LEDControlCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.commands.PrototypeControlCommand;
 import frc.robot.subsystems.PrototypeSubsystem;
 
@@ -40,15 +45,20 @@ import frc.robot.subsystems.PrototypeSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final AddressableLED m_LED = new AddressableLED(LEDConstants.kLEDPwmPort);
+  private final AddressableLEDBuffer m_LEDBuffer = new AddressableLEDBuffer(LEDConstants.kLEDStrandLength);
+
   private final Joystick m_driverStick = new Joystick(ControllerConstants.kControllerPort);
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem();
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
+  private final LEDSubsystem m_LEDSubsystem = new LEDSubsystem(m_LED, m_LEDBuffer);
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
+  private final LEDControlCommand m_LEDCommand = new LEDControlCommand(m_LEDSubsystem, m_driverStick);
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
     m_driveTrainSubsystem,
     m_gyroSubsystem,
