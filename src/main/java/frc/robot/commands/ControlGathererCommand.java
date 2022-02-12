@@ -1,4 +1,4 @@
-//RUNS ROLLERS
+//LOWERS ARM
 
 package frc.robot.commands;
 
@@ -7,12 +7,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GathererSubsystem;
 
 
-public class StartGathererCommand extends CommandBase {
+public class ControlGathererCommand extends CommandBase {
     
     private final GathererSubsystem m_subsystem;
+    private final Encoder m_encoder = new Encoder(0, 1);
+    private final double m_speed;
     
-    public StartGathererCommand(GathererSubsystem subsystem) {
+    public ControlGathererCommand(GathererSubsystem subsystem, double speed) {
         m_subsystem = subsystem;
+        m_speed = speed;
+
         addRequirements(subsystem);
     }
 
@@ -24,18 +28,18 @@ public class StartGathererCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.startCollector();
+        m_subsystem.runGatherer(m_speed);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_subsystem.stopCollector();
+        m_subsystem.stopGatherer();
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return m_encoder.getStopped(); //m_encoder.getStopped says when the arm hits the mechanical stop
     }
 }

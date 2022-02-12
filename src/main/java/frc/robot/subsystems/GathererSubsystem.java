@@ -1,27 +1,28 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+import frc.robot.Constants.GathererConstants;
 
 public class GathererSubsystem extends SubsystemBase {
-    private final CANSparkMax m_deployMotor = new CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_collectorMotor = new CANSparkMax(8, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final TalonFX m_deployMotor = new TalonFX(GathererConstants.kGathererSpeedController);
+    private final TalonFX m_collectorMotor = new TalonFX(GathererConstants.kCollectorSpeedController);
 
     public GathererSubsystem() {}
 
     public void runGatherer(double speed) {
-        m_deployMotor.set(speed);
+        m_deployMotor.set(ControlMode.PercentOutput, 1.0);
     }
 
     public void stopGatherer() {
-        m_deployMotor.stopMotor();
+        m_deployMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public void startCollector() {
-        m_collectorMotor.set(.3);
+        m_collectorMotor.set(ControlMode.PercentOutput, 1);
     }
     public void stopCollector() {
-        m_collectorMotor.stopMotor();
+        m_collectorMotor.set(ControlMode.PercentOutput, 0);
     }
 }

@@ -15,13 +15,18 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.ControlGathererCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.StartCollectorCommand;
+import frc.robot.commands.ControlGathererCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.GathererSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -42,12 +47,15 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final Joystick m_driverStick = new Joystick(ControllerConstants.kControllerPort);
 
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem();
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
+  private final GathererSubsystem m_gathererSubsystem = new GathererSubsystem();
+  
+  private final ControlGathererCommand m_startGathererCommand = new ControlGathererCommand(m_gathererSubsystem, 1.0);
+  private final ControlGathererCommand m_retractGathererCommand = new ControlGathererCommand(m_gathererSubsystem, -1);
+  private final StartCollectorCommand m_startCollectorCommand = new StartCollectorCommand(m_gathererSubsystem);
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
     m_driveTrainSubsystem,
@@ -91,6 +99,11 @@ public class RobotContainer {
    * into Shuffleboard.
    */
   private final SendableChooser<Boolean> m_prototypeInputChooser = new SendableChooser<>();
+
+  /**
+   * Chooser for the automonous routine
+   */
+  private final SendableChooser<Command> m_automonousRoutineChooser = new SendableChooser<>();
 
   /**
    * The speed [0, 1] to drive the prototyping speed controllers at.
@@ -143,6 +156,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     final JoystickButton shootButton = new JoystickButton(m_driverStick, ControllerConstants.kShootButton);
     shootButton.whileHeld(m_shootCommand);
+
+    final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kGatherButton);
+
+    gatherButton.whileHeld(m_startCollectorCommand);
+    // When limit switches are added to robot, add that to the subsystem and delete withtimeout
+    //gatherButton.whenPressed(m_startGathererCommand.withTimeout(2));
+    //gatherButton.whenReleased(m_retractGathererCommand.withTimeout(2));
   }
 
   /**
@@ -152,7 +172,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return m_automonousRoutineChooser.getSelected();
   }
 
   /**
