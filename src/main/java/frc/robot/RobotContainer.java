@@ -10,21 +10,24 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.PrototypeControlCommand;
 import frc.robot.subsystems.PrototypeSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -37,16 +40,33 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final XboxController m_xboxController = new XboxController(ControllerConstants.kControllerPort);
+  private final Joystick m_driverStick = new Joystick(ControllerConstants.kControllerPort);
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem();
+  private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
-  private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(m_driveTrainSubsystem,
-      m_xboxController);
+  private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
+    m_driveTrainSubsystem,
+    m_gyroSubsystem,
+    () -> {
+      // Invert the X-axis.
+      return -1.0 * m_driverStick.getX();
+    },
+    m_driverStick::getY,
+    () -> {
+      if (m_driverStick.getRawButton(ControllerConstants.kThrottleButton)) {
+        return 0.50;
+      } else {
+        // The default throttle is 75%. In practice, however, the maximum motor power is 56%, as the
+        // {@link DriveTrainSubsystem#tankDrive} currently squares inputs.
+        return 0.75;
+      }
+    }
+  );
 
   /**
    * The joystick used for prototyping controls.
@@ -91,6 +111,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    // We use an arcade-drive system with joystick regions that select specialized drive strategies.
     m_driveTrainSubsystem.setDefaultCommand(m_teleopDriveCommand);
 
     // Configure the prototype input chooser
@@ -120,12 +141,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
-    final JoystickButton buttonY = new JoystickButton(m_xboxController, XboxController.Button.kY.value);
-    buttonY.whileHeld(m_shootCommand);
-
-    JoystickButton prototypeButton = new JoystickButton(m_prototypeJoystick, 1);
-    prototypeButton.whenHeld(m_prototypeControlCommand);
+    final JoystickButton shootButton = new JoystickButton(m_driverStick, ControllerConstants.kShootButton);
+    shootButton.whileHeld(m_shootCommand);
   }
 
   /**
@@ -140,11 +157,11 @@ public class RobotContainer {
 
   /**
    * Calculates the speed value to drive the prototype speed controller at.
-   * 
+   *
    * @return the speed [-1, 1] to drive the prototype speed controller at.
    */
   private double getPrototypePowerOutput() {
-    int inversionConstant = m_prototypeOutputIsInverted.getBoolean(false) ? 1 : -1;
+    double inversionConstant = m_prototypeOutputIsInverted.getBoolean(false) ? 1 : -1;
 
     if (m_prototypeInputChooser.getSelected()) {
       return inversionConstant * m_prototypeJoystick.getY();
