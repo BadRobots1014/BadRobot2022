@@ -24,7 +24,7 @@ public class VisionSubsystem extends SubsystemBase {
     private final SendableChooser<Integer> pipelineChooser;
 
     public VisionSubsystem() {
-        this.rotationalPid = new PIDController(.01, 0, 0);
+        this.rotationalPid = new PIDController(.0125, 0, .00125);
         this.rotationalPid.setSetpoint(0.0);
 
         final NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
