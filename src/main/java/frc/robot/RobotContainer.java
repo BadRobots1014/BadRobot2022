@@ -158,8 +158,8 @@ public class RobotContainer {
     shootButton.whileHeld(m_shootCommand);
 
     final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kGatherButton);
-
     gatherButton.whileHeld(m_startCollectorCommand);
+    
     // When limit switches are added to robot, add that to the subsystem and delete withtimeout
     //gatherButton.whenPressed(m_startGathererCommand.withTimeout(2));
     //gatherButton.whenReleased(m_retractGathererCommand.withTimeout(2));

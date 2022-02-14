@@ -2,7 +2,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GathererSubsystem;
 
@@ -10,7 +9,6 @@ import frc.robot.subsystems.GathererSubsystem;
 public class ControlGathererCommand extends CommandBase {
     
     private final GathererSubsystem m_subsystem;
-    private final Encoder m_encoder = new Encoder(0, 1);
     private final double m_speed;
     
     public ControlGathererCommand(GathererSubsystem subsystem, double speed) {
@@ -35,11 +33,5 @@ public class ControlGathererCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         m_subsystem.stopGatherer();
-    }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return m_encoder.getStopped(); //m_encoder.getStopped says when the arm hits the mechanical stop
     }
 }
