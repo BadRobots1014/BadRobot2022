@@ -52,7 +52,7 @@ public class PrototypeSubsystem extends SubsystemBase {
         // Configure speed controller chooser
         m_speedControllerChooser.addOption("SPARK MAX (ID 7)", m_speedControllers[0]);
         m_speedControllerChooser.addOption("TalonFX (ID 11)", m_speedControllers[1]);
-        m_speedControllerChooser.addOption("TalonFX (ID 13)", m_speedControllers[2]);
+        // m_speedControllerChooser.addOption("TalonFX (ID 13)", m_speedControllers[2]);
         //m_speedControllerChooser.addOption("TalonFX (ID 14)", m_speedControllers[3]);
 
         m_prototypeTab.add("Speed Controller", m_speedControllerChooser).withWidget(BuiltInWidgets.kComboBoxChooser);
