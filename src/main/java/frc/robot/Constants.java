@@ -42,7 +42,7 @@ public final class Constants {
          * The CAN ID of the unattached Talon SRX on RoboRIO 3
          */
         public static final int kSpeedController1 = 21;
-        public static final int kSpeedController2 = 18;
+        public static final int kSpeedController2 = 21;
     }
 
     /**
