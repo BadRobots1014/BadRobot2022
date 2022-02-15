@@ -23,7 +23,7 @@ public class DriveStrategyCommand extends CommandBase {
         final GyroSubsystem gyro
     ) {
         final DriveStrategyCommand self = new DriveStrategyCommand(
-            new AnchorStrategy(gyro),
+            new AnchorStrategy(drive, gyro),
             drive,
             () -> 0.0,
             () -> 0.0
@@ -39,7 +39,7 @@ public class DriveStrategyCommand extends CommandBase {
         final Supplier<Double> rotationSource
     ) {
         return new DriveStrategyCommand(
-            new ArcadeDriveStrategy(),
+            new ArcadeDriveStrategy(drive),
             drive,
             rotationSource,
             powerSource
@@ -60,7 +60,7 @@ public class DriveStrategyCommand extends CommandBase {
         final Supplier<Double> powerSource
     ) {
         final DriveStrategyCommand self = new DriveStrategyCommand(
-            new DriveStraightStrategy(gyro),
+            new DriveStraightStrategy(drive, gyro),
             drive,
             () -> 0.0,
             powerSource
@@ -75,7 +75,7 @@ public class DriveStrategyCommand extends CommandBase {
         final Supplier<Double> rotationSource
     ) {
         return new DriveStrategyCommand(
-            new PivotTurnStrategy(),
+            new PivotTurnStrategy(drive),
             drive,
             rotationSource,
             () -> 0.0

@@ -8,14 +8,15 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive.WheelSpeeds;
 
 import frc.robot.commands.drive.ArcadeDriveStrategy;
 import frc.robot.commands.drive.DriveStraightStrategy;
 import frc.robot.commands.drive.AnchorStrategy;
 import frc.robot.commands.drive.DriveStrategy;
+import frc.robot.commands.drive.FollowTargetStrategy;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.drive.PivotTurnStrategy;
 
@@ -24,28 +25,38 @@ public class TeleopDriveCommand extends CommandBase {
     private final Supplier<Double> m_xSource;
     private final Supplier<Double> m_ySource;
     private final Supplier<Double> m_throttleSource;
+    private final Supplier<Boolean> m_shouldFollowTarget;
 
-    public final DriveStrategy m_arcadeStrategy;
-    public final DriveStrategy m_driveStraightStrategy;
-    public final DriveStrategy m_pivotTurnStrategy;
-    public final DriveStrategy m_anchorStrategy;
+    private final DriveStrategy m_arcadeStrategy;
+    private final DriveStrategy m_driveStraightStrategy;
+    private final DriveStrategy m_pivotTurnStrategy;
+    private final DriveStrategy m_anchorStrategy;
+    private final DriveStrategy m_followTargetStrategy;
 
     private Optional<DriveStrategy> m_strategy;
 
     private final ShuffleboardTab m_tab;
 
-    public TeleopDriveCommand(DriveTrainSubsystem drive, GyroSubsystem gyro, Supplier<Double> xSource,
-            Supplier<Double> ySource, Supplier<Double> throttleSource) {
-
+    public TeleopDriveCommand(
+        DriveTrainSubsystem drive,
+        GyroSubsystem gyro,
+        VisionSubsystem vision,
+        Supplier<Double> xSource,
+        Supplier<Double> ySource,
+        Supplier<Double> throttleSource,
+        Supplier<Boolean> shouldFollowTarget
+    ) {
         m_drive = drive;
         m_xSource = xSource;
         m_ySource = ySource;
         m_throttleSource = throttleSource;
+        m_shouldFollowTarget = shouldFollowTarget;
 
-        m_arcadeStrategy = new ArcadeDriveStrategy();
-        m_driveStraightStrategy = new DriveStraightStrategy(gyro);
-        m_pivotTurnStrategy = new PivotTurnStrategy();
-        m_anchorStrategy = new AnchorStrategy(gyro);
+        m_arcadeStrategy = new ArcadeDriveStrategy(drive);
+        m_driveStraightStrategy = new DriveStraightStrategy(drive, gyro);
+        m_pivotTurnStrategy = new PivotTurnStrategy(drive);
+        m_anchorStrategy = new AnchorStrategy(drive, gyro);
+        m_followTargetStrategy = new FollowTargetStrategy(drive, vision);
 
         // Initialize teleop. driving without a current strategy.
         //
@@ -59,11 +70,10 @@ public class TeleopDriveCommand extends CommandBase {
         m_tab.addNumber("Y", m_ySource::get);
         m_tab.addNumber("Throttle (%)", m_throttleSource::get);
         m_tab.addNumber("Yaw (deg.)", gyro::getYaw);
-        m_tab.addNumber("Rotational PID", gyro::getRotationalPid);
 
-        // Although {@link TeleopDriveCommand} doesn't use the gyroscope directly, some of its
-        // strategies do, and they cannot add requirements themselves.
-        addRequirements(drive, gyro);
+        // Although {@link TeleopDriveCommand} doesn't use the gyroscope or vision subsystems
+        // directly, some of its strategies do, and they cannot add requirements themselves.
+        addRequirements(drive, gyro, vision);
     }
 
     /*
@@ -121,7 +131,7 @@ public class TeleopDriveCommand extends CommandBase {
         // detection. Do not scale 'x' and 'y' by the throttle power yet!
         final DriveStrategy nextStrategy = this.getNextDriveStrategy(x, y);
 
-        // Determine if the current stategy is nonexistent or differs from the new strategy.
+        // If the current stategy is nonexistent or differs from the new strategy...
         if (m_strategy.filter(nextStrategy::equals).isEmpty()) {
             // Update the current strategy.
             m_strategy = Optional.of(nextStrategy);
@@ -140,12 +150,10 @@ public class TeleopDriveCommand extends CommandBase {
         assert this.throttleIsValid(throttle) : "Throttle is out-of-range";
 
         // Execute the next strategy.
-        final WheelSpeeds wheelSpeeds = nextStrategy.execute(
+        nextStrategy.execute(
             this.scaleCoordinate(x, throttle),
             this.scaleCoordinate(y, throttle)
         );
-
-        m_drive.tankDrive(wheelSpeeds.left, wheelSpeeds.right);
     }
 
     private boolean coordinateIsValid(final double coord) {
@@ -153,6 +161,15 @@ public class TeleopDriveCommand extends CommandBase {
     }
 
     private DriveStrategy getNextDriveStrategy(final double x, final double y) {
+        if (m_shouldFollowTarget.get()) {
+            return m_followTargetStrategy;
+        } else {
+            // Otherwise, select the drive strategy based on {@code x} and {@code y}.
+            return this.getNextNonFollowDriveStrategy(x, y);
+        }
+    }
+
+    private DriveStrategy getNextNonFollowDriveStrategy(final double x, final double y) {
         // 'x' and 'y' represent a Cartesian point in the plane of possible joystick positions.
         // There are certain regions in this plane that correspond to certain drive strategies.
         //
