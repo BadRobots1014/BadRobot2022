@@ -12,7 +12,7 @@ public class GathererSubsystem extends SubsystemBase {
     public GathererSubsystem() {}
 
     public void runGatherer(double speed) {
-        m_deployMotor.set(ControlMode.PercentOutput, 1.0);
+        m_deployMotor.set(ControlMode.PercentOutput, speed);
     }
 
     public void stopGatherer() {

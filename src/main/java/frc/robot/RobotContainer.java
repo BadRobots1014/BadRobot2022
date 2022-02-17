@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.GathererConstants;
 import frc.robot.commands.ControlGathererCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ShootCommand;
@@ -54,8 +55,8 @@ public class RobotContainer {
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
   private final GathererSubsystem m_gathererSubsystem = new GathererSubsystem();
   
-  private final ControlGathererCommand m_startGathererCommand = new ControlGathererCommand(m_gathererSubsystem, 1.0);
-  private final ControlGathererCommand m_retractGathererCommand = new ControlGathererCommand(m_gathererSubsystem, -1);
+  private final ControlGathererCommand m_startGathererCommand = new ControlGathererCommand(m_gathererSubsystem, 0.5);
+  private final ControlGathererCommand m_retractGathererCommand = new ControlGathererCommand(m_gathererSubsystem, -0.5);
   private final StartCollectorCommand m_startCollectorCommand = new StartCollectorCommand(m_gathererSubsystem);
 
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
@@ -165,11 +166,20 @@ public class RobotContainer {
     shootButton.whileHeld(m_shootCommand);
 
     final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kGatherButton);
+    final JoystickButton lowerButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
+    final JoystickButton raiseButton = new JoystickButton(m_driverStick, ControllerConstants.kRaiseButton);
+    final int lowerTime = GathererConstants.kDownRuntime;
+    final int raiseTime = GathererConstants.kUpRuntime;
     gatherButton.whileHeld(m_startCollectorCommand);
+
+    //Temporary manual gather arm control
+    lowerButton.whileHeld(m_startGathererCommand);
+    raiseButton.whileHeld(m_retractGathererCommand);
+
     
     // When limit switches are added to robot, add that to the subsystem and delete withtimeout
-    //gatherButton.whenPressed(m_startGathererCommand.withTimeout(2));
-    //gatherButton.whenReleased(m_retractGathererCommand.withTimeout(2));
+    //gatherButton.whenPressed(m_startGathererCommand.withTimeout(lowerTime));
+    //gatherButton.whenReleased(m_retractGathererCommand.withTimeout(raiseTime));
   }
 
   /**
