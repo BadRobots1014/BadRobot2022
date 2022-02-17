@@ -168,8 +168,6 @@ public class RobotContainer {
     final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kGatherButton);
     final JoystickButton lowerButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
     final JoystickButton raiseButton = new JoystickButton(m_driverStick, ControllerConstants.kRaiseButton);
-    final int lowerTime = GathererConstants.kDownRuntime;
-    final int raiseTime = GathererConstants.kUpRuntime;
     gatherButton.whileHeld(m_startCollectorCommand);
 
     //Temporary manual gather arm control
@@ -178,6 +176,8 @@ public class RobotContainer {
 
     
     // When limit switches are added to robot, add that to the subsystem and delete withtimeout
+    // final int lowerTime = GathererConstants.kDownRuntime;
+    // final int raiseTime = GathererConstants.kUpRuntime;
     //gatherButton.whenPressed(m_startGathererCommand.withTimeout(lowerTime));
     //gatherButton.whenReleased(m_retractGathererCommand.withTimeout(raiseTime));
   }
