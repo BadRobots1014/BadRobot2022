@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import java.lang.Math;
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMTalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.ShooterConstants;
@@ -34,8 +34,7 @@ public class ShooterSubsystem extends SubsystemBase {
             this.motorIsInverted = motorIsInverted;
         }
     }
-
-    private final PWMTalonFX speedController = new PWMTalonFX(ShooterConstants.kShooterPort);
+    private final TalonFX speedController = new TalonFX(ShooterConstants.kShooterPort);
 
     public ShooterSubsystem() {
 
