@@ -63,6 +63,8 @@ public final class Constants {
         public static final int kThrottleButton = 2;
         public static final int kShootButton = 3;
 
+        public static final int kGatherButton = 3;
+
         public static final double kDeadzoneRadius = .2;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
         public static final double kPivotTurnRegionHalfBaseLength = .2;
@@ -79,6 +81,10 @@ public final class Constants {
         public static final double kPositionalP = 1.0;
         public static final double kPositionalI = 0;
         public static final double kPositionalD = 0;
+    }
+    public final class GathererConstants {
+        public static final int kCollectorSpeedController = 13;
+        public static final int kGathererSpeedController = 14;
     }
 
     /**
