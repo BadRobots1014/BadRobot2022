@@ -12,17 +12,21 @@ public class GathererSubsystem extends SubsystemBase {
     public GathererSubsystem() {}
 
     public void runGatherer(double speed) {
+        System.out.println("Run arm "+speed+"...");
         m_deployMotor.set(ControlMode.PercentOutput, speed);
     }
 
     public void stopGatherer() {
+        System.out.println("Stop arm...");        
         m_deployMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public void startCollector() {
+        System.out.println("Start collector...");
         m_collectorMotor.set(ControlMode.PercentOutput, 1);
     }
     public void stopCollector() {
+        System.out.println("Stop collector...");
         m_collectorMotor.set(ControlMode.PercentOutput, 0);
     }
 }

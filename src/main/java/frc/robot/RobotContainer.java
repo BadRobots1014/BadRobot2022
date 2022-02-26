@@ -55,8 +55,8 @@ public class RobotContainer {
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
   private final GathererSubsystem m_gathererSubsystem = new GathererSubsystem();
   
-  private final ControlGathererCommand m_startGathererCommand = new ControlGathererCommand(m_gathererSubsystem, 0.5);
-  private final ControlGathererCommand m_retractGathererCommand = new ControlGathererCommand(m_gathererSubsystem, -0.5);
+  private final ControlGathererCommand m_startGathererCommand = new ControlGathererCommand(m_gathererSubsystem, 0.25);
+  private final ControlGathererCommand m_retractGathererCommand = new ControlGathererCommand(m_gathererSubsystem, -0.25);
   private final StartCollectorCommand m_startCollectorCommand = new StartCollectorCommand(m_gathererSubsystem);
 
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
