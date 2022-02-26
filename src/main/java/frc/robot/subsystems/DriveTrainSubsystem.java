@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveTrainConstants;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -12,13 +13,13 @@ import com.revrobotics.CANSparkMaxLowLevel;
 
 
 public class DriveTrainSubsystem extends SubsystemBase {
-    private final CANSparkMax m_frontRight = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_frontLeft = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_backRight = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_backLeft = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final CANSparkMax m_leftA = new CANSparkMax(DriveTrainConstants.kDriveTrainLeftAPort, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final CANSparkMax m_leftB = new CANSparkMax(DriveTrainConstants.kDriveTrainLeftBPort, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final CANSparkMax m_rightA = new CANSparkMax(DriveTrainConstants.kDriveTrainRightAPort, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final CANSparkMax m_rightB = new CANSparkMax(DriveTrainConstants.kDriveTrainRightBPort, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-    private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(m_frontRight, m_backRight);
-    private final MotorControllerGroup m_leftMotors = new MotorControllerGroup(m_frontLeft, m_backLeft);
+    private final MotorControllerGroup m_leftMotors = new MotorControllerGroup(m_leftA, m_leftB);
+    private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(m_rightA, m_rightB);
 
     private final DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftMotors, m_rightMotors);
 
