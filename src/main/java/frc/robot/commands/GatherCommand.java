@@ -1,11 +1,12 @@
-//LOWERS ARM
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GathererSubsystem;
 
-
+/**
+ * Deploys the gatherer and starts the collector. On command end,
+ * stops the collector.
+ */
 public class GatherCommand extends CommandBase {
     
     private final GathererSubsystem m_subsystem;

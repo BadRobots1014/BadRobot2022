@@ -66,7 +66,7 @@ public final class Constants {
         //Maybe use 6 and 7 for shooting forward and back in the future
         public static final int kShootButton = 6;
 
-        public static final int kGatherButton = 3;
+        public static final int kCollectorButton = 1;
         public static final int kLowerButton = 4;
         public static final int kRaiseButton = 5;
 

@@ -53,7 +53,7 @@ public class RobotContainer {
 
   private final DeployGathererCommand m_deployGathererCommand = new DeployGathererCommand(m_gathererSubsystem);
   private final RetractGathererCommand m_retractGathererCommand = new RetractGathererCommand(m_gathererSubsystem);
-  private final GatherCommand m_gatherCommand = new GatherCommand(m_gathererSubsystem);
+  private final GatherCommand m_startGathererCommand = new GatherCommand(m_gathererSubsystem);
 
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
@@ -163,19 +163,19 @@ public class RobotContainer {
     shootButton.whileHeld(m_shootCommand);
 
     // TODO: Change the button to a constant later.
-    final JoystickButton gatherButton = new JoystickButton(m_driverStick, 1);
-    final JoystickButton lowerButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
-    final JoystickButton raiseButton = new JoystickButton(m_driverStick, ControllerConstants.kRaiseButton);
+    final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kCollectorButton);
+    final JoystickButton lowerGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
+    final JoystickButton raiseGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kRaiseButton);
 
     /*
      * Hold down the gather button to deploy the gatherer and run the collector. Let
      * go to retract the gatherer and stop the collector.
      */
-    gatherButton.whileHeld(m_gatherCommand).whenReleased(m_retractGathererCommand.withTimeout(5));
+    gatherButton.whileHeld(m_startGathererCommand).whenReleased(m_retractGathererCommand.withTimeout(5));
 
     // Temporary manual gather arm control
-    lowerButton.whileHeld(m_deployGathererCommand);
-    raiseButton.whenPressed(m_retractGathererCommand);
+    lowerGathererButton.whileHeld(m_deployGathererCommand);
+    raiseGathererButton.whenPressed(m_retractGathererCommand);
 
     // When limit switches are added to robot, add that to the subsystem and delete
     // withtimeout
