@@ -15,26 +15,21 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.GathererConstants;
-import frc.robot.commands.ControlGathererCommand;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.DeployGathererCommand;
+import frc.robot.commands.GatherCommand;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.StartCollectorCommand;
-import frc.robot.commands.ControlGathererCommand;
 import frc.robot.commands.TeleopDriveCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.GathererSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.commands.PrototypeControlCommand;
+import frc.robot.commands.RetractGathererCommand;
 import frc.robot.subsystems.PrototypeSubsystem;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -47,42 +42,43 @@ import frc.robot.subsystems.PrototypeSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Joystick m_driverStick = new Joystick(ControllerConstants.kControllerPort);
+  // TODO: Fix this constant
+  private final Joystick m_driverStick = new Joystick(0);
 
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem();
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
   private final GathererSubsystem m_gathererSubsystem = new GathererSubsystem();
-  
-  private final ControlGathererCommand m_startGathererCommand = new ControlGathererCommand(m_gathererSubsystem, 0.25);
-  private final ControlGathererCommand m_retractGathererCommand = new ControlGathererCommand(m_gathererSubsystem, -0.25);
-  private final StartCollectorCommand m_startCollectorCommand = new StartCollectorCommand(m_gathererSubsystem);
+
+  private final DeployGathererCommand m_deployGathererCommand = new DeployGathererCommand(m_gathererSubsystem);
+  private final RetractGathererCommand m_retractGathererCommand = new RetractGathererCommand(m_gathererSubsystem);
+  private final GatherCommand m_gatherCommand = new GatherCommand(m_gathererSubsystem);
 
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
-    m_driveTrainSubsystem,
-    m_gyroSubsystem,
-    m_visionSubsystem,
-    () -> {
-      // Invert the X-axis.
-      return -1.0 * m_driverStick.getX();
-    },
-    m_driverStick::getY,
-    () -> {
-      if (m_driverStick.getRawButton(ControllerConstants.kThrottleButton)) {
-        return 0.50;
-      } else {
-        // The default throttle is 75%. In practice, however, the maximum motor power is 56%, as the
-        // {@link DriveTrainSubsystem#tankDrive} currently squares inputs.
-        return 0.75;
-      }
-    },
-    () -> {
-      // TODO
-      return m_driverStick.getRawButton(ControllerConstants.kFollowTargetButton);
-    }
-  );
+      m_driveTrainSubsystem,
+      m_gyroSubsystem,
+      m_visionSubsystem,
+      () -> {
+        // Invert the X-axis.
+        return -1.0 * m_driverStick.getX();
+      },
+      m_driverStick::getY,
+      () -> {
+        if (m_driverStick.getRawButton(ControllerConstants.kThrottleButton)) {
+          return 0.50;
+        } else {
+          // The default throttle is 75%. In practice, however, the maximum motor power is
+          // 56%, as the
+          // {@link DriveTrainSubsystem#tankDrive} currently squares inputs.
+          return 0.75;
+        }
+      },
+      () -> {
+        // TODO
+        return m_driverStick.getRawButton(ControllerConstants.kFollowTargetButton);
+      });
 
   /**
    * The joystick used for prototyping controls.
@@ -132,7 +128,8 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // We use an arcade-drive system with joystick regions that select specialized drive strategies.
+    // We use an arcade-drive system with joystick regions that select specialized
+    // drive strategies.
     m_driveTrainSubsystem.setDefaultCommand(m_teleopDriveCommand);
 
     // Configure the prototype input chooser
@@ -165,21 +162,27 @@ public class RobotContainer {
     final JoystickButton shootButton = new JoystickButton(m_driverStick, ControllerConstants.kShootButton);
     shootButton.whileHeld(m_shootCommand);
 
-    final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kGatherButton);
+    // TODO: Change the button to a constant later.
+    final JoystickButton gatherButton = new JoystickButton(m_driverStick, 1);
     final JoystickButton lowerButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
     final JoystickButton raiseButton = new JoystickButton(m_driverStick, ControllerConstants.kRaiseButton);
-    gatherButton.whileHeld(m_startCollectorCommand);
 
-    //Temporary manual gather arm control
-    lowerButton.whileHeld(m_startGathererCommand);
-    raiseButton.whileHeld(m_retractGathererCommand);
+    /*
+     * Hold down the gather button to deploy the gatherer and run the collector. Let
+     * go to retract the gatherer and stop the collector.
+     */
+    gatherButton.whileHeld(m_gatherCommand).whenReleased(m_retractGathererCommand.withTimeout(5));
 
-    
-    // When limit switches are added to robot, add that to the subsystem and delete withtimeout
+    // Temporary manual gather arm control
+    lowerButton.whileHeld(m_deployGathererCommand);
+    raiseButton.whenPressed(m_retractGathererCommand);
+
+    // When limit switches are added to robot, add that to the subsystem and delete
+    // withtimeout
     // final int lowerTime = GathererConstants.kDownRuntime;
     // final int raiseTime = GathererConstants.kUpRuntime;
-    //gatherButton.whenPressed(m_startGathererCommand.withTimeout(lowerTime));
-    //gatherButton.whenReleased(m_retractGathererCommand.withTimeout(raiseTime));
+    // gatherButton.whenPressed(m_startGathererCommand.withTimeout(lowerTime));
+    // gatherButton.whenReleased(m_retractGathererCommand.withTimeout(raiseTime));
   }
 
   /**

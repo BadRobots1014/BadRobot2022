@@ -16,6 +16,14 @@ public class GathererSubsystem extends SubsystemBase {
         m_deployMotor.set(ControlMode.PercentOutput, speed);
     }
 
+    public void deployGatherer() {
+        m_deployMotor.set(ControlMode.PercentOutput, -0.20);
+    }
+
+    public void retractGatherer() {
+        m_deployMotor.set(ControlMode.PercentOutput, 0.20);
+    }
+
     public void stopGatherer() {
         System.out.println("Stop arm...");        
         m_deployMotor.set(ControlMode.PercentOutput, 0);
