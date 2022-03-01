@@ -13,11 +13,23 @@ import frc.robot.subsystems.gatherer.GathererStateRetracting;
 /**
  * Represents the gatherer subsystem and exposes methods to control it.
  * 
+ * A {@code GathererSubsystem} uses an internal state machine to control what
+ * the gatherer is doing at all times.
+ * 
+ * {@code this.state} stores a reference to the current state. State-specific
+ * logic is implemented in {@code GathererState} classes. The
+ * {@code requestEngage} and {@code requestDisengage} methods are used to
+ * retract and extend the gatherer automagically.
+ * 
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Benjamin Gluck
  */
 public class GathererSubsystem extends SubsystemBase {
 
+    /**
+     * {@code GathererState}s that can be requested from a {@code GathererSubsystem}
+     * using the {@code getState} method.
+     */
     public static enum State {
         RETRACTED,
         EXTENDING,
@@ -55,7 +67,8 @@ public class GathererSubsystem extends SubsystemBase {
      */
 
     /**
-     * Handles state changes by calling prev.end() and next.initialize().
+     * Handles state changes by calling {@code prev.end()} and
+     * {@code next.initialize()}.
      * 
      * @param prev the previous state object
      * @param next the next state object
@@ -101,10 +114,12 @@ public class GathererSubsystem extends SubsystemBase {
      * State setter and getter ------------------------------------------------
      */
 
-    public GathererState getCurrentState() {
-        return this.state;
-    }
-
+    /**
+     * Gets the corresponding {@code GathererState} object used with {@code this}.
+     * 
+     * @param state the type of state object to retrieve
+     * @return the corresponding {@code GathererState} object
+     */
     public GathererState getState(State state) {
         switch (state) {
             case RETRACTED:
@@ -121,6 +136,11 @@ public class GathererSubsystem extends SubsystemBase {
         return null;
     }
 
+    /**
+     * Sets {@code this.state} to {@code state}.
+     * 
+     * @param state the new state
+     */
     public void setState(GathererState state) {
         this.onStateChange(this.state, state);
         this.state = state;
@@ -130,10 +150,18 @@ public class GathererSubsystem extends SubsystemBase {
      * Request methods --------------------------------------------------------
      */
 
+    /**
+     * Request the gatherer to engage. The internal state machine of {@code this}
+     * will handle all further logic.
+     */
     public void requestEngage() {
         this.state.onRequestEngage();
     }
 
+    /**
+     * Request the gatherer to disengage. The internal state machine of {@code this}
+     * will handle all further logic.
+     */
     public void requestDisengage() {
         this.state.onRequestDisengage();
     }
