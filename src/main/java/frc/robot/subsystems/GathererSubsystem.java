@@ -11,18 +11,49 @@ public class GathererSubsystem extends SubsystemBase {
 
     public GathererSubsystem() {}
 
+    /**
+     * Runs the gatherer with a custom speed, mainly for testing.
+     * @param speed
+     */
     public void runGatherer(double speed) {
-        m_deployMotor.set(ControlMode.PercentOutput, 1.0);
+        System.out.println("Run arm "+speed+"...");
+        m_deployMotor.set(ControlMode.PercentOutput, speed);
+    }
+
+    /**
+     * Deploys the gatherer from stored position.
+     * TODO: Make the gatherer stop when it reaches the limit switch.
+     * (Check to make sure limit switch is on the robot)
+     */
+    public void deployGatherer() {
+        m_deployMotor.set(ControlMode.PercentOutput, -0.20);
+    }
+
+    /**
+     * Retracts the gatherer from deployed position.
+     * TODO: Make the gatherer stop when it reaches the limit switch.
+     * (Check to make sure limit switch is on the robot)
+     */
+    public void retractGatherer() {
+        m_deployMotor.set(ControlMode.PercentOutput, 0.20);
     }
 
     public void stopGatherer() {
+        System.out.println("Stop arm...");        
         m_deployMotor.set(ControlMode.PercentOutput, 0);
     }
 
+    /**
+     * Starts the collector, the part of the gatherer that uses
+     * wheels to direct balls into the robot.
+     */
     public void startCollector() {
+        System.out.println("Start collector...");
         m_collectorMotor.set(ControlMode.PercentOutput, 1);
     }
+
     public void stopCollector() {
+        System.out.println("Stop collector...");
         m_collectorMotor.set(ControlMode.PercentOutput, 0);
     }
 }

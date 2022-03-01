@@ -4,13 +4,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveTrainConstants;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
-
 
 public class DriveTrainSubsystem extends SubsystemBase {
     private final CANSparkMax m_leftA = new CANSparkMax(DriveTrainConstants.kDriveTrainLeftAPort, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -18,18 +16,16 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final CANSparkMax m_rightA = new CANSparkMax(DriveTrainConstants.kDriveTrainRightAPort, CANSparkMaxLowLevel.MotorType.kBrushless);
     private final CANSparkMax m_rightB = new CANSparkMax(DriveTrainConstants.kDriveTrainRightBPort, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-    private final MotorControllerGroup m_leftMotors = new MotorControllerGroup(m_leftA, m_leftB);
-    private final MotorControllerGroup m_rightMotors = new MotorControllerGroup(m_rightA, m_rightB);
-
-    private final DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftMotors, m_rightMotors);
+    private final DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftA, m_rightA);
 
     private final ShuffleboardTab m_tab = Shuffleboard.getTab("Drivetrain");
 
     public DriveTrainSubsystem() {
-        m_leftMotors.setInverted(true);
+        m_leftB.follow(m_leftA, true);
+        m_rightB.follow(m_rightA);
 
-        m_tab.addNumber("Left Power", m_leftMotors::get);
-        m_tab.addNumber("Right Power", m_rightMotors::get);
+        m_tab.addNumber("Left Power", m_leftA::get);
+        m_tab.addNumber("Right Power", m_rightA::get);
     }
 
     public void arcadeDrive(double speed, double rotation) {
