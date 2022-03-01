@@ -22,6 +22,8 @@ public class GathererSubsystem extends SubsystemBase {
 
     /**
      * Deploys the gatherer from stored position.
+     * TODO: Make the gatherer stop when it reaches the limit switch.
+     * (Check to make sure limit switch is on the robot)
      */
     public void deployGatherer() {
         m_deployMotor.set(ControlMode.PercentOutput, -0.20);
@@ -29,6 +31,8 @@ public class GathererSubsystem extends SubsystemBase {
 
     /**
      * Retracts the gatherer from deployed position.
+     * TODO: Make the gatherer stop when it reaches the limit switch.
+     * (Check to make sure limit switch is on the robot)
      */
     public void retractGatherer() {
         m_deployMotor.set(ControlMode.PercentOutput, 0.20);

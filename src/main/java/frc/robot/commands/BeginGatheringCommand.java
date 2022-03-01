@@ -5,13 +5,13 @@ import frc.robot.subsystems.GathererSubsystem;
 
 /**
  * Deploys the gatherer and starts the collector. On command end,
- * stops the collector.
+ * stops the collector and gatherer motors.
  */
-public class GatherCommand extends CommandBase {
+public class BeginGatheringCommand extends CommandBase {
     
     private final GathererSubsystem m_subsystem;
     
-    public GatherCommand(GathererSubsystem subsystem) {
+    public BeginGatheringCommand(GathererSubsystem subsystem) {
         m_subsystem = subsystem;
 
         addRequirements(subsystem);

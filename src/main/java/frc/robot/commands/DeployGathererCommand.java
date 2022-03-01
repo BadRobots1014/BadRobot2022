@@ -1,11 +1,11 @@
-//LOWERS ARM
-
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.GathererSubsystem;
 
-
+/**
+ * Retracts the gatherer from stored position to deployed position.
+ */
 public class DeployGathererCommand extends CommandBase {
     
     private final GathererSubsystem m_subsystem;
