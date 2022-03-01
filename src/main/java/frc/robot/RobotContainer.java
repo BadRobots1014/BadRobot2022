@@ -18,8 +18,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.commands.DeployGathererCommand;
-import frc.robot.commands.BeginGatheringCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.GathererSubsystem;
@@ -28,7 +26,8 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.commands.PrototypeControlCommand;
-import frc.robot.commands.RetractGathererCommand;
+import frc.robot.commands.RequestDisengageGathererCommand;
+import frc.robot.commands.RequestEngageGathererCommand;
 import frc.robot.subsystems.PrototypeSubsystem;
 
 /**
@@ -51,9 +50,8 @@ public class RobotContainer {
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
   private final GathererSubsystem m_gathererSubsystem = new GathererSubsystem();
 
-  private final DeployGathererCommand m_deployGathererCommand = new DeployGathererCommand(m_gathererSubsystem);
-  private final RetractGathererCommand m_retractGathererCommand = new RetractGathererCommand(m_gathererSubsystem);
-  private final BeginGatheringCommand m_startGathererCommand = new BeginGatheringCommand(m_gathererSubsystem);
+  private final RequestEngageGathererCommand m_reqEngageGathererCommand = new RequestEngageGathererCommand(m_gathererSubsystem);
+  private final RequestDisengageGathererCommand m_reqDisengageGathererCommand = new RequestDisengageGathererCommand(m_gathererSubsystem);
 
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
@@ -162,27 +160,9 @@ public class RobotContainer {
     final JoystickButton shootButton = new JoystickButton(m_driverStick, ControllerConstants.kShootButton);
     shootButton.whileHeld(m_shootCommand);
 
-    // TODO: Change the button to a constant later.
-    final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kCollectorButton);
-    final JoystickButton lowerGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
-    final JoystickButton raiseGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kRaiseButton);
+    final JoystickButton gatherButton = new JoystickButton(m_driverStick, 1);
+    gatherButton.whileHeld(m_reqEngageGathererCommand).whenReleased(m_reqDisengageGathererCommand);
 
-    /*
-     * Hold down the gather button to deploy the gatherer and run the collector. Let
-     * go to retract the gatherer and stop the collector.
-     */
-    gatherButton.whileHeld(m_startGathererCommand).whenReleased(m_retractGathererCommand.withTimeout(5));
-
-    // Temporary manual gather arm control
-    lowerGathererButton.whileHeld(m_deployGathererCommand);
-    raiseGathererButton.whenPressed(m_retractGathererCommand);
-
-    // When limit switches are added to robot, add that to the subsystem and delete
-    // withtimeout
-    // final int lowerTime = GathererConstants.kDownRuntime;
-    // final int raiseTime = GathererConstants.kUpRuntime;
-    // gatherButton.whenPressed(m_startGathererCommand.withTimeout(lowerTime));
-    // gatherButton.whenReleased(m_retractGathererCommand.withTimeout(raiseTime));
   }
 
   /**
