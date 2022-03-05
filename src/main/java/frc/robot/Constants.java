@@ -97,6 +97,8 @@ public final class Constants {
     public final class IndexerConstants {
         public static final int kLowerIndexerSpeedController = 29;
         public static final int kUpperIndexerSpeedController = 15;
+
+        public static final int kIndexerMaxSpeed = 1;
     }
 
     /**
