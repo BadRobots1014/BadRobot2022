@@ -20,7 +20,7 @@ public class IndexerSubsystem extends SubsystemBase {
     }
 
     public void runUpperMotor() {
-        m_upperMotor.set(ControlMode.PercentOutput, IndexerConstants.kIndexerMaxSpeed);
+        m_upperMotor.set(ControlMode.PercentOutput, -IndexerConstants.kIndexerMaxSpeed);
     }
 
     public void stopUpperMotor() {
