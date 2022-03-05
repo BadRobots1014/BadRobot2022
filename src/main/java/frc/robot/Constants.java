@@ -94,6 +94,11 @@ public final class Constants {
         public static final int kGathererSpeedController = 14;
     }
 
+    public final class IndexerConstants {
+        public static final int kLowerIndexerSpeedController = 29;
+        public static final int kUpperIndexerSpeedController = 15;
+    }
+
     /**
      * Constants used for prototyping.
      */
