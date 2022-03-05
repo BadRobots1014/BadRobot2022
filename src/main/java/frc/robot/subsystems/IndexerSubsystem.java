@@ -13,17 +13,21 @@ public class IndexerSubsystem extends SubsystemBase {
 
     public void runLowerMotor() {
         m_lowerMotor.set(ControlMode.PercentOutput, IndexerConstants.kIndexerMaxSpeed);
+        System.out.println("Running lower motor");
     }
 
     public void stopLowerMotor() {
         m_lowerMotor.set(ControlMode.PercentOutput, 0);
+        System.out.println("Stopped lower motor");
     }
 
     public void runUpperMotor() {
-        m_upperMotor.set(ControlMode.PercentOutput, IndexerConstants.kIndexerMaxSpeed);
+        m_upperMotor.set(ControlMode.PercentOutput, -IndexerConstants.kIndexerMaxSpeed);
+        System.out.println("Running upper motor");
     }
 
     public void stopUpperMotor() {
         m_upperMotor.set(ControlMode.PercentOutput, 0);
+        System.out.println("Stopped upper motor");
     }
 }

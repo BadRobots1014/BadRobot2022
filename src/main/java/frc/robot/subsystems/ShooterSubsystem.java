@@ -48,8 +48,8 @@ public class ShooterSubsystem extends SubsystemBase {
      *              negative otherwise.
      */
     public void run(double power) {
-        //this.speedController.set(TalonFXControlMode.PercentOutput, power);
         this.speedController.set(TalonFXControlMode.Velocity, ShooterConstants.kGoalSpeed);
+        System.out.println("Running shooter");
     }
 
     /**
