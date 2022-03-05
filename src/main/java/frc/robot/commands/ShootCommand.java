@@ -2,14 +2,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.IndexerSubsystem;
 
 
 public class ShootCommand extends CommandBase {
     
     private final ShooterSubsystem m_subsystem;
+    private final IndexerSubsystem m_indexSubsystem;
     
-    public ShootCommand(ShooterSubsystem subsystem) {
+    public ShootCommand(ShooterSubsystem subsystem, IndexerSubsystem indexSubsystem) {
         m_subsystem = subsystem;
+        m_indexSubsystem = indexSubsystem;
 
         addRequirements(subsystem);
     }
@@ -24,12 +28,19 @@ public class ShootCommand extends CommandBase {
     @Override
     public void execute() {
         m_subsystem.run(0.5);
+        if (Math.abs(m_subsystem.getDeltaDesiredVelocity()) < ShooterConstants.kMaxTolerance) {
+            m_indexSubsystem.runUpperMotor();
+        }
+        else {
+            m_indexSubsystem.stopUpperMotor();
+        }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         m_subsystem.stop();
+        m_indexSubsystem.stopUpperMotor();
     }
 
     // Returns true when the command should end.

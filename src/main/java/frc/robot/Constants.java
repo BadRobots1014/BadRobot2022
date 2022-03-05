@@ -50,6 +50,9 @@ public final class Constants {
          * The acceleration of gravity, in m/s/s.
          */
         public static final double kGravityAcceleration = 9.8;
+
+        public static final double kGoalSpeed = 2000;
+        public static final double kMaxTolerance = 10;
     }
 
     /**

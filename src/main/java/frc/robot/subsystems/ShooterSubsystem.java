@@ -48,14 +48,16 @@ public class ShooterSubsystem extends SubsystemBase {
      *              negative otherwise.
      */
     public void run(double power) {
-        this.speedController.set(TalonFXControlMode.PercentOutput, power);
+        //this.speedController.set(TalonFXControlMode.PercentOutput, power);
+        this.speedController.set(TalonFXControlMode.Velocity, ShooterConstants.kGoalSpeed);
     }
 
     /**
      * Stops the flywheel motor.
      */
     public void stop() {
-        this.speedController.set(TalonFXControlMode.PercentOutput, 0.0);
+        this.speedController.set(TalonFXControlMode.Velocity, 0.0);
+        System.out.println("Stopped");
     }
 
     /**
@@ -104,5 +106,9 @@ public class ShooterSubsystem extends SubsystemBase {
             ((-1.0 * targetY) + (targetX * Math.tan(initialAngle)));
         
         return Math.sqrt(numerator / denominator);
+    }
+
+    public double getDeltaDesiredVelocity() {
+        return this.speedController.getSelectedSensorVelocity() - ShooterConstants.kGoalSpeed;
     }
 }
