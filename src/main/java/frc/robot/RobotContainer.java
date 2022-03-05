@@ -30,6 +30,9 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.commands.PrototypeControlCommand;
 import frc.robot.commands.RetractGathererCommand;
 import frc.robot.subsystems.PrototypeSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.commands.IndexerCommand;
+import frc.robot.commands.UpperIndexerCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -50,10 +53,14 @@ public class RobotContainer {
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem();
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
   private final GathererSubsystem m_gathererSubsystem = new GathererSubsystem();
+  private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
 
   private final DeployGathererCommand m_deployGathererCommand = new DeployGathererCommand(m_gathererSubsystem);
   private final RetractGathererCommand m_retractGathererCommand = new RetractGathererCommand(m_gathererSubsystem);
   private final BeginGatheringCommand m_startGathererCommand = new BeginGatheringCommand(m_gathererSubsystem);
+
+  private final IndexerCommand m_runIndexerCommand = new IndexerCommand(m_indexerSubsystem);
+  private final UpperIndexerCommand m_runUpperIndexerCommand = new UpperIndexerCommand(m_indexerSubsystem);
 
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
@@ -162,10 +169,15 @@ public class RobotContainer {
     final JoystickButton shootButton = new JoystickButton(m_driverStick, ControllerConstants.kShootButton);
     shootButton.whileHeld(m_shootCommand);
 
-    // TODO: Change the button to a constant later.
     final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kCollectorButton);
     final JoystickButton lowerGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
     final JoystickButton raiseGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kRaiseButton);
+
+    //Temporary manual indexer controls
+    final JoystickButton runIndexerButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerIndexerButton);
+    final JoystickButton runUpperIndexerButton = new JoystickButton(m_driverStick, ControllerConstants.kUpperIndexerButton);
+    runIndexerButton.whileHeld(m_runIndexerCommand);
+    runUpperIndexerButton.whileHeld(m_runUpperIndexerCommand);
 
     /*
      * Hold down the gather button to deploy the gatherer and run the collector. Let

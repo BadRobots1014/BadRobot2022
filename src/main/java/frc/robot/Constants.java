@@ -62,13 +62,16 @@ public final class Constants {
         public static final int kFollowTargetButton = 1;
         public static final int kThrottleButton = 2;
         
-        //Needs to be read in from another joystick, needs to be fixed
+        //TODO: Shooting to be read in from another joystick still
         //Maybe use 6 and 7 for shooting forward and back in the future
         public static final int kShootButton = 6;
 
         public static final int kCollectorButton = 1;
         public static final int kLowerButton = 4;
         public static final int kRaiseButton = 5;
+
+        public static final int kLowerIndexerButton = 10;
+        public static final int kUpperIndexerButton = 11;
 
         public static final double kDeadzoneRadius = .2;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
