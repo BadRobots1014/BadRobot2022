@@ -57,7 +57,6 @@ public final class Constants {
      */
     public final class ControllerConstants {
         public static final int kControllerPort = 0;
-        public static final int kPrototypePort = 1;
 
         public static final int kFollowTargetButton = 1;
         public static final int kThrottleButton = 2;
@@ -102,30 +101,5 @@ public final class Constants {
         public static final int kUpperIndexerSpeedController = 15;
 
         public static final int kIndexerMaxSpeed = 1;
-    }
-
-    /**
-     * Constants used for prototyping.
-     */
-    public final class PrototypeConstants {
-        /**
-         * The CAN ID of the unattached SPARK MAX.
-         */
-        public static final int kSpeedController1 = 7;
-
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController2 = 11;
-
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController3 = 13;
-
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController4 = 14;
     }
 }
