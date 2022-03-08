@@ -51,8 +51,8 @@ public final class Constants {
          */
         public static final double kGravityAcceleration = 9.8;
 
-        public static final double kGoalSpeed = 2000;
-        public static final double kMaxTolerance = 10;
+        public static final double kGoalSpeed = 1000;
+        public static final double kMaxTolerance = 100;
     }
 
     /**
@@ -66,7 +66,7 @@ public final class Constants {
         
         //TODO: Shooting to be read in from another joystick still
         //Maybe use 6 and 7 for shooting forward and back in the future
-        public static final int kShootButton = 6;
+        public static final int kShootButton = 7;
 
         public static final int kCollectorButton = 1;
         public static final int kLowerButton = 4;

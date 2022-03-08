@@ -4,6 +4,8 @@ import java.lang.Math;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.ShooterConstants;
@@ -35,7 +37,7 @@ public class ShooterSubsystem extends SubsystemBase {
             this.motorIsInverted = motorIsInverted;
         }
     }
-    private final TalonFX speedController = new TalonFX(ShooterConstants.kShooterPort);
+    private final WPI_TalonFX speedController = new WPI_TalonFX(ShooterConstants.kShooterPort);
 
     public ShooterSubsystem() {
 
@@ -48,7 +50,7 @@ public class ShooterSubsystem extends SubsystemBase {
      *              negative otherwise.
      */
     public void run(double power) {
-        this.speedController.set(TalonFXControlMode.Velocity, ShooterConstants.kGoalSpeed);
+        this.speedController.set(TalonFXControlMode.PercentOutput, 0.5);
         System.out.println("Running shooter");
     }
 
@@ -56,8 +58,10 @@ public class ShooterSubsystem extends SubsystemBase {
      * Stops the flywheel motor.
      */
     public void stop() {
-        this.speedController.set(TalonFXControlMode.Velocity, 0.0);
-        System.out.println("Stopped");
+        //this.speedController.set(TalonFXControlMode.Velocity, 0.0);
+        //this.speedController.set(TalonFXControlMode.PercentOutput, 0.0);
+        this.speedController.stopMotor();
+        System.out.println("Shooter stopped");
     }
 
     /**
@@ -109,6 +113,7 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public double getDeltaDesiredVelocity() {
-        return this.speedController.getSelectedSensorVelocity() - ShooterConstants.kGoalSpeed;
+        System.out.println(this.speedController.getSelectedSensorVelocity());
+        return this.speedController.getSelectedSensorVelocity() - (ShooterConstants.kGoalSpeed * 2);
     }
 }

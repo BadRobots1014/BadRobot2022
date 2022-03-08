@@ -21,7 +21,7 @@ public class ShootCommand extends CommandBase {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        m_subsystem.run(0.5);
+        //m_subsystem.run(0.5);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -31,9 +31,9 @@ public class ShootCommand extends CommandBase {
         if (Math.abs(m_subsystem.getDeltaDesiredVelocity()) < ShooterConstants.kMaxTolerance) {
             m_indexSubsystem.runUpperMotor();
         }
-        else {
-            m_indexSubsystem.stopUpperMotor();
-        }
+        // else {
+        //     m_indexSubsystem.stopUpperMotor();
+        // }
     }
 
     // Called once the command ends or is interrupted.
@@ -41,6 +41,7 @@ public class ShootCommand extends CommandBase {
     public void end(boolean interrupted) {
         m_subsystem.stop();
         m_indexSubsystem.stopUpperMotor();
+        System.out.println("Stopping everything");
     }
 
     // Returns true when the command should end.
