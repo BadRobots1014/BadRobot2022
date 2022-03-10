@@ -57,11 +57,20 @@ public final class Constants {
      */
     public final class ControllerConstants {
         public static final int kControllerPort = 0;
-        public static final int kPrototypePort = 1;
 
         public static final int kFollowTargetButton = 1;
         public static final int kThrottleButton = 2;
-        public static final int kShootButton = 3;
+        
+        //TODO: Shooting to be read in from another joystick still
+        //Maybe use 6 and 7 for shooting forward and back in the future
+        public static final int kShootButton = 6;
+
+        public static final int kCollectorButton = 1;
+        public static final int kLowerButton = 4;
+        public static final int kRaiseButton = 5;
+
+        public static final int kLowerIndexerButton = 10;
+        public static final int kUpperIndexerButton = 11;
 
         public static final double kDeadzoneRadius = .2;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
@@ -69,8 +78,10 @@ public final class Constants {
     }
 
     public final class DriveTrainConstants {
-        public static final int kDriveTrainLeftPort = 9;
-        public static final int kDriveTrainRightPort = 8;
+        public static final int kDriveTrainLeftAPort = 12;
+        public static final int kDriveTrainLeftBPort = 4;
+        public static final int kDriveTrainRightAPort = 2;
+        public static final int kDriveTrainRightBPort = 3;
 
         public static final double kRotationalP = .03;
         public static final double kRotationalI = 0;
@@ -80,29 +91,15 @@ public final class Constants {
         public static final double kPositionalI = 0;
         public static final double kPositionalD = 0;
     }
+    public final class GathererConstants {
+        public static final int kCollectorSpeedController = 13;
+        public static final int kGathererSpeedController = 14;
+    }
 
-    /**
-     * Constants used for prototyping.
-     */
-    public final class PrototypeConstants {
-        /**
-         * The CAN ID of the unattached SPARK MAX.
-         */
-        public static final int kSpeedController1 = 7;
+    public final class IndexerConstants {
+        public static final int kLowerIndexerSpeedController = 29;
+        public static final int kUpperIndexerSpeedController = 15;
 
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController2 = 11;
-
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController3 = 13;
-
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController4 = 14;
+        public static final int kIndexerMaxSpeed = 1;
     }
 }
