@@ -4,32 +4,29 @@
 
 package frc.robot;
 
-import java.util.Map;
-
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.DeployGathererCommand;
+import frc.robot.commands.BeginGatheringCommand;
 import frc.robot.commands.AutoStartRoutineCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.GathererSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.commands.PrototypeControlCommand;
-import frc.robot.subsystems.PrototypeSubsystem;
-
+import frc.robot.commands.RetractGathererCommand;
+import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.commands.IndexerCommand;
+import frc.robot.commands.UpperIndexerCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -42,14 +39,22 @@ import frc.robot.subsystems.PrototypeSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final Joystick m_driverStick = new Joystick(ControllerConstants.kControllerPort);
+  // TODO: Fix this constant
+  private final Joystick m_driverStick = new Joystick(0);
 
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
   private final DriveTrainSubsystem m_driveTrainSubsystem = new DriveTrainSubsystem();
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
+  private final GathererSubsystem m_gathererSubsystem = new GathererSubsystem();
+  private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
 
+  private final DeployGathererCommand m_deployGathererCommand = new DeployGathererCommand(m_gathererSubsystem);
+  private final RetractGathererCommand m_retractGathererCommand = new RetractGathererCommand(m_gathererSubsystem);
+  private final BeginGatheringCommand m_startGathererCommand = new BeginGatheringCommand(m_gathererSubsystem);
+
+  private final IndexerCommand m_runIndexerCommand = new IndexerCommand(m_indexerSubsystem);
+  private final UpperIndexerCommand m_runUpperIndexerCommand = new UpperIndexerCommand(m_indexerSubsystem);
   private final AutoStartRoutineCommand m_autoStartCommand = new AutoStartRoutineCommand(
     m_driveTrainSubsystem,
     m_gyroSubsystem,
@@ -114,15 +119,35 @@ public class RobotContainer {
    */
   private final NetworkTableEntry m_prototypePower;
 
-  /**
-   * Whether or not the output to the speed controllers should be inverted.
-   */
-  private final NetworkTableEntry m_prototypeOutputIsInverted;
+  private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem);
+  private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
+      m_driveTrainSubsystem,
+      m_gyroSubsystem,
+      m_visionSubsystem,
+      () -> {
+        // Invert the X-axis.
+        return -1.0 * m_driverStick.getX();
+      },
+      m_driverStick::getY,
+      () -> {
+        if (m_driverStick.getRawButton(ControllerConstants.kThrottleButton)) {
+          return 0.50;
+        } else {
+          // The default throttle is 75%. In practice, however, the maximum motor power is
+          // 56%, as the
+          // {@link DriveTrainSubsystem#tankDrive} currently squares inputs.
+          return 0.75;
+        }
+      },
+      () -> {
+        // TODO
+        return m_driverStick.getRawButton(ControllerConstants.kFollowTargetButton);
+      });
 
   /**
-   * A reference to the "Prototype" Shuffleboard tab object.
+   * Chooser for the automonous routine
    */
-  private final ShuffleboardTab m_prototypeTab = Shuffleboard.getTab("Prototype");
+  private final SendableChooser<Command> m_automonousRoutineChooser = new SendableChooser<>();
 
   /**
    * A reference to the "Autonomous" Shuffleboard tab object.
@@ -133,7 +158,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // We use an arcade-drive system with joystick regions that select specialized drive strategies.
+    System.out.println("RobotContainer initializing");
+    // We use an arcade-drive system with joystick regions that select specialized
+    // drive strategies.
     m_driveTrainSubsystem.setDefaultCommand(m_teleopDriveCommand);
 
     // Configure the autonomous routine chooser
@@ -153,9 +180,10 @@ public class RobotContainer {
     // Configure the invert output chooser
     m_prototypeOutputIsInverted = m_prototypeTab.add("Invert Output", false).withWidget(BuiltInWidgets.kToggleSwitch)
         .getEntry();
-
+    
     // Configure the button bindings
     configureButtonBindings();
+    System.out.println("RobotContainer Init done");
   }
 
   /**
@@ -169,6 +197,33 @@ public class RobotContainer {
   private void configureButtonBindings() {
     final JoystickButton shootButton = new JoystickButton(m_driverStick, ControllerConstants.kShootButton);
     shootButton.whileHeld(m_shootCommand);
+
+    final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kCollectorButton);
+    final JoystickButton lowerGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
+    final JoystickButton raiseGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kRaiseButton);
+
+    //Temporary manual indexer controls
+    final JoystickButton runIndexerButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerIndexerButton);
+    final JoystickButton runUpperIndexerButton = new JoystickButton(m_driverStick, ControllerConstants.kUpperIndexerButton);
+    runIndexerButton.whileHeld(m_runIndexerCommand);
+    runUpperIndexerButton.whileHeld(m_runUpperIndexerCommand);
+
+    /*
+     * Hold down the gather button to deploy the gatherer and run the collector. Let
+     * go to retract the gatherer and stop the collector.
+     */
+    gatherButton.whileHeld(m_startGathererCommand).whenReleased(m_retractGathererCommand.withTimeout(5));
+
+    // Temporary manual gather arm control
+    lowerGathererButton.whileHeld(m_deployGathererCommand);
+    raiseGathererButton.whenPressed(m_retractGathererCommand);
+
+    // When limit switches are added to robot, add that to the subsystem and delete
+    // withtimeout
+    // final int lowerTime = GathererConstants.kDownRuntime;
+    // final int raiseTime = GathererConstants.kUpRuntime;
+    // gatherButton.whenPressed(m_startGathererCommand.withTimeout(lowerTime));
+    // gatherButton.whenReleased(m_retractGathererCommand.withTimeout(raiseTime));
   }
 
   /**
