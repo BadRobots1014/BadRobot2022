@@ -39,11 +39,6 @@ public class DriveStraightStrategy implements DriveStrategy {
         m_drive.tankDrive(power - correction, power + correction);
     }
 
-    @Override
-    public boolean shouldLockPosition() {
-        return false;
-    }
-
     /*
      * Constructors -----------------------------------------------------------
      */

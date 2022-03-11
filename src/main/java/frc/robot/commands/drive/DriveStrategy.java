@@ -25,6 +25,4 @@ public interface DriveStrategy {
      */
     public void execute(double x, double y);
 
-    public boolean shouldLockPosition();
-
 }

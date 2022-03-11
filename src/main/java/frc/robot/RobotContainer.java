@@ -15,7 +15,6 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DeployGathererCommand;
 import frc.robot.commands.BeginGatheringCommand;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.GathererSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -25,6 +24,7 @@ import frc.robot.commands.RetractGathererCommand;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.UpperIndexerCommand;
+import frc.robot.commands.drive.TeleopDriveCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -73,10 +73,6 @@ public class RobotContainer {
           // {@link DriveTrainSubsystem#tankDrive} currently squares inputs.
           return 0.75;
         }
-      },
-      () -> {
-        // TODO
-        return m_driverStick.getRawButton(ControllerConstants.kFollowTargetButton);
       });
 
   /**

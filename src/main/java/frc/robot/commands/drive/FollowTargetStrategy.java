@@ -12,6 +12,7 @@ import frc.robot.subsystems.VisionSubsystem;
 public class FollowTargetStrategy implements DriveStrategy {
 
     private final DriveTrainSubsystem m_drive;
+
     /**
      * The {@link VisionSubsystem} to obtain gyroscope readings from.
      */
@@ -41,11 +42,6 @@ public class FollowTargetStrategy implements DriveStrategy {
         } else {
             m_vision.activateChosenPipeline();
         }
-    }
-
-    @Override
-    public boolean shouldLockPosition() {
-        return false;
     }
 
     /*
