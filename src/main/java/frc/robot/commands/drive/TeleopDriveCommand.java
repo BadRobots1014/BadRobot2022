@@ -8,14 +8,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.Constants.ControllerConstants;
 
 public class TeleopDriveCommand extends CommandBase {
 
     private final DriveTrainSubsystem drive;
     private final GyroSubsystem gyro;
-    private final VisionSubsystem vision;
 
     private final Supplier<Double> xSource;
     private final Supplier<Double> ySource;
@@ -88,7 +86,6 @@ public class TeleopDriveCommand extends CommandBase {
      * 
      * @param drive          the {@code DriveTrainSubsystem}
      * @param gyro           the {@code GyroSubsystem}
-     * @param vision         the {@code VisionSubsystem}
      * @param xSource        supplies the joystick X input
      * @param ySource        supplies the joystick Y input
      * @param throttleSource supplies the throttle factor
@@ -98,14 +95,12 @@ public class TeleopDriveCommand extends CommandBase {
     public TeleopDriveCommand(
             DriveTrainSubsystem drive,
             GyroSubsystem gyro,
-            VisionSubsystem vision,
             Supplier<Double> xSource,
             Supplier<Double> ySource,
             Supplier<Double> throttleSource) {
 
         this.drive = drive;
         this.gyro = gyro;
-        this.vision = vision;
 
         this.xSource = xSource;
         this.ySource = ySource;
@@ -129,7 +124,7 @@ public class TeleopDriveCommand extends CommandBase {
         m_tab.addNumber("Throttle (%)", this.throttleSource::get);
         m_tab.addNumber("Yaw (deg.)", this.gyro::getYaw);
 
-        addRequirements(this.drive, this.gyro, this.vision);
+        addRequirements(this.drive, this.gyro);
     }
 
     /*
