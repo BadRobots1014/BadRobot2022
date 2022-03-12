@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.ShooterSubsystem.RangeConfig;
 
 /**
@@ -50,6 +51,9 @@ public final class Constants {
          * The acceleration of gravity, in m/s/s.
          */
         public static final double kGravityAcceleration = 9.8;
+
+        public static final double kGoalSpeed = 1000;
+        public static final double kMaxTolerance = 100;
     }
 
     /**
@@ -57,18 +61,20 @@ public final class Constants {
      */
     public final class ControllerConstants {
         public static final int kControllerPort = 0;
-        public static final int kPrototypePort = 1;
 
-        public static final int kFollowTargetButton = 1;
+        public static final int kFollowTargetButton = 3;
         public static final int kThrottleButton = 2;
         
-        //Needs to be read in from another joystick, needs to be fixed
+        //TODO: Shooting to be read in from another joystick still
         //Maybe use 6 and 7 for shooting forward and back in the future
-        public static final int kShootButton = 6;
+        public static final int kShootButton = 7;
 
         public static final int kCollectorButton = 1;
         public static final int kLowerButton = 4;
         public static final int kRaiseButton = 5;
+
+        public static final int kLowerIndexerButton = 10;
+        // Upper indexer is in RobotConatiner as it is second controller
 
         public static final double kDeadzoneRadius = .2;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
@@ -94,28 +100,10 @@ public final class Constants {
         public static final int kGathererSpeedController = 14;
     }
 
-    /**
-     * Constants used for prototyping.
-     */
-    public final class PrototypeConstants {
-        /**
-         * The CAN ID of the unattached SPARK MAX.
-         */
-        public static final int kSpeedController1 = 7;
+    public final class IndexerConstants {
+        public static final int kLowerIndexerSpeedController = 29;
+        public static final int kUpperIndexerSpeedController = 15;
 
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController2 = 11;
-
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController3 = 13;
-
-        /**
-         * The CAN ID of one of the unattached Talon FXs.
-         */
-        public static final int kSpeedController4 = 14;
+        public static final int kIndexerMaxSpeed = 1;
     }
 }
