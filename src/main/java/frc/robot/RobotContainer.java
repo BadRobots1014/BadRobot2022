@@ -14,12 +14,14 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DeployGathererCommand;
 import frc.robot.commands.BeginGatheringCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TeleopDriveCommand;
 import frc.robot.subsystems.GathererSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.commands.RetractGathererCommand;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -46,6 +48,7 @@ public class RobotContainer {
   private final GyroSubsystem m_gyroSubsystem = new GyroSubsystem();
   private final GathererSubsystem m_gathererSubsystem = new GathererSubsystem();
   private final IndexerSubsystem m_indexerSubsystem = new IndexerSubsystem();
+  private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
 
   private final DeployGathererCommand m_deployGathererCommand = new DeployGathererCommand(m_gathererSubsystem);
   private final RetractGathererCommand m_retractGathererCommand = new RetractGathererCommand(m_gathererSubsystem);
@@ -53,6 +56,8 @@ public class RobotContainer {
 
   private final IndexerCommand m_runIndexerCommand = new IndexerCommand(m_indexerSubsystem);
   private final UpperIndexerCommand m_runUpperIndexerCommand = new UpperIndexerCommand(m_indexerSubsystem);
+
+  private final ClimbCommand m_ClimbCommand = new ClimbCommand(m_climberSubsystem);
 
   private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem, m_indexerSubsystem);
   private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
@@ -119,6 +124,10 @@ public class RobotContainer {
     final JoystickButton runUpperIndexerButton = new JoystickButton(m_driverStick, ControllerConstants.kUpperIndexerButton);
     runIndexerButton.whileHeld(m_runIndexerCommand);
     runUpperIndexerButton.whileHeld(m_runUpperIndexerCommand);
+
+    //Climber controls
+    final JoystickButton runClimberButton = new JoystickButton(m_driverStick, ControllerConstants.kClimbingButton);
+    runClimberButton.whileHeld(m_ClimbCommand);
 
     /*
      * Hold down the gather button to deploy the gatherer and run the collector. Let
