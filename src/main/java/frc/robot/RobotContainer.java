@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DeployGathererCommand;
 import frc.robot.commands.BeginGatheringCommand;
-import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.GathererSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -29,6 +28,7 @@ import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.UpperIndexerCommand;
 import frc.robot.commands.drive.FollowTargetCommand;
 import frc.robot.commands.drive.TeleopDriveCommand;
+import frc.robot.commands.shoot.ShootCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
