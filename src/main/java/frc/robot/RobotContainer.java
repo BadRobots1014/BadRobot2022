@@ -180,54 +180,60 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        final Trigger shootTrigger = new Trigger(this::getLeftTrigger);
-        shootTrigger.whileActiveContinuous(shootCmd);
-
-        final Trigger shootBackTrigger = new Trigger(this::getRightTrigger);
-        shootBackTrigger.whileActiveContinuous(shootBackCmd);
-
-        final JoystickButton closeShootBumper = new JoystickButton(primaryController,
-                XboxController.Button.kLeftBumper.value);
-        closeShootBumper.whileHeld(closeShootCmd);
-
-        final JoystickButton closeShootBackBumper = new JoystickButton(primaryController,
-                XboxController.Button.kRightBumper.value);
-        closeShootBackBumper.whileHeld(closeShootBackCmd);
-
-        final JoystickButton gatherButton = new JoystickButton(primaryController, ControllerConstants.kCollectorButton);
-        final JoystickButton lowerGathererButton = new JoystickButton(primaryController,
-                ControllerConstants.kLowerButton);
-        final JoystickButton raiseGathererButton = new JoystickButton(primaryController,
-                ControllerConstants.kRaiseButton);
-
-        // Temporary manual indexer controls
-        final JoystickButton runIndexerButton = new JoystickButton(primaryController,
-                ControllerConstants.kLowerIndexerButton);
-        final JoystickButton runUpperIndexerButton = new JoystickButton(secondaryController,
-                XboxController.Button.kX.value);
-        runIndexerButton.whileHeld(runIndexerCmd);
-        runUpperIndexerButton.whileHeld(runUpperIndexerCmd);
-
-        final JoystickButton followTargetButton = new JoystickButton(primaryController,
+        /*
+         * Driving bindings
+         */
+        JoystickButton followTargetButton = new JoystickButton(this.primaryController,
                 ControllerConstants.kFollowTargetButton);
-        followTargetButton.whileHeld(followTargetCmd);
+        followTargetButton.whileHeld(this.followTargetCmd);
+
+        /*
+         * Gatherer bindings
+         */
+
+        JoystickButton lowerGathererButton = new JoystickButton(this.primaryController,
+                ControllerConstants.kLowerButton);
+        lowerGathererButton.whileHeld(this.deployGathererCmd);
+
+        JoystickButton raiseGathererButton = new JoystickButton(this.primaryController,
+                ControllerConstants.kRaiseButton);
+        raiseGathererButton.whenPressed(this.retractGathererCmd);
 
         /*
          * Hold down the gather button to deploy the gatherer and run the collector. Let
          * go to retract the gatherer and stop the collector.
          */
-        gatherButton.whileHeld(startGathererCmd).whenReleased(retractGathererCmd.withTimeout(5));
+        JoystickButton gatherButton = new JoystickButton(this.primaryController, ControllerConstants.kCollectorButton);
+        gatherButton.whileHeld(this.startGathererCmd).whenReleased(this.retractGathererCmd.withTimeout(5));
 
-        // Temporary manual gather arm control
-        lowerGathererButton.whileHeld(deployGathererCmd);
-        raiseGathererButton.whenPressed(retractGathererCmd);
+        /*
+         * Indexer bindings
+         */
 
-        // When limit switches are added to robot, add that to the subsystem and delete
-        // withtimeout
-        // final int lowerTime = GathererConstants.kDownRuntime;
-        // final int raiseTime = GathererConstants.kUpRuntime;
-        // gatherButton.whenPressed(m_startGathererCommand.withTimeout(lowerTime));
-        // gatherButton.whenReleased(m_retractGathererCommand.withTimeout(raiseTime));
+        JoystickButton runIndexerButton = new JoystickButton(this.primaryController,
+                ControllerConstants.kLowerIndexerButton);
+        runIndexerButton.whileHeld(this.runIndexerCmd);
+
+        JoystickButton runUpperIndexerButton = new JoystickButton(secondaryController, XboxController.Button.kX.value);
+        runUpperIndexerButton.whileHeld(this.runUpperIndexerCmd);
+
+        /*
+         * Shooter bindings
+         */
+
+        Trigger shootTrigger = new Trigger(this::getLeftTrigger);
+        shootTrigger.whileActiveContinuous(this.shootCmd);
+
+        Trigger shootBackTrigger = new Trigger(this::getRightTrigger);
+        shootBackTrigger.whileActiveContinuous(this.shootBackCmd);
+
+        JoystickButton closeShootBumper = new JoystickButton(this.primaryController,
+                XboxController.Button.kLeftBumper.value);
+        closeShootBumper.whileHeld(this.closeShootCmd);
+
+        JoystickButton closeShootBackBumper = new JoystickButton(this.primaryController,
+                XboxController.Button.kRightBumper.value);
+        closeShootBackBumper.whileHeld(this.closeShootBackCmd);
     }
 
     /*
