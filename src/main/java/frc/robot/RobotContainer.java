@@ -4,13 +4,16 @@
 
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DeployGathererCommand;
 import frc.robot.commands.BeginGatheringCommand;
@@ -40,6 +43,7 @@ public class RobotContainer {
     // The robot's subsystems and commands are defined here...
     // TODO: Fix this constant
     private final Joystick m_driverStick = new Joystick(0);
+    private final XboxController m_shooterController = new XboxController(1);
 
     private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
     private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
@@ -109,8 +113,10 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        final JoystickButton shootButton = new JoystickButton(m_driverStick, ControllerConstants.kShootButton);
-        shootButton.whileHeld(m_shootCommand);
+      BooleanSupplier leftTriggerSupplier = () -> m_shooterController.getLeftTriggerAxis() > 0.3;
+        final Trigger shootTrigger = new Trigger(leftTriggerSupplier);
+        // final JoystickButton shootButton = new JoystickButton(m_shooterController, XboxController.Button.kLeftBumper.value);
+        shootTrigger.whileActiveContinuous(m_shootCommand);
 
         final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kCollectorButton);
         final JoystickButton lowerGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
@@ -119,8 +125,8 @@ public class RobotContainer {
         // Temporary manual indexer controls
         final JoystickButton runIndexerButton = new JoystickButton(m_driverStick,
                 ControllerConstants.kLowerIndexerButton);
-        final JoystickButton runUpperIndexerButton = new JoystickButton(m_driverStick,
-                ControllerConstants.kUpperIndexerButton);
+        final JoystickButton runUpperIndexerButton = new JoystickButton(m_shooterController,
+                XboxController.Button.kX.value);
         runIndexerButton.whileHeld(m_runIndexerCommand);
         runUpperIndexerButton.whileHeld(m_runUpperIndexerCommand);
 

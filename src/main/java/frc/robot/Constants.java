@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.ShooterSubsystem.RangeConfig;
 
 /**
@@ -73,7 +74,7 @@ public final class Constants {
         public static final int kRaiseButton = 5;
 
         public static final int kLowerIndexerButton = 10;
-        public static final int kUpperIndexerButton = 11;
+        // Upper indexer is in RobotConatiner as it is second controller
 
         public static final double kDeadzoneRadius = .2;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
