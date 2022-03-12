@@ -29,7 +29,7 @@ public class TeleopDriveCommand extends CommandBase {
     private final ShuffleboardTab m_tab;
 
     private static final double DEADBAND_RADIUS = 0.2;
-    private static final double DEADBAND_ANGLE = Math.atan(1.0 / 0.2);
+    private static final double DEADBAND_ANGLE = Math.atan(0.2);
 
     /*
      * Helper methods ---------------------------------------------------------
@@ -118,7 +118,7 @@ public class TeleopDriveCommand extends CommandBase {
         this.strategy = this.anchorStrategy;
 
         m_tab = Shuffleboard.getTab("Teleop. Drive");
-        m_tab.addString("Strategy", this.strategy::getName);
+        m_tab.addString("Strategy", () -> this.strategy.getName());
         m_tab.addNumber("X", this.xSource::get);
         m_tab.addNumber("Y", this.ySource::get);
         m_tab.addNumber("Throttle (%)", this.throttleSource::get);
