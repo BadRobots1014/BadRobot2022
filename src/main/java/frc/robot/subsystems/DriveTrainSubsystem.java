@@ -21,6 +21,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final ShuffleboardTab m_tab = Shuffleboard.getTab("Drivetrain");
 
     public DriveTrainSubsystem() {
+        m_leftA.setInverted(true);
+        m_rightA.setInverted(false);
+
         m_leftB.follow(m_leftA);
         m_rightB.follow(m_rightA);
 
