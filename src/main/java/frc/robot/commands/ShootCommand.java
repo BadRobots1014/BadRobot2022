@@ -10,10 +10,13 @@ public class ShootCommand extends CommandBase {
     
     private final ShooterSubsystem m_subsystem;
     private final IndexerSubsystem m_indexSubsystem;
+    private final double m_power;
+    private boolean runIndexer;
     
-    public ShootCommand(ShooterSubsystem subsystem, IndexerSubsystem indexSubsystem) {
+    public ShootCommand(ShooterSubsystem subsystem, IndexerSubsystem indexSubsystem, double power) {
         m_subsystem = subsystem;
         m_indexSubsystem = indexSubsystem;
+        m_power = power;
 
         addRequirements(subsystem);
     }
@@ -22,18 +25,28 @@ public class ShootCommand extends CommandBase {
     @Override
     public void initialize() {
         //m_subsystem.run(0.5);
+        runIndexer = false;
+        try {
+            m_indexSubsystem.wait(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        runIndexer = true;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.run(0.5);
-        if (Math.abs(m_subsystem.getDeltaDesiredVelocity()) < ShooterConstants.kMaxTolerance) {
-            m_indexSubsystem.runUpperMotor();
-        }
+        m_subsystem.run(m_power);
+        // if (Math.abs(m_subsystem.getDeltaDesiredVelocity()) < ShooterConstants.kMaxTolerance) {
+        //     m_indexSubsystem.runUpperMotor();
+        // }
         // else {
         //     m_indexSubsystem.stopUpperMotor();
         // }
+        if (runIndexer) {
+            m_indexSubsystem.runUpperMotor();
+        }
     }
 
     // Called once the command ends or is interrupted.
