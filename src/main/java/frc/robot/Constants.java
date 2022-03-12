@@ -4,9 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.subsystems.ShooterSubsystem.RangeConfig;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -34,23 +31,6 @@ public final class Constants {
      */
     public static final class ShooterConstants {
         public static final int kShooterPort = 7;
-
-        /**
-         * The range of the ball from the target that determines which configuration is used, in
-         * meters.
-         * 
-         * If the actual range is less than this value, then use {@link #kRangeConfigClose}.
-         * Otherwise, if it is higher than this value, then use {@link #kRangeConfigFar}.
-         */
-        public static final double kInitialAngleDeterminantRange = 2.0;
-
-        public static final RangeConfig kRangeConfigClose = new RangeConfig(65.0, 32.8, false);
-        public static final RangeConfig kRangeConfigFar = new RangeConfig(75.0, 32.8, true);
-    
-        /**
-         * The acceleration of gravity, in m/s/s.
-         */
-        public static final double kGravityAcceleration = 9.8;
 
         public static final double kGoalSpeed = 1000;
         public static final double kMaxTolerance = 100;

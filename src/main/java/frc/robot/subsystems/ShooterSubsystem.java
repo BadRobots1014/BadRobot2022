@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import java.lang.Math;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,109 +10,128 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
-    public static class RangeConfig {
-        /**
-         * The initial angle of the shooter, in degrees.
-         */
-        public final double initialAngle;
-        /**
-         * The maximum initial velocity of a ball launched in this configuration, in m/s.
-         * 
-         * This is measured with the flywheel motor running at full speed.
-         */
-        public final double maxInitialVelocity;
-        /**
-         * Whether or not the motor power should be multiplied by -1.
-         */
-        public final boolean motorIsInverted;
 
-        public RangeConfig(
-            double initialAngle,
-            double maxInitialVelocity,
-            boolean motorIsInverted
-        ) {
-            this.initialAngle = initialAngle;
-            this.maxInitialVelocity = maxInitialVelocity;
-            this.motorIsInverted = motorIsInverted;
-        }
+    /*
+     * Private constants ------------------------------------------------------
+     */
+
+    /**
+     * Gravitational acceleration (little g) in m/s^2.
+     */
+    private static final double GRAVITATIONAL_ACCELERATION = 9.8;
+
+    /**
+     * The maximum tangential velocity of the shooter flywheel, in m/s.
+     */
+    private static final double MAX_FLYWHEEL_VELOCITY = 32.8;
+
+    /*
+     * Public constants -------------------------------------------------------
+     */
+
+    /**
+     * The range of the ball from the target that determines whether to shoot from a
+     * smaller or larger shooting angle.
+     * 
+     * If the range is lower than this value, use the smaller shooting angle,
+     * otherwise, use the larger shooting angle.
+     */
+    public static final double RANGE_CUTOFF = 2.0;
+
+    /**
+     * The lower angle of the shooter, in degrees.
+     */
+    public static final double LOW_ANGLE = 65.0;
+
+    /**
+     * The higher angle of the shooter, in degrees.
+     */
+    public static final double HIGH_ANGLE = 75.0;
+
+    /*
+     * Private instance members -----------------------------------------------
+     */
+
+    /**
+     * The speed controller for the shooter motor.
+     */
+    private final WPI_TalonFX motor;
+
+    /*
+     * Public utility methods -------------------------------------------------
+     */
+
+    /**
+     * Calculates the initial velocity required for a ball launched
+     * {@code initialAngle} degrees from the horizontal to hit a target
+     * {@code range} meters away horizontally, and {@height} meters away vertically.
+     * 
+     * This method returns the value of v (velocity) that satisfies the following
+     * system of physical equations:
+     * range = cos(initialAngle) * v * t
+     * height = sin(initialAngle) * v * t - (1/2) * GRAVITATIONAL_ACCELERATION * t^2
+     * 
+     * @param initialAngle the angle the ball is launched at, in degrees
+     * @param range        the horizontal distance the ball must cover to hit the
+     *                     target
+     * @param height       the vertical distance the ball must cover to hit the
+     *                     target
+     * @return the initial velocity required for the ball to hit the target.
+     */
+    public double calculateInitialVelocity(double initialAngle, double range, double height) {
+        initialAngle = Math.toRadians(initialAngle);
+        double numerator = GRAVITATIONAL_ACCELERATION * Math.pow(range, 2.0);
+        double denominator = (2 * Math.pow(Math.cos(initialAngle), 2)) *
+                ((-1.0 * height) + (range * Math.tan(initialAngle)));
+
+        return Math.sqrt(numerator / denominator);
     }
-    private final WPI_TalonFX speedController = new WPI_TalonFX(ShooterConstants.kShooterPort);
 
+    /**
+     * Calculates the motor power output (as a fraction) required for a ball
+     * launched at {@code initialAngle} degrees from the horizontal to hit a target
+     * {@code range} meters away horizontally, and {@height} meters away vertically.
+     * 
+     * @param initialAngle the angle the ball is launched at, in degrees
+     * @param range        the horizontal distance the ball must cover to hit the
+     *                     target
+     * @param height       the vertical distance the ball must cover to hit the
+     *                     target
+     * @return the motor power output required to launch a ball to hit the target.
+     */
+    public double calculatePower(double initialAngle, double range, double height) {
+        return calculateInitialVelocity(initialAngle, range, height) / MAX_FLYWHEEL_VELOCITY;
+    }
+
+    /*
+     * Constructor ------------------------------------------------------------
+     */
+
+    /**
+     * No-argument constructor.
+     */
     public ShooterSubsystem() {
-
+        this.motor = new WPI_TalonFX(ShooterConstants.kShooterPort);
     }
+
+    /*
+     * Control methods --------------------------------------------------------
+     */
 
     /**
      * Sets the flywheel motor to the given power.
      * 
-     * @param power The motor power, as a percentage. This is positive for the forward direction and
-     *              negative otherwise.
+     * @param power The motor power, as a percentage. This is positive for the
+     *              forward direction and negative otherwise.
      */
     public void run(double power) {
-        this.speedController.set(TalonFXControlMode.PercentOutput, 0.5);
-        System.out.println("Running shooter");
+        this.motor.set(TalonFXControlMode.PercentOutput, power);
     }
 
     /**
      * Stops the flywheel motor.
      */
     public void stop() {
-        //this.speedController.set(TalonFXControlMode.Velocity, 0.0);
-        //this.speedController.set(TalonFXControlMode.PercentOutput, 0.0);
-        this.speedController.stopMotor();
-        System.out.println("Shooter stopped");
-    }
-
-    /**
-     * Returns the motor power necessary to hit a target point.
-     * 
-     * The output of this method is intended as an input to {@link #run}.
-     * 
-     * @param targetX The target range, in meters.
-     * @param targetY The target height, in meters.
-     * @return        The power, as a percentage.
-     */
-    public double powerToHitTarget(double targetX, double targetY) {
-        RangeConfig config;
-        if(targetX < ShooterConstants.kInitialAngleDeterminantRange) {
-            config = ShooterConstants.kRangeConfigClose;
-        } else {
-            config = ShooterConstants.kRangeConfigFar;
-        }
-
-        double initialVelocity = initialVelocityToHitTarget(config.initialAngle, targetX, targetY);
-        double power = initialVelocity / config.maxInitialVelocity;
-        if(config.motorIsInverted) {
-            power *= -1.0;
-        }
-        
-        return power;
-    }
-
-    /**
-     * Returns the necessary initial velocity to hit a target point with the given initial angle.
-     * 
-     * @param initialAngle  The initial angle, in degrees.
-     * @param targetX       The target range, in meters.
-     * @param targetY       The target height, in meters.
-     * @return              The initial velocity, in m/s.
-     */
-    private double initialVelocityToHitTarget(double initialAngle, double targetX, double targetY) {
-        // This function solves the following system of equations for `initVel` by substituting
-        // `time`:
-        //   { x =  cos(initAngle) * initVel * time
-        //   { y = (sin(initAngle) * initVel * time) - ((1/2) * gravityAccel * (time^2))
-
-        initialAngle = Math.toRadians(initialAngle);
-        double numerator = ShooterConstants.kGravityAcceleration * Math.pow(targetX, 2.0);
-        double denominator = (2 * Math.pow(Math.cos(initialAngle), 2)) *
-            ((-1.0 * targetY) + (targetX * Math.tan(initialAngle)));
-        
-        return Math.sqrt(numerator / denominator);
-    }
-
-    public double getDeltaDesiredVelocity() {
-        System.out.println(this.speedController.getSelectedSensorVelocity());
-        return this.speedController.getSelectedSensorVelocity() - (ShooterConstants.kGoalSpeed * 2);
+        this.motor.stopMotor();
     }
 }
