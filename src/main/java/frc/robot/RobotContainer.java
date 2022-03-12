@@ -55,7 +55,8 @@ public class RobotContainer {
     private final IndexerCommand m_runIndexerCommand = new IndexerCommand(m_indexerSubsystem);
     private final UpperIndexerCommand m_runUpperIndexerCommand = new UpperIndexerCommand(m_indexerSubsystem);
 
-    private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem, m_indexerSubsystem);
+    private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem, m_indexerSubsystem, 0.5);
+    private final ShootCommand m_shootBackCommand = new ShootCommand(m_shooterSubsystem, m_indexerSubsystem, -0.5);
     private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
             m_driveTrainSubsystem,
             m_gyroSubsystem,
