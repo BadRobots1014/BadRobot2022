@@ -1,5 +1,6 @@
 package frc.robot.commands.drive;
 
+import edu.wpi.first.math.controller.PIDController;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
@@ -10,7 +11,11 @@ import frc.robot.subsystems.GyroSubsystem;
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Will Blankemeyer
  */
-public class AnchorStrategy extends DriveStraightStrategy {
+public class AnchorStrategy implements DriveStrategy {
+
+    private final DriveTrainSubsystem m_drive;
+    private final PIDController m_rotationalPid;
+    private final GyroSubsystem m_gyro;
 
     /*
      * DriveStrategy interface methods ----------------------------------------
@@ -22,13 +27,15 @@ public class AnchorStrategy extends DriveStraightStrategy {
     }
 
     @Override
-    public void execute(double x, double y) {
-        super.execute(0, 0);
+    public void reset() {
+        m_drive.stop();
+        m_gyro.zeroYaw();
     }
 
     @Override
-    public boolean shouldLockPosition() {
-        return true;
+    public void execute(double x, double y) {
+        final double correction = m_rotationalPid.calculate(m_gyro.getYaw());
+        m_drive.tankDrive(-correction, correction);
     }
 
     /*
@@ -46,7 +53,10 @@ public class AnchorStrategy extends DriveStraightStrategy {
      * @author Will Blankemeyer
      */
     public AnchorStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
-        super(drive, gyro);
+        m_drive = drive;
+        m_rotationalPid = GyroSubsystem.createRotationalPid(0.02, 0, 0);
+        m_rotationalPid.setSetpoint(0);
+        m_gyro = gyro;
     }
 
 }

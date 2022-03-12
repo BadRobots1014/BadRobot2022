@@ -8,7 +8,9 @@ import frc.robot.subsystems.DriveTrainSubsystem;
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Will Blankemeyer
  */
-public class PivotTurnStrategy extends ArcadeDriveStrategy {
+public class PivotTurnStrategy implements DriveStrategy {
+
+    private final DriveTrainSubsystem m_drive;
 
     /*
      * DriveStrategy interface methods ----------------------------------------
@@ -16,17 +18,17 @@ public class PivotTurnStrategy extends ArcadeDriveStrategy {
 
     @Override
     public String getName() {
-        return "Pivot-turn";
+        return "Pivot Turn";
+    }
+
+    @Override
+    public void reset() {
+        // Do nothing.
     }
 
     @Override
     public void execute(double rotation, double y) {
-        super.execute(rotation, 0);
-    }
-
-    @Override
-    public boolean shouldLockPosition() {
-        return true;
+        m_drive.arcadeDrive(0, rotation);
     }
 
     /*
@@ -37,7 +39,7 @@ public class PivotTurnStrategy extends ArcadeDriveStrategy {
      * Constructs a new {@link PivotTurnStrategy}.
      */
     public PivotTurnStrategy(DriveTrainSubsystem drive) {
-        super(drive);
+        m_drive = drive;
     }
 
 }
