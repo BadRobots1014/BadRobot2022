@@ -61,6 +61,8 @@ public class RobotContainer {
 
     private final ShootCommand m_shootCommand = new ShootCommand(m_shooterSubsystem, m_indexerSubsystem, 0.5);
     private final ShootCommand m_shootBackCommand = new ShootCommand(m_shooterSubsystem, m_indexerSubsystem, -0.5);
+    private final ShootCommand m_closeShootCommand = new ShootCommand(m_shooterSubsystem, m_indexerSubsystem, 0.25);
+    private final ShootCommand m_closeShootBackCommand = new ShootCommand(m_shooterSubsystem, m_indexerSubsystem, -0.25);
     private final TeleopDriveCommand m_teleopDriveCommand = new TeleopDriveCommand(
             m_driveTrainSubsystem,
             m_gyroSubsystem,
@@ -114,10 +116,19 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-      BooleanSupplier leftTriggerSupplier = () -> m_shooterController.getLeftTriggerAxis() > 0.3;
+        BooleanSupplier leftTriggerSupplier = () -> m_shooterController.getLeftTriggerAxis() > 0.3;
         final Trigger shootTrigger = new Trigger(leftTriggerSupplier);
-        // final JoystickButton shootButton = new JoystickButton(m_shooterController, XboxController.Button.kLeftBumper.value);
         shootTrigger.whileActiveContinuous(m_shootCommand);
+
+        BooleanSupplier rightTriggerSupplier = () -> m_shooterController.getRightTriggerAxis() > 0.3;
+        final Trigger shootBackTrigger = new Trigger(rightTriggerSupplier);
+        shootBackTrigger.whileActiveContinuous(m_shootBackCommand);
+
+        final JoystickButton closeShootBumper = new JoystickButton(m_driverStick, XboxController.Button.kLeftBumper.value);
+        closeShootBumper.whileHeld(m_closeShootCommand);
+
+        final JoystickButton closeShootBackBumper = new JoystickButton(m_driverStick, XboxController.Button.kRightBumper.value);
+        closeShootBackBumper.whileHeld(m_closeShootBackCommand);
 
         final JoystickButton gatherButton = new JoystickButton(m_driverStick, ControllerConstants.kCollectorButton);
         final JoystickButton lowerGathererButton = new JoystickButton(m_driverStick, ControllerConstants.kLowerButton);
