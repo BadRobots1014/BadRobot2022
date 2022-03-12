@@ -271,17 +271,17 @@ public class RobotContainer {
         this.followTargetCmd = new FollowTargetCommand(this.driveTrainSubsystem,
                 visionSubsystem, this::getPrimaryX, this::getPrimaryY);
 
-        this.deployGathererCmd = new DeployGathererCommand(gathererSubsystem);
-        this.retractGathererCmd = new RetractGathererCommand(gathererSubsystem);
-        this.startGathererCmd = new BeginGatheringCommand(gathererSubsystem);
+        this.deployGathererCmd = new DeployGathererCommand(this.gathererSubsystem);
+        this.retractGathererCmd = new RetractGathererCommand(this.gathererSubsystem);
+        this.startGathererCmd = new BeginGatheringCommand(this.gathererSubsystem);
 
-        this.runIndexerCmd = new IndexerCommand(indexerSubsystem);
-        this.runUpperIndexerCmd = new UpperIndexerCommand(indexerSubsystem);
+        this.runIndexerCmd = new IndexerCommand(this.indexerSubsystem);
+        this.runUpperIndexerCmd = new UpperIndexerCommand(this.indexerSubsystem);
 
-        this.shootCmd = new ShootCommand(shooterSubsystem, indexerSubsystem, 0.5);
-        this.shootBackCmd = new ShootCommand(shooterSubsystem, indexerSubsystem, -0.5);
-        this.closeShootCmd = new ShootCommand(shooterSubsystem, indexerSubsystem, 0.25);
-        this.closeShootBackCmd = new ShootCommand(shooterSubsystem, indexerSubsystem,
+        this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.5);
+        this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.5);
+        this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.25);
+        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem,
                 -0.25);
 
         this.driveTrainSubsystem.setDefaultCommand(this.teleopDriveCmd);
