@@ -204,7 +204,7 @@ public class RobotContainer {
          * go to retract the gatherer and stop the collector.
          */
         JoystickButton gatherButton = new JoystickButton(this.primaryController, ControllerConstants.kCollectorButton);
-        gatherButton.whileHeld(this.startGathererCmd).whenReleased(this.retractGathererCmd.withTimeout(5));
+        gatherButton.whileHeld(this.startGathererCmd).whenReleased(this.retractGathererCmd);
 
         /*
          * Indexer bindings
