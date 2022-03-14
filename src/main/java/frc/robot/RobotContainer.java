@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DeployGathererCommand;
 import frc.robot.commands.BeginGatheringCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.GathererSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.commands.RetractGathererCommand;
 import frc.robot.subsystems.IndexerSubsystem;
@@ -35,6 +37,9 @@ import frc.robot.commands.drive.TeleopDriveCommand;
  * commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    //Climber controls
+    final JoystickButton runClimberButton = new JoystickButton(m_driverStick, ControllerConstants.kClimbingButton);
+    runClimberButton.whileHeld(m_ClimbCommand);
 
     /*
      * Private constants ------------------------------------------------------
