@@ -50,7 +50,7 @@ public class ShooterSubsystem extends SubsystemBase {
      *              negative otherwise.
      */
     public void run(double power) {
-        this.speedController.set(TalonFXControlMode.PercentOutput, 0.5);
+        this.speedController.set(TalonFXControlMode.PercentOutput, power);
         System.out.println("Running shooter");
     }
 

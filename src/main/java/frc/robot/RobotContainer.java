@@ -227,11 +227,11 @@ public class RobotContainer {
         Trigger shootBackTrigger = new Trigger(this::getRightTrigger);
         shootBackTrigger.whileActiveContinuous(this.shootBackCmd);
 
-        JoystickButton closeShootBumper = new JoystickButton(this.primaryController,
+        JoystickButton closeShootBumper = new JoystickButton(this.secondaryController,
                 XboxController.Button.kLeftBumper.value);
         closeShootBumper.whileHeld(this.closeShootCmd);
 
-        JoystickButton closeShootBackBumper = new JoystickButton(this.primaryController,
+        JoystickButton closeShootBackBumper = new JoystickButton(this.secondaryController,
                 XboxController.Button.kRightBumper.value);
         closeShootBackBumper.whileHeld(this.closeShootBackCmd);
     }
@@ -287,8 +287,7 @@ public class RobotContainer {
         this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.5);
         this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.5);
         this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.25);
-        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem,
-                -0.25);
+        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.25);
 
         this.driveTrainSubsystem.setDefaultCommand(this.teleopDriveCmd);
 
