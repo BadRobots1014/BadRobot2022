@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.ShooterSubsystem.RangeConfig;
 
 /**
@@ -61,7 +62,7 @@ public final class Constants {
     public final class ControllerConstants {
         public static final int kControllerPort = 0;
 
-        public static final int kFollowTargetButton = 1;
+        public static final int kFollowTargetButton = 3;
         public static final int kThrottleButton = 2;
         
         //TODO: Shooting to be read in from another joystick still
@@ -73,7 +74,7 @@ public final class Constants {
         public static final int kRaiseButton = 5;
 
         public static final int kLowerIndexerButton = 10;
-        public static final int kUpperIndexerButton = 11;
+        // Upper indexer is in RobotConatiner as it is second controller
 
         public static final int kClimbingButton = 8; // Still needs set
 
