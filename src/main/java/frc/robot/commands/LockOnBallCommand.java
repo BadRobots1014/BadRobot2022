@@ -5,12 +5,12 @@
 package frc.robot.commands;
 
 import frc.robot.commands.drive.DriveStraightStrategy;
+import frc.robot.commands.drive.PivotCommand;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.DriveStrategyCommand;
 
 /** An example command that uses an example subsystem. */
 public class LockOnBallCommand extends CommandBase {
@@ -18,7 +18,6 @@ public class LockOnBallCommand extends CommandBase {
   private final GyroSubsystem m_gyroSubsystem;
   private final VisionSubsystem m_visionSubSystem;
   private final DriveTrainSubsystem m_driveSubsystem;
-  private double totalAngle;
   //private final DriveStrategyCommand m_driveStrategy;
 
   /**
@@ -37,14 +36,13 @@ public class LockOnBallCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    totalAngle = 15.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Supplier<Double> driveAngle = () -> (totalAngle += 15);
-    DriveStrategyCommand.pivotTurn(m_driveSubsystem, driveAngle);
+    Supplier<Double> driveSpeed = () -> 0.3;
+    new PivotCommand(m_driveSubsystem, driveSpeed);
   }
 
   // Called once the command ends or is interrupted.
