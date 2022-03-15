@@ -3,11 +3,10 @@ package frc.robot.commands.drive;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
 
 /**
- * PID drive-straight commmand.
+ * Pivot turning command.
  * 
  * @author Victor Chen <victorc.1@outlook.com>
  */
