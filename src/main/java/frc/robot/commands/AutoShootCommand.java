@@ -23,7 +23,7 @@ public class AutoShootCommand extends SequentialCommandGroup {
             new PivotCommand(driveSubsystem, () -> 0.0),
             new ParallelDeadlineGroup
             (
-                new ShootCommand(shooterSubsystem, indexerSubsystem, 0.8),
+                new ShootCommand(shooterSubsystem, indexerSubsystem, 0.8).withTimeout(2),
                 new AnchorCommand(driveSubsystem, gyroSubsystem)
             )
         );
