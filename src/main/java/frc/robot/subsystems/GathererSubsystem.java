@@ -2,6 +2,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GathererConstants;
 import frc.robot.subsystems.gatherer.GathererState;
@@ -47,6 +51,8 @@ public class GathererSubsystem extends SubsystemBase {
     private final TalonSRX armMotor;
     private final TalonSRX collectorMotor;
 
+    private final ShuffleboardTab shuffleTab;
+
     /**
      * No-argument constructor.
      */
@@ -60,6 +66,9 @@ public class GathererSubsystem extends SubsystemBase {
 
         this.armMotor = new TalonSRX(GathererConstants.kGathererSpeedController);
         this.collectorMotor = new TalonSRX(GathererConstants.kCollectorSpeedController);
+
+        this.shuffleTab = Shuffleboard.getTab("Gatherer");
+        this.shuffleTab.addString("State", () -> this.state.getClass().toString());
     }
 
     /*
@@ -103,11 +112,19 @@ public class GathererSubsystem extends SubsystemBase {
     }
 
     public boolean isArmAtRetractLimit() {
-        return this.armMotor.getSensorCollection().isRevLimitSwitchClosed();
+        /*
+         * This is supposed to read from the forward limit switch. The limit switches
+         * are hooked up backwards on the robot.
+         */
+        return this.armMotor.getSensorCollection().isFwdLimitSwitchClosed();
     }
 
     public boolean isArmAtExtendLimit() {
-        return this.armMotor.getSensorCollection().isFwdLimitSwitchClosed();
+        /*
+         * This is supposed to read from the reverse limit switch. The limit switches
+         * are hooked up backwards on the robot.
+         */
+        return this.armMotor.getSensorCollection().isRevLimitSwitchClosed();
     }
 
     /*
