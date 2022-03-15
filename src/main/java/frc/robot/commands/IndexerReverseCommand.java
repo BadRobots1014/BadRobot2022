@@ -2,11 +2,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 
-public class IndexerCommand extends CommandBase {
+public class IndexerReverseCommand extends CommandBase {
 
     private final IndexerSubsystem m_subsystem;
     
-    public IndexerCommand(IndexerSubsystem subsystem) {
+    public IndexerReverseCommand(IndexerSubsystem subsystem) {
         m_subsystem = subsystem;
         addRequirements(subsystem);
     }
@@ -19,7 +19,7 @@ public class IndexerCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.runLowerMotor(1);
+        m_subsystem.runLowerMotor(-1);
     }
 
     // Called once the command ends or is interrupted.

@@ -17,12 +17,17 @@ import frc.robot.subsystems.GathererSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.commands.RequestDisengageGathererCommand;
 import frc.robot.commands.RequestEngageGathererCommand;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbDownCommand;
 import frc.robot.commands.IndexerCommand;
+import frc.robot.commands.IndexerReverseCommand;
 import frc.robot.commands.UpperIndexerCommand;
+import frc.robot.commands.UpperIndexerReverseCommand;
 import frc.robot.commands.drive.FollowTargetCommand;
 import frc.robot.commands.drive.TeleopDriveCommand;
 
@@ -82,6 +87,7 @@ public class RobotContainer {
     private final GathererSubsystem gathererSubsystem;
     private final IndexerSubsystem indexerSubsystem;
     private final ShooterSubsystem shooterSubsystem;
+    private final ClimberSubsystem climberSubsystem;
 
     /*
      * Commands ---------------------------------------------------------------
@@ -95,12 +101,17 @@ public class RobotContainer {
     private final RequestDisengageGathererCommand reqDisengageGathererCmd;
 
     private final IndexerCommand runIndexerCmd;
+    private final IndexerReverseCommand runIndexerBackCmd;
     private final UpperIndexerCommand runUpperIndexerCmd;
+    private final UpperIndexerReverseCommand runUpperIndexerBackCmd;
 
     private final ShootCommand shootCmd;
     private final ShootCommand shootBackCmd;
     private final ShootCommand closeShootCmd;
     private final ShootCommand closeShootBackCmd;
+
+    private final ClimbCommand climbUpCommand;
+    private final ClimbDownCommand climbDownCommand;
 
     /*
      * Shuffleboard -----------------------------------------------------------
@@ -195,12 +206,17 @@ public class RobotContainer {
          * Indexer bindings
          */
 
-        JoystickButton runIndexerButton = new JoystickButton(this.primaryController,
-                ControllerConstants.kLowerIndexerButton);
+        JoystickButton runIndexerButton = new JoystickButton(this.secondaryController, XboxController.Button.kA.value);
         runIndexerButton.whileHeld(this.runIndexerCmd);
 
-        JoystickButton runUpperIndexerButton = new JoystickButton(secondaryController, XboxController.Button.kX.value);
+        JoystickButton runIndexerBackButton = new JoystickButton(this.secondaryController, XboxController.Button.kB.value);
+        runIndexerBackButton.whileHeld(this.runIndexerBackCmd);
+
+        JoystickButton runUpperIndexerButton = new JoystickButton(this.secondaryController, XboxController.Button.kX.value);
         runUpperIndexerButton.whileHeld(this.runUpperIndexerCmd);
+
+        JoystickButton runUpperIndexerBackButton = new JoystickButton(this.secondaryController, XboxController.Button.kY.value);
+        runUpperIndexerBackButton.whileHeld(this.runUpperIndexerBackCmd);
 
         /*
          * Shooter bindings
@@ -212,13 +228,22 @@ public class RobotContainer {
         Trigger shootBackTrigger = new Trigger(this::getRightTrigger);
         shootBackTrigger.whileActiveContinuous(this.shootBackCmd);
 
-        JoystickButton closeShootBumper = new JoystickButton(this.primaryController,
+        JoystickButton closeShootBumper = new JoystickButton(this.secondaryController,
                 XboxController.Button.kLeftBumper.value);
         closeShootBumper.whileHeld(this.closeShootCmd);
 
-        JoystickButton closeShootBackBumper = new JoystickButton(this.primaryController,
+        JoystickButton closeShootBackBumper = new JoystickButton(this.secondaryController,
                 XboxController.Button.kRightBumper.value);
         closeShootBackBumper.whileHeld(this.closeShootBackCmd);
+
+        /*
+         * Climber bindings
+         */
+        final JoystickButton runClimberButton = new JoystickButton(this.secondaryController, XboxController.Button.kStart.value);
+        runClimberButton.whileHeld(this.climbUpCommand);
+        final JoystickButton runClimberDownButton = new JoystickButton(this.secondaryController, XboxController.Button.kBack.value);
+        runClimberDownButton.whileHeld(this.climbDownCommand);
+
     }
 
     /*
@@ -250,6 +275,7 @@ public class RobotContainer {
         this.gathererSubsystem = new GathererSubsystem();
         this.indexerSubsystem = new IndexerSubsystem();
         this.shooterSubsystem = new ShooterSubsystem();
+        this.climberSubsystem = new ClimberSubsystem();
 
         /*
          * Initialize commands
@@ -266,15 +292,19 @@ public class RobotContainer {
         this.reqDisengageGathererCmd = new RequestDisengageGathererCommand(this.gathererSubsystem);
 
         this.runIndexerCmd = new IndexerCommand(this.indexerSubsystem);
+        this.runIndexerBackCmd = new IndexerReverseCommand(this.indexerSubsystem);
         this.runUpperIndexerCmd = new UpperIndexerCommand(this.indexerSubsystem);
+        this.runUpperIndexerBackCmd = new UpperIndexerReverseCommand(this.indexerSubsystem);
 
         this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.5);
         this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.5);
         this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.25);
-        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem,
-                -0.25);
+        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.25);
 
         this.driveTrainSubsystem.setDefaultCommand(this.teleopDriveCmd);
+
+        this.climbDownCommand = new ClimbDownCommand(this.climberSubsystem);
+        this.climbUpCommand = new ClimbCommand(this.climberSubsystem);
 
         configureButtonBindings();
 

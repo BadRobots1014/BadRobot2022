@@ -76,6 +76,8 @@ public final class Constants {
         public static final int kLowerIndexerButton = 10;
         // Upper indexer is in RobotConatiner as it is second controller
 
+        public static final int kClimbingButton = 8; // Still needs set
+
         public static final double kDeadzoneRadius = .2;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
         public static final double kPivotTurnRegionHalfBaseLength = .2;
@@ -105,5 +107,11 @@ public final class Constants {
         public static final int kUpperIndexerSpeedController = 15;
 
         public static final int kIndexerMaxSpeed = 1;
+    }
+    public final class ClimberConstants {
+        public static final int kRightClimberID = 34;
+        public static final int kLeftClimberID = 35;
+        public static final double climberUpSpeed = 0.5;
+        public static final double climberDownSpeed = -0.25;
     }
 }
