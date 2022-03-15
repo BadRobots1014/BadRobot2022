@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.commands.drive.DriveStraightStrategy;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.drive.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import java.util.function.Supplier;

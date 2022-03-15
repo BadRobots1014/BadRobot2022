@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.drive.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 
 public class DriveDistanceCommand extends CommandBase{
