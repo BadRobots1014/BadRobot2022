@@ -6,6 +6,8 @@ import frc.robot.subsystems.drive.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.commands.drive.AnchorCommand;
+import frc.robot.commands.drive.PivotCommand;
 import frc.robot.commands.shoot.ShootCommand;
 
 public class AutoShootCommand extends SequentialCommandGroup {
@@ -18,11 +20,11 @@ public class AutoShootCommand extends SequentialCommandGroup {
         super(
             // Robot is turned on facing the hub so this should work
             // Will likely eventually be limelight code
-            DriveStrategyCommand.pivotTurn(driveSubsystem, () -> 0.0),
+            new PivotCommand(driveSubsystem, () -> 0.0),
             new ParallelDeadlineGroup
             (
                 new ShootCommand(shooterSubsystem, indexerSubsystem, 0.8),
-                DriveStrategyCommand.anchor(driveSubsystem, gyroSubsystem)
+                new AnchorCommand(driveSubsystem, gyroSubsystem)
             )
         );
     }
