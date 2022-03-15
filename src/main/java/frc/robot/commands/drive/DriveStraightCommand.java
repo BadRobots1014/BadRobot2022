@@ -17,6 +17,8 @@ public class DriveStraightCommand extends CommandBase {
      * Private members --------------------------------------------------------
      */
 
+    private final DriveTrainSubsystem drive;
+
     private final Supplier<Double> power;
 
     private final DriveStrategy strategy;
@@ -34,6 +36,7 @@ public class DriveStraightCommand extends CommandBase {
      * @requires -1 <= [the return value of power] <= 1
      */
     public DriveStraightCommand(DriveTrainSubsystem drive, GyroSubsystem gyro, Supplier<Double> power) {
+        this.drive = drive;
         this.power = power;
         this.strategy = new DriveStraightStrategy(drive, gyro);
 
@@ -56,7 +59,7 @@ public class DriveStraightCommand extends CommandBase {
 
     @Override
     public void end(boolean isFinished) {
-
+        this.drive.stop();
     }
 
 }

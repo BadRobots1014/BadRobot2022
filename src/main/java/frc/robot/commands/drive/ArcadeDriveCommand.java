@@ -16,6 +16,8 @@ public class ArcadeDriveCommand extends CommandBase {
      * Private members --------------------------------------------------------
      */
 
+    private final DriveTrainSubsystem drive;
+
     private final Supplier<Double> power;
 
     private final Supplier<Double> rotation;
@@ -35,6 +37,7 @@ public class ArcadeDriveCommand extends CommandBase {
      * @requires ( -1 <= [the return value of power] <= 1 ) and ( -1 <= [the return value of rotation] <= 1 )
      */
     public ArcadeDriveCommand(DriveTrainSubsystem drive, Supplier<Double> power, Supplier<Double> rotation) {
+        this.drive = drive;
         this.power = power;
         this.rotation = rotation;
         this.strategy = new ArcadeDriveStrategy(drive);
@@ -58,7 +61,7 @@ public class ArcadeDriveCommand extends CommandBase {
 
     @Override
     public void end(boolean isFinished) {
-
+        this.drive.stop();
     }
 
 }

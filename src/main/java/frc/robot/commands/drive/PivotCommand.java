@@ -16,6 +16,8 @@ public class PivotCommand extends CommandBase {
      * Private members --------------------------------------------------------
      */
 
+    private final DriveTrainSubsystem drive;
+
     private final Supplier<Double> power;
 
     private final DriveStrategy strategy;
@@ -33,6 +35,7 @@ public class PivotCommand extends CommandBase {
      * @requires -1 <= [the return value of power] <= 1
      */
     public PivotCommand(DriveTrainSubsystem drive, Supplier<Double> power) {
+        this.drive = drive;
         this.power = power;
         this.strategy = new PivotTurnStrategy(drive);
 
@@ -55,7 +58,7 @@ public class PivotCommand extends CommandBase {
 
     @Override
     public void end(boolean isFinished) {
-
+        this.drive.stop();
     }
 
 }
