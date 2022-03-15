@@ -1,8 +1,8 @@
 package frc.robot.commands.drive;
 
-import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.subsystems.GyroSubsystem;
+import frc.robot.subsystems.drive.DriveTrainSubsystem;
 
 /**
  * A {@link DriveStrategy} for driving straight using PID.

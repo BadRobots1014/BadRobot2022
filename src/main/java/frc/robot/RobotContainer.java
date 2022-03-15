@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.shoot.ShootCommand;
 import frc.robot.commands.DeployGathererCommand;
 import frc.robot.commands.BeginGatheringCommand;
 import frc.robot.commands.ClimbCommand;
@@ -23,18 +24,22 @@ import frc.robot.commands.AutoStartRoutineCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.GathererSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.drive.DriveTrainSubsystem;
+import frc.robot.subsystems.gatherer.GathererSubsystem;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.DriveTrainSubsystem;
-import frc.robot.commands.RetractGathererCommand;
 import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ClimbDownCommand;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.IndexerReverseCommand;
 import frc.robot.commands.UpperIndexerCommand;
 import frc.robot.commands.UpperIndexerReverseCommand;
 import frc.robot.commands.drive.FollowTargetCommand;
 import frc.robot.commands.drive.TeleopDriveCommand;
+import frc.robot.commands.gather.RequestDisengageGathererCommand;
+import frc.robot.commands.gather.RequestEngageGathererCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -102,9 +107,8 @@ public class RobotContainer {
 
     private final FollowTargetCommand followTargetCmd;
 
-    private final DeployGathererCommand deployGathererCmd;
-    private final RetractGathererCommand retractGathererCmd;
-    private final BeginGatheringCommand startGathererCmd;
+    private final RequestEngageGathererCommand reqEngageGathererCmd;
+    private final RequestDisengageGathererCommand reqDisengageGathererCmd;
 
     private final IndexerCommand runIndexerCmd;
     private final IndexerReverseCommand runIndexerBackCmd;
@@ -205,20 +209,8 @@ public class RobotContainer {
          * Gatherer bindings
          */
 
-        JoystickButton lowerGathererButton = new JoystickButton(this.primaryController,
-                ControllerConstants.kLowerButton);
-        lowerGathererButton.whileHeld(this.deployGathererCmd);
-
-        JoystickButton raiseGathererButton = new JoystickButton(this.primaryController,
-                ControllerConstants.kRaiseButton);
-        raiseGathererButton.whenPressed(this.retractGathererCmd);
-
-        /*
-         * Hold down the gather button to deploy the gatherer and run the collector. Let
-         * go to retract the gatherer and stop the collector.
-         */
-        JoystickButton gatherButton = new JoystickButton(this.primaryController, ControllerConstants.kCollectorButton);
-        gatherButton.whileHeld(this.startGathererCmd).whenReleased(this.retractGathererCmd);
+        JoystickButton gatherButton = new JoystickButton(this.primaryController, ControllerConstants.kLowerButton);
+        gatherButton.whileHeld(this.reqEngageGathererCmd).whenReleased(this.reqDisengageGathererCmd);
 
         /*
          * Indexer bindings
@@ -306,9 +298,8 @@ public class RobotContainer {
         this.followTargetCmd = new FollowTargetCommand(this.driveTrainSubsystem,
                 visionSubsystem, this::getPrimaryX, this::getPrimaryY);
 
-        this.deployGathererCmd = new DeployGathererCommand(this.gathererSubsystem);
-        this.retractGathererCmd = new RetractGathererCommand(this.gathererSubsystem);
-        this.startGathererCmd = new BeginGatheringCommand(this.gathererSubsystem);
+        this.reqEngageGathererCmd = new RequestEngageGathererCommand(this.gathererSubsystem);
+        this.reqDisengageGathererCmd = new RequestDisengageGathererCommand(this.gathererSubsystem);
 
         this.runIndexerCmd = new IndexerCommand(this.indexerSubsystem);
         this.runIndexerBackCmd = new IndexerReverseCommand(this.indexerSubsystem);

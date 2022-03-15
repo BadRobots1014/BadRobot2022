@@ -9,8 +9,8 @@ import frc.robot.commands.drive.PivotTurnStrategy;
 import frc.robot.commands.drive.AnchorStrategy;
 import frc.robot.commands.drive.ArcadeDriveStrategy;
 import frc.robot.commands.drive.DriveStraightStrategy;
-import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
+import frc.robot.subsystems.drive.DriveTrainSubsystem;
 
 public class DriveStrategyCommand extends CommandBase {
     private final DriveStrategy strategy;

@@ -1,17 +1,17 @@
-package frc.robot.commands;
+//LOWERS ARM
+
+package frc.robot.commands.gather;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GathererSubsystem;
+import frc.robot.subsystems.gatherer.GathererSubsystem;
 
-/**
- * Retracts the gatherer from stored position to deployed position.
- */
-public class DeployGathererCommand extends CommandBase {
+
+public class RequestDisengageGathererCommand extends CommandBase {
     
-    private final GathererSubsystem m_subsystem;
+    private final GathererSubsystem subsystem;
     
-    public DeployGathererCommand(GathererSubsystem subsystem) {
-        m_subsystem = subsystem;
+    public RequestDisengageGathererCommand(GathererSubsystem subsystem) {
+        this.subsystem = subsystem;
 
         addRequirements(subsystem);
     }
@@ -24,12 +24,12 @@ public class DeployGathererCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.deployGatherer();
+        subsystem.requestDisengage();
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_subsystem.retractGatherer();
+        subsystem.requestDisengage();
     }
 }

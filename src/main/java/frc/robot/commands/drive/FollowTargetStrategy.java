@@ -1,7 +1,7 @@
 package frc.robot.commands.drive;
 
-import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.drive.DriveTrainSubsystem;
 
 /**
  * A {@link DriveStrategy} for following cargo using PID.

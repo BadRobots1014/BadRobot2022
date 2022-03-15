@@ -1,6 +1,6 @@
 package frc.robot.commands.drive;
 
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.drive.DriveTrainSubsystem;
 
 /**
  * A {@link DriveStrategy} for arcade-driving.
