@@ -1,10 +1,8 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
-import frc.robot.commands.drive.DriveStraightStrategy;
-import frc.robot.commands.drive.DriveStrategy;
 import frc.robot.subsystems.GyroSubsystem;
 
 /**
