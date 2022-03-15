@@ -1,13 +1,18 @@
+//LOWERS ARM
+
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.GathererSubsystem;
 
-public class IndexerCommand extends CommandBase {
 
-    private final IndexerSubsystem m_subsystem;
+public class RequestDisengageGathererCommand extends CommandBase {
     
-    public IndexerCommand(IndexerSubsystem subsystem) {
-        m_subsystem = subsystem;
+    private final GathererSubsystem subsystem;
+    
+    public RequestDisengageGathererCommand(GathererSubsystem subsystem) {
+        this.subsystem = subsystem;
+
         addRequirements(subsystem);
     }
 
@@ -19,18 +24,12 @@ public class IndexerCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.runLowerMotor(1);
+        subsystem.requestDisengage();
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_subsystem.stopLowerMotor();
-    }
-
-    // Returns true when the command should end.
-    @Override
-    public boolean isFinished() {
-        return false;
+        subsystem.requestDisengage();
     }
 }

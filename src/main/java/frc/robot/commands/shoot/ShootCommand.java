@@ -83,7 +83,7 @@ public class ShootCommand extends CommandBase {
         this.shooter.run(this.power);
 
         if (this.timer.hasElapsed(WAIT_TIME)) {
-            this.indexer.runUpperMotor();
+            this.indexer.runUpperMotor(this.power);
         }
     }
 

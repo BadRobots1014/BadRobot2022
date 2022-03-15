@@ -1,16 +1,12 @@
-//RUNS ROLLERS
-
 package frc.robot.commands;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GathererSubsystem;
+import frc.robot.subsystems.IndexerSubsystem;
 
+public class UpperIndexerReverseCommand extends CommandBase {
 
-public class StartCollectorCommand extends CommandBase {
+    private final IndexerSubsystem m_subsystem;
     
-    private final GathererSubsystem m_subsystem;
-    
-    public StartCollectorCommand(GathererSubsystem subsystem) {
+    public UpperIndexerReverseCommand(IndexerSubsystem subsystem) {
         m_subsystem = subsystem;
         addRequirements(subsystem);
     }
@@ -23,13 +19,13 @@ public class StartCollectorCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.startCollector();
+        m_subsystem.runUpperMotor(-1);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_subsystem.stopCollector();
+        m_subsystem.stopUpperMotor();
     }
 
     // Returns true when the command should end.
