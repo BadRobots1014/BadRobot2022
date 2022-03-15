@@ -23,7 +23,9 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.commands.RetractGathererCommand;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.commands.IndexerCommand;
+import frc.robot.commands.IndexerReverseCommand;
 import frc.robot.commands.UpperIndexerCommand;
+import frc.robot.commands.UpperIndexerReverseCommand;
 import frc.robot.commands.drive.FollowTargetCommand;
 import frc.robot.commands.drive.TeleopDriveCommand;
 
@@ -98,7 +100,9 @@ public class RobotContainer {
     private final BeginGatheringCommand startGathererCmd;
 
     private final IndexerCommand runIndexerCmd;
+    private final IndexerReverseCommand runIndexerBackCmd;
     private final UpperIndexerCommand runUpperIndexerCmd;
+    private final UpperIndexerReverseCommand runUpperIndexerBackCmd;
 
     private final ShootCommand shootCmd;
     private final ShootCommand shootBackCmd;
@@ -210,12 +214,17 @@ public class RobotContainer {
          * Indexer bindings
          */
 
-        JoystickButton runIndexerButton = new JoystickButton(this.primaryController,
-                ControllerConstants.kLowerIndexerButton);
+        JoystickButton runIndexerButton = new JoystickButton(this.secondaryController, XboxController.Button.kA.value);
         runIndexerButton.whileHeld(this.runIndexerCmd);
 
-        JoystickButton runUpperIndexerButton = new JoystickButton(secondaryController, XboxController.Button.kX.value);
+        JoystickButton runIndexerBackButton = new JoystickButton(this.secondaryController, XboxController.Button.kB.value);
+        runIndexerBackButton.whileHeld(this.runIndexerBackCmd);
+
+        JoystickButton runUpperIndexerButton = new JoystickButton(this.secondaryController, XboxController.Button.kX.value);
         runUpperIndexerButton.whileHeld(this.runUpperIndexerCmd);
+
+        JoystickButton runUpperIndexerBackButton = new JoystickButton(this.secondaryController, XboxController.Button.kY.value);
+        runUpperIndexerBackButton.whileHeld(this.runUpperIndexerBackCmd);
 
         /*
          * Shooter bindings
@@ -282,7 +291,9 @@ public class RobotContainer {
         this.startGathererCmd = new BeginGatheringCommand(this.gathererSubsystem);
 
         this.runIndexerCmd = new IndexerCommand(this.indexerSubsystem);
+        this.runIndexerBackCmd = new IndexerReverseCommand(this.indexerSubsystem);
         this.runUpperIndexerCmd = new UpperIndexerCommand(this.indexerSubsystem);
+        this.runUpperIndexerBackCmd = new UpperIndexerReverseCommand(this.indexerSubsystem);
 
         this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.5);
         this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.5);

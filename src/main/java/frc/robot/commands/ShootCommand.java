@@ -39,7 +39,7 @@ public class ShootCommand extends CommandBase {
         // }
         long elapsedTime = System.currentTimeMillis() - startTime;
         if (elapsedTime >= 1000) {
-            m_indexSubsystem.runUpperMotor();
+            m_indexSubsystem.runUpperMotor(1);
         }
     }
 
