@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.gatherer;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -7,11 +7,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GathererConstants;
-import frc.robot.subsystems.gatherer.GathererState;
-import frc.robot.subsystems.gatherer.GathererStateExtended;
-import frc.robot.subsystems.gatherer.GathererStateExtending;
-import frc.robot.subsystems.gatherer.GathererStateRetracted;
-import frc.robot.subsystems.gatherer.GathererStateRetracting;
 
 /**
  * Represents the gatherer subsystem and exposes methods to control it.

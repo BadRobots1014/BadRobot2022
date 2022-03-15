@@ -3,8 +3,8 @@ package frc.robot.commands.drive;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.drive.DriveTrainSubsystem;
 
 public class FollowTargetCommand extends CommandBase {
 

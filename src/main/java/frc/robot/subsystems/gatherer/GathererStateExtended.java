@@ -1,7 +1,6 @@
 package frc.robot.subsystems.gatherer;
 
-import frc.robot.subsystems.GathererSubsystem;
-import frc.robot.subsystems.GathererSubsystem.State;
+import frc.robot.subsystems.gatherer.GathererSubsystem.State;
 
 public class GathererStateExtended implements GathererState {
 

@@ -1,7 +1,7 @@
-package frc.robot.commands;
+package frc.robot.commands.gather;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GathererSubsystem;
+import frc.robot.subsystems.gatherer.GathererSubsystem;
 
 
 public class RequestEngageGathererCommand extends CommandBase {
