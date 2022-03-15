@@ -31,11 +31,6 @@ public class ArcadeDriveStrategy implements DriveStrategy {
         m_drive.arcadeDrive(power, rotation);
     }
 
-    @Override
-    public boolean shouldLockPosition() {
-        return false;
-    }
-
     /*
      * Constructors -----------------------------------------------------------
      */

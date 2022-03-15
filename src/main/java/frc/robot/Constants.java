@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.ShooterSubsystem.RangeConfig;
 
 /**
@@ -50,6 +51,9 @@ public final class Constants {
          * The acceleration of gravity, in m/s/s.
          */
         public static final double kGravityAcceleration = 9.8;
+
+        public static final double kGoalSpeed = 1000;
+        public static final double kMaxTolerance = 100;
     }
 
     /**
@@ -58,19 +62,21 @@ public final class Constants {
     public final class ControllerConstants {
         public static final int kControllerPort = 0;
 
-        public static final int kFollowTargetButton = 1;
+        public static final int kFollowTargetButton = 3;
         public static final int kThrottleButton = 2;
         
         //TODO: Shooting to be read in from another joystick still
         //Maybe use 6 and 7 for shooting forward and back in the future
-        public static final int kShootButton = 6;
+        public static final int kShootButton = 7;
 
         public static final int kCollectorButton = 1;
         public static final int kLowerButton = 4;
         public static final int kRaiseButton = 5;
 
         public static final int kLowerIndexerButton = 10;
-        public static final int kUpperIndexerButton = 11;
+        // Upper indexer is in RobotConatiner as it is second controller
+
+        public static final int kClimbingButton = 8; // Still needs set
 
         public static final double kDeadzoneRadius = .2;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
@@ -101,5 +107,11 @@ public final class Constants {
         public static final int kUpperIndexerSpeedController = 15;
 
         public static final int kIndexerMaxSpeed = 1;
+    }
+    public final class ClimberConstants {
+        public static final int kRightClimberID = 34;
+        public static final int kLeftClimberID = 35;
+        public static final double climberUpSpeed = 0.5;
+        public static final double climberDownSpeed = -0.25;
     }
 }

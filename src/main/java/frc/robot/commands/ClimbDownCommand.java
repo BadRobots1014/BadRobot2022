@@ -1,12 +1,13 @@
 package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IndexerSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.Constants.ClimberConstants;
 
-public class IndexerCommand extends CommandBase {
+public class ClimbDownCommand extends CommandBase {
 
-    private final IndexerSubsystem m_subsystem;
+    private final ClimberSubsystem m_subsystem;
     
-    public IndexerCommand(IndexerSubsystem subsystem) {
+    public ClimbDownCommand(ClimberSubsystem subsystem) {
         m_subsystem = subsystem;
         addRequirements(subsystem);
     }
@@ -19,13 +20,13 @@ public class IndexerCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.runLowerMotor(1);
+        m_subsystem.setClimberPower(ClimberConstants.climberDownSpeed);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_subsystem.stopLowerMotor();
+        m_subsystem.stopClimber();
     }
 
     // Returns true when the command should end.
