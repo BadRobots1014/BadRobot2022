@@ -15,7 +15,7 @@ public class ShootCommand extends CommandBase {
      * The amount of time, in seconds, to wait between activating the shooter motor
      * and activating the indexer motor.
      */
-    private static final double WAIT_TIME = 1.0;
+    private static final double WAIT_TIME = 2.0;
 
     /*
      * Private instance members -----------------------------------------------
@@ -83,7 +83,7 @@ public class ShootCommand extends CommandBase {
         this.shooter.run(this.power);
 
         if (this.timer.hasElapsed(WAIT_TIME)) {
-            this.indexer.runUpperMotor(this.power);
+            this.indexer.runUpperMotor(1);
         }
     }
 
