@@ -1,7 +1,6 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveTrainConstants;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -10,39 +9,107 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 
+/**
+ * Represents the drive train subsystem and exposes methods to control it.
+ */
 public class DriveTrainSubsystem extends SubsystemBase {
-    private final CANSparkMax m_leftA = new CANSparkMax(DriveTrainConstants.kDriveTrainLeftAPort, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_leftB = new CANSparkMax(DriveTrainConstants.kDriveTrainLeftBPort, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_rightA = new CANSparkMax(DriveTrainConstants.kDriveTrainRightAPort, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_rightB = new CANSparkMax(DriveTrainConstants.kDriveTrainRightBPort, CANSparkMaxLowLevel.MotorType.kBrushless);
+    /*
+     * Private constants ------------------------------------------------------
+     */
+    private static final int LEFT_A_PORT = 12;
+    private static final int LEFT_B_PORT = 4;
+    private static final int RIGHT_A_PORT = 2;
+    private static final int RIGHT_B_PORT = 3;
 
-    private final DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftA, m_rightA);
+    /*
+     * Speed controllers ------------------------------------------------------
+     */
+    private final CANSparkMax leftA;
+    private final CANSparkMax leftB;
+    private final CANSparkMax rightA;
+    private final CANSparkMax rightB;
 
-    private final ShuffleboardTab m_tab = Shuffleboard.getTab("Drivetrain");
+    /*
+     * Utility objects --------------------------------------------------------
+     */
 
-    public DriveTrainSubsystem() {
-        m_leftA.setInverted(true);
+    private final DifferentialDrive driveTrain;
 
-        m_leftB.follow(m_leftA, false);
-        m_rightB.follow(m_rightA, false);
+    /*
+     * Shuffleboard -----------------------------------------------------------
+     */
 
-        m_tab.addNumber("Left Power", m_leftA::get);
-        m_tab.addNumber("Right Power", m_rightA::get);
-    }
+    private final ShuffleboardTab shuffleTab;
 
-    public void arcadeDrive(double speed, double rotation) {
-        m_driveTrain.arcadeDrive(speed, rotation, true);
-    }
+    /*
+     * Private helper methods -------------------------------------------------
+     */
 
-    public void tankDrive(double leftSpeed, double rightSpeed) {
-        m_driveTrain.tankDrive(clampPower(leftSpeed), clampPower(rightSpeed), true);
-    }
-
+    /**
+     * Clamps {@code power} between -1 and 1.
+     * 
+     * @param power the value to clamp
+     * @return {@code power} clamped between -1 and 1
+     */
     private static double clampPower(double power) {
         return MathUtil.clamp(power, -1.0, 1.0);
     }
 
+    /*
+     * Constructor ------------------------------------------------------------
+     */
+
+    /**
+     * Constructs a new {@link DriveTrainSubsystem}.
+     */
+    public DriveTrainSubsystem() {
+        /*
+         * Initialize speed controllers
+         */
+
+        this.leftA = new CANSparkMax(LEFT_A_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
+        this.leftB = new CANSparkMax(LEFT_B_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
+        this.rightA = new CANSparkMax(RIGHT_A_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
+        this.rightB = new CANSparkMax(RIGHT_B_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
+
+        /*
+         * Initialize utility objects
+         */
+
+        this.driveTrain = new DifferentialDrive(this.leftA, this.rightA);
+
+        /*
+         * Configure speed controllers
+         */
+
+        this.leftA.setInverted(true);
+
+        this.leftB.follow(this.leftA, false);
+        this.rightB.follow(this.rightA, false);
+
+        /*
+         * Shuffleboard setup
+         */
+
+        this.shuffleTab = Shuffleboard.getTab("Drivetrain");
+
+        this.shuffleTab.addNumber("Left Power", this.leftA::get);
+        this.shuffleTab.addNumber("Right Power", this.rightA::get);
+    }
+
+    /*
+     * Exposed control methods ------------------------------------------------
+     */
+
+    public void arcadeDrive(double speed, double rotation) {
+        this.driveTrain.arcadeDrive(speed, rotation, true);
+    }
+
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        this.driveTrain.tankDrive(clampPower(leftSpeed), clampPower(rightSpeed), true);
+    }
+
     public void stop() {
-        m_driveTrain.stopMotor();
+        this.driveTrain.stopMotor();
     }
 }
