@@ -6,18 +6,19 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
-import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
+import frc.robot.util.GyroUtil;
 import frc.robot.Constants.ControllerConstants;
 
 public class TeleopDriveCommand extends CommandBase {
 
     private final DriveTrainSubsystem drive;
-    private final GyroSubsystem gyro;
 
     private final Supplier<Double> xSource;
     private final Supplier<Double> ySource;
     private final Supplier<Double> throttleSource;
+
+    private final GyroUtil gyro;
 
     private final DriveStrategy arcadeStrategy;
     private final DriveStrategy driveStraightStrategy;
@@ -84,8 +85,7 @@ public class TeleopDriveCommand extends CommandBase {
     /**
      * Constructs a new TeleopDriveCommand.
      * 
-     * @param drive          the {@code DriveTrainSubsystem}
-     * @param gyro           the {@code GyroSubsystem}
+     * @param drive          the {@link DriveTrainSubsystem}
      * @param xSource        supplies the joystick X input
      * @param ySource        supplies the joystick Y input
      * @param throttleSource supplies the throttle factor
@@ -94,22 +94,22 @@ public class TeleopDriveCommand extends CommandBase {
      */
     public TeleopDriveCommand(
             DriveTrainSubsystem drive,
-            GyroSubsystem gyro,
             Supplier<Double> xSource,
             Supplier<Double> ySource,
             Supplier<Double> throttleSource) {
 
         this.drive = drive;
-        this.gyro = gyro;
 
         this.xSource = xSource;
         this.ySource = ySource;
         this.throttleSource = throttleSource;
 
+        this.gyro = GyroUtil.get();
+
         this.arcadeStrategy = new ArcadeDriveStrategy(this.drive);
-        this.driveStraightStrategy = new DriveStraightStrategy(this.drive, this.gyro);
+        this.driveStraightStrategy = new DriveStraightStrategy(this.drive);
         this.pivotTurnStrategy = new PivotTurnStrategy(this.drive);
-        this.anchorStrategy = new AnchorStrategy(this.drive, this.gyro);
+        this.anchorStrategy = new AnchorStrategy(this.drive);
 
         /*
          * Initialize this.strategy to an anchor strategy. This will be changed anyways
@@ -124,7 +124,7 @@ public class TeleopDriveCommand extends CommandBase {
         m_tab.addNumber("Throttle (%)", this.throttleSource::get);
         m_tab.addNumber("Yaw (deg.)", this.gyro::getYaw);
 
-        addRequirements(this.drive, this.gyro);
+        addRequirements(this.drive);
     }
 
     /*

@@ -1,8 +1,8 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.math.controller.PIDController;
-import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
+import frc.robot.util.GyroUtil;
 
 /**
  * A {@link DriveStrategy} for driving straight using PID.
@@ -12,12 +12,12 @@ import frc.robot.subsystems.drive.DriveTrainSubsystem;
  */
 public class DriveStraightStrategy implements DriveStrategy {
 
-    private final DriveTrainSubsystem m_drive;
-    private final PIDController m_rotationalPid;
+    private final DriveTrainSubsystem drive;
+    private final PIDController pidController;
     /**
-     * The {@link GyroSubsystem} to obtain gyroscope readings from.
+     * The {@link GyroUtil} to obtain gyroscope readings from.
      */
-    private final GyroSubsystem m_gyro;
+    private final GyroUtil gyro;
 
     /*
      * DriveStrategy interface methods ----------------------------------------
@@ -30,13 +30,13 @@ public class DriveStraightStrategy implements DriveStrategy {
 
     @Override
     public void reset() {
-        m_gyro.zeroYaw();
+        this.pidController.setSetpoint(this.gyro.getYaw());
     }
 
     @Override
     public void execute(double x, double power) {
-        final double correction = m_rotationalPid.calculate(m_gyro.getYaw());
-        m_drive.tankDrive(power - correction, power + correction);
+        final double correction = this.pidController.calculate(this.gyro.getYaw());
+        this.drive.tankDrive(power - correction, power + correction);
     }
 
     /*
@@ -44,20 +44,16 @@ public class DriveStraightStrategy implements DriveStrategy {
      */
 
     /**
-     * Constructs a new {@code DriveStraightStrategy} that controls the given
-     * {@code drive} using gyroscope readings from {@code gyro} for straight
-     * driving.
+     * Constructs a new {@link DriveStraightStrategy}.
      *
      * @param drive
-     * @param gyro
      * @author Victor Chen <victorc.1@outlook.com>
      * @author Will Blankemeyer
      */
-    public DriveStraightStrategy(DriveTrainSubsystem drive, GyroSubsystem gyro) {
-        m_drive = drive;
-        m_rotationalPid = GyroSubsystem.createRotationalPid(.02, 0, 0);
-        m_rotationalPid.setSetpoint(0);
-        m_gyro = gyro;
+    public DriveStraightStrategy(DriveTrainSubsystem drive) {
+        this.drive = drive;
+        this.pidController = GyroUtil.createRotationalPid(.02, 0, 0);
+        this.gyro = GyroUtil.get();
     }
 
 }

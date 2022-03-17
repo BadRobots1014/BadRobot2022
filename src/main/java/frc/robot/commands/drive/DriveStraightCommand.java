@@ -3,7 +3,6 @@ package frc.robot.commands.drive;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
 
 /**
@@ -31,16 +30,15 @@ public class DriveStraightCommand extends CommandBase {
      * Constructs a new {@link DriveStraightCommand}.
      * 
      * @param drive the {@link DriveTrainSubsystem} to control
-     * @param gyro  the {@link GyroSubsystem} to use for PID
      * @param power the percentage power to drive at
      * @requires -1 <= [the return value of power] <= 1
      */
-    public DriveStraightCommand(DriveTrainSubsystem drive, GyroSubsystem gyro, Supplier<Double> power) {
+    public DriveStraightCommand(DriveTrainSubsystem drive, Supplier<Double> power) {
         this.drive = drive;
         this.power = power;
-        this.strategy = new DriveStraightStrategy(drive, gyro);
+        this.strategy = new DriveStraightStrategy(drive);
 
-        addRequirements(drive, gyro);
+        addRequirements(drive);
     }
 
     /*

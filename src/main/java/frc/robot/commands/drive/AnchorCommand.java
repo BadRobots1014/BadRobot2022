@@ -1,7 +1,6 @@
 package frc.robot.commands.drive;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
 
 /**
@@ -26,12 +25,11 @@ public class AnchorCommand extends CommandBase {
      * Constructs a new {@link AnchorCommand}.
      * 
      * @param drive the {@link DriveTrainSubsystem} to control
-     * @param gyro  the {@link GyroSubsystem} to use for PID
      */
-    public AnchorCommand(DriveTrainSubsystem drive, GyroSubsystem gyro) {
-        this.strategy = new AnchorStrategy(drive, gyro);
+    public AnchorCommand(DriveTrainSubsystem drive) {
+        this.strategy = new AnchorStrategy(drive);
 
-        addRequirements(drive, gyro);
+        addRequirements(drive);
     }
 
     /*

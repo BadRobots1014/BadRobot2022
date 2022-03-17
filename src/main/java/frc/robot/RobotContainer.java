@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.shoot.ShootCommand;
-import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
 import frc.robot.subsystems.gatherer.GathererSubsystem;
@@ -79,7 +78,6 @@ public class RobotContainer {
      * Subsystems -------------------------------------------------------------
      */
 
-    private final GyroSubsystem gyroSubsystem;
     private final VisionSubsystem visionSubsystem;
 
     private final DriveTrainSubsystem driveTrainSubsystem;
@@ -209,13 +207,16 @@ public class RobotContainer {
         JoystickButton runIndexerButton = new JoystickButton(this.secondaryController, XboxController.Button.kA.value);
         runIndexerButton.whileHeld(this.runIndexerCmd);
 
-        JoystickButton runIndexerBackButton = new JoystickButton(this.secondaryController, XboxController.Button.kB.value);
+        JoystickButton runIndexerBackButton = new JoystickButton(this.secondaryController,
+                XboxController.Button.kB.value);
         runIndexerBackButton.whileHeld(this.runIndexerBackCmd);
 
-        JoystickButton runUpperIndexerButton = new JoystickButton(this.secondaryController, XboxController.Button.kX.value);
+        JoystickButton runUpperIndexerButton = new JoystickButton(this.secondaryController,
+                XboxController.Button.kX.value);
         runUpperIndexerButton.whileHeld(this.runUpperIndexerCmd);
 
-        JoystickButton runUpperIndexerBackButton = new JoystickButton(this.secondaryController, XboxController.Button.kY.value);
+        JoystickButton runUpperIndexerBackButton = new JoystickButton(this.secondaryController,
+                XboxController.Button.kY.value);
         runUpperIndexerBackButton.whileHeld(this.runUpperIndexerBackCmd);
 
         /*
@@ -239,9 +240,11 @@ public class RobotContainer {
         /*
          * Climber bindings
          */
-        final JoystickButton runClimberButton = new JoystickButton(this.secondaryController, XboxController.Button.kStart.value);
+        final JoystickButton runClimberButton = new JoystickButton(this.secondaryController,
+                XboxController.Button.kStart.value);
         runClimberButton.whileHeld(this.climbUpCommand);
-        final JoystickButton runClimberDownButton = new JoystickButton(this.secondaryController, XboxController.Button.kBack.value);
+        final JoystickButton runClimberDownButton = new JoystickButton(this.secondaryController,
+                XboxController.Button.kBack.value);
         runClimberDownButton.whileHeld(this.climbDownCommand);
 
     }
@@ -267,7 +270,6 @@ public class RobotContainer {
          * Initialize subsystems
          */
 
-        this.gyroSubsystem = new GyroSubsystem();
         this.visionSubsystem = new VisionSubsystem();
 
         this.driveTrainSubsystem = new DriveTrainSubsystem();
@@ -281,8 +283,7 @@ public class RobotContainer {
          * Initialize commands
          */
 
-        this.teleopDriveCmd = new TeleopDriveCommand(this.driveTrainSubsystem,
-                this.gyroSubsystem, this::getPrimaryX, this::getPrimaryY,
+        this.teleopDriveCmd = new TeleopDriveCommand(this.driveTrainSubsystem, this::getPrimaryX, this::getPrimaryY,
                 this::getThrottle);
 
         this.followTargetCmd = new FollowTargetCommand(this.driveTrainSubsystem,
