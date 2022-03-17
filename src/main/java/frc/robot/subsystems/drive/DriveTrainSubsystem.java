@@ -31,6 +31,23 @@ public class DriveTrainSubsystem extends SubsystemBase {
      */
     private static final double TRACK_WIDTH = 0.60325;
 
+    /**
+     * Diameter of the wheels. in meters.
+     */
+    private static final double WHEEL_DIAMETER = 0.2032;
+
+    /**
+     * 
+     * Gear ratio of the motors.
+     */
+    private static final double GEAR_RATIO = 10.75;
+
+    /**
+     * The conversion factor from revolutions of the motor, as reported by the
+     * encoder, to distance covered by the wheels.
+     */
+    private static final double ENCODER_CONVERSION_FACTOR = Math.PI * WHEEL_DIAMETER / GEAR_RATIO;
+
     /*
      * Speed controllers ------------------------------------------------------
      */
@@ -84,6 +101,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 this.rightEncoder.getPosition());
     }
 
+    /**
+     * Get the x position, as reported by {@link #odometry}.
+     */
+    private double getX() {
+        return this.odometry.getPoseMeters().getX();
+    }
+
+    /**
+     * Get the y position, as reported by {@link #odometry}.
+     */
+    private double getY() {
+        return this.odometry.getPoseMeters().getY();
+    }
+
     /*
      * Constructor ------------------------------------------------------------
      */
@@ -106,6 +137,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
          */
         this.leftEncoder = this.leftA.getEncoder();
         this.rightEncoder = this.rightA.getEncoder();
+
+        this.leftEncoder.setPositionConversionFactor(ENCODER_CONVERSION_FACTOR);
+        this.rightEncoder.setPositionConversionFactor(ENCODER_CONVERSION_FACTOR);
 
         /*
          * Initialize utility objects
@@ -135,6 +169,9 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
         this.shuffleTab.addNumber("Left Power", this.leftA::get);
         this.shuffleTab.addNumber("Right Power", this.rightA::get);
+        
+        this.shuffleTab.addNumber("Odometry X Position", this::getX);
+        this.shuffleTab.addNumber("Odometry Y Position", this::getY);
     }
 
     /*
