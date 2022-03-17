@@ -1,13 +1,18 @@
 package frc.robot.subsystems.drive;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.GyroUtil;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 
 /**
  * Represents the drive train subsystem and exposes methods to control it.
@@ -21,6 +26,11 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private static final int RIGHT_A_PORT = 2;
     private static final int RIGHT_B_PORT = 3;
 
+    /**
+     * The track width of the robot, in meters.
+     */
+    private static final double TRACK_WIDTH = 0.60325;
+
     /*
      * Speed controllers ------------------------------------------------------
      */
@@ -30,10 +40,21 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final CANSparkMax rightB;
 
     /*
+     * Encoders ---------------------------------------------------------------
+     */
+    private final RelativeEncoder leftEncoder;
+    private final RelativeEncoder rightEncoder;
+
+    /*
      * Utility objects --------------------------------------------------------
      */
 
     private final DifferentialDrive driveTrain;
+
+    private final GyroUtil gyro;
+    private final DifferentialDriveOdometry odometry;
+
+    private final DifferentialDriveKinematics kinematics;
 
     /*
      * Shuffleboard -----------------------------------------------------------
@@ -55,6 +76,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
         return MathUtil.clamp(power, -1.0, 1.0);
     }
 
+    /**
+     * Update odometry.
+     */
+    private void updateOdometry() {
+        this.odometry.update(Rotation2d.fromDegrees(-this.gyro.getYaw()), this.leftEncoder.getPosition(),
+                this.rightEncoder.getPosition());
+    }
+
     /*
      * Constructor ------------------------------------------------------------
      */
@@ -67,16 +96,27 @@ public class DriveTrainSubsystem extends SubsystemBase {
          * Initialize speed controllers
          */
 
-        this.leftA = new CANSparkMax(LEFT_A_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
-        this.leftB = new CANSparkMax(LEFT_B_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
-        this.rightA = new CANSparkMax(RIGHT_A_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
-        this.rightB = new CANSparkMax(RIGHT_B_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
+        this.leftA = new CANSparkMax(LEFT_A_PORT, MotorType.kBrushless);
+        this.leftB = new CANSparkMax(LEFT_B_PORT, MotorType.kBrushless);
+        this.rightA = new CANSparkMax(RIGHT_A_PORT, MotorType.kBrushless);
+        this.rightB = new CANSparkMax(RIGHT_B_PORT, MotorType.kBrushless);
+
+        /*
+         * Initialize encoders
+         */
+        this.leftEncoder = this.leftA.getEncoder();
+        this.rightEncoder = this.rightA.getEncoder();
 
         /*
          * Initialize utility objects
          */
 
         this.driveTrain = new DifferentialDrive(this.leftA, this.rightA);
+
+        this.gyro = GyroUtil.get();
+        this.odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-this.gyro.getYaw()));
+
+        this.kinematics = new DifferentialDriveKinematics(TRACK_WIDTH);
 
         /*
          * Configure speed controllers
@@ -112,4 +152,14 @@ public class DriveTrainSubsystem extends SubsystemBase {
     public void stop() {
         this.driveTrain.stopMotor();
     }
+
+    /*
+     * SubsystemBase methods --------------------------------------------------
+     */
+
+    @Override
+    public void periodic() {
+        updateOdometry();
+    }
+
 }
