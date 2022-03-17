@@ -52,7 +52,7 @@ public class DriveDistanceCommand extends CommandBase {
      * @requires distance >= 0 and speed > 0
      */
     private static double calculateTime(double distance, double speed) {
-        return distance / speed;
+        return Math.abs(distance) / speed;
     }
 
     /*
@@ -85,6 +85,7 @@ public class DriveDistanceCommand extends CommandBase {
     public void initialize() {
         this.strategy.reset();
         this.timer.reset();
+        this.timer.start();
     }
 
     @Override
@@ -99,10 +100,11 @@ public class DriveDistanceCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         this.drive.stop();
+        this.timer.stop();
     }
 
     @Override
     public boolean isFinished() {
-        return this.timer.get() > this.time;
+        return this.timer.hasElapsed(this.time);
     }
 }
