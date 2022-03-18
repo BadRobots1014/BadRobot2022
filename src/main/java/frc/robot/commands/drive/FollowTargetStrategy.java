@@ -37,7 +37,7 @@ public class FollowTargetStrategy implements DriveStrategy {
         if (m_vision.chosenPipelineIsActive()) {
             final double correction = m_vision.getRotationalPid();
             // Only works with camera upside down; invert to have camera upright.
-            m_drive.tankDrive(power - correction, power + correction);
+            m_drive.directTankDrive(power - correction, power + correction);
             // TODO: m_drive.arcadeDrive(power, correction);
         } else {
             m_vision.activateChosenPipeline();

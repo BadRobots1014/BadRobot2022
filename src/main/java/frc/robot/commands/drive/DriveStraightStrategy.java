@@ -36,7 +36,7 @@ public class DriveStraightStrategy implements DriveStrategy {
     @Override
     public void execute(double x, double power) {
         final double correction = this.pidController.calculate(this.gyro.getYaw());
-        this.drive.tankDrive(power - correction, power + correction);
+        this.drive.directTankDrive(power - correction, power + correction);
     }
 
     /*

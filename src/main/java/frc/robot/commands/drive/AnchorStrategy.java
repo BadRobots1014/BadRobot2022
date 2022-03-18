@@ -35,7 +35,7 @@ public class AnchorStrategy implements DriveStrategy {
     @Override
     public void execute(double x, double y) {
         final double correction = this.pidController.calculate(this.gyro.getYaw());
-        this.drive.tankDrive(-correction, correction);
+        this.drive.directTankDrive(-correction, correction);
     }
 
     /*
