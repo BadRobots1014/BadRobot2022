@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
@@ -44,6 +46,12 @@ public class IndexerSubsystem extends SubsystemBase {
     private final DigitalInput upperSensor;
 
     /*
+     * Shuffleboard -----------------------------------------------------------
+     */
+
+    private final ShuffleboardTab shuffleTab;
+
+    /*
      * Constructor ------------------------------------------------------------
      */
 
@@ -53,6 +61,10 @@ public class IndexerSubsystem extends SubsystemBase {
 
         this.lowerSensor = new DigitalInput(LOWER_SENSOR_PORT);
         this.upperSensor = new DigitalInput(UPPER_SENSOR_PORT);
+
+        this.shuffleTab = Shuffleboard.getTab("Indexer");
+        this.shuffleTab.addBoolean("Lower Sensor", this::getLower);
+        this.shuffleTab.addBoolean("Upper Sensor", this::getUpper);
     }
 
     /*
