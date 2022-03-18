@@ -4,15 +4,20 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.GyroUtil;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 
 /**
  * Represents the drive train subsystem and exposes methods to control it.
@@ -48,6 +53,50 @@ public class DriveTrainSubsystem extends SubsystemBase {
      */
     private static final double ENCODER_CONVERSION_FACTOR = Math.PI * WHEEL_DIAMETER / GEAR_RATIO;
 
+    /**
+     * The proportional coefficient for PID velocity control of drive train motors.
+     */
+    private static final double PID_PROPORTIONAL_COEFFICIENT = 0.0022395;
+
+    /**
+     * The required voltage to overcome static friction, in V, for feedforward
+     * control.
+     * 
+     * This is the coefficient kS in the following equation:
+     * V = kS * sgn(v) + kV * v + kA * a
+     * 
+     * @see <a href=
+     *      "https://docs.wpilib.org/en/stable/docs/software/pathplanning/system-identification/introduction.html">Introduction
+     *      to System Identification</a>
+     */
+    private static final double FEEDFORWARD_STATIC_COEFFICIENT = 0.49638;
+
+    /**
+     * The proportionality constant of the velocity term, in V*s/m, for feedforward
+     * control.
+     * 
+     * This is the coefficient kV in the following equation:
+     * V = kS * sgn(v) + kV * v + kA * a
+     * 
+     * @see <a href=
+     *      "https://docs.wpilib.org/en/stable/docs/software/pathplanning/system-identification/introduction.html">Introduction
+     *      to System Identification</a>
+     */
+    private static final double FEEDFORWARD_VELOCITY_COEFFICIENT = 2.3537;
+
+    /**
+     * The proportionality constant of the acceleration term, in V*s^2/m, for
+     * feedforward control.
+     * 
+     * This is the coefficient kA in the following equation:
+     * V = kS * sgn(v) + kV * v + kA * a
+     * 
+     * @see <a href=
+     *      "https://docs.wpilib.org/en/stable/docs/software/pathplanning/system-identification/introduction.html">Introduction
+     *      to System Identification</a>
+     */
+    private static final double FEEDFORWARD_ACCELERATION_COEFFICIENT = 0.58533;
+
     /*
      * Speed controllers ------------------------------------------------------
      */
@@ -63,6 +112,12 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final RelativeEncoder rightEncoder;
 
     /*
+     * PID Controllers --------------------------------------------------------
+     */
+    private final SparkMaxPIDController leftPIDController;
+    private final SparkMaxPIDController rightPIDController;
+
+    /*
      * Utility objects --------------------------------------------------------
      */
 
@@ -71,6 +126,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
     private final GyroUtil gyro;
     private final DifferentialDriveOdometry odometry;
 
+    private final SimpleMotorFeedforward feedforward;
     private final DifferentialDriveKinematics kinematics;
 
     /*
@@ -142,6 +198,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.rightEncoder.setPositionConversionFactor(ENCODER_CONVERSION_FACTOR);
 
         /*
+         * Initialize PID controllers
+         */
+        this.leftPIDController = this.leftA.getPIDController();
+        this.rightPIDController = this.rightA.getPIDController();
+
+        this.leftPIDController.setP(PID_PROPORTIONAL_COEFFICIENT);
+        this.rightPIDController.setP(PID_PROPORTIONAL_COEFFICIENT);
+
+        /*
          * Initialize utility objects
          */
 
@@ -150,6 +215,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.gyro = GyroUtil.get();
         this.odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(-this.gyro.getYaw()));
 
+        this.feedforward = new SimpleMotorFeedforward(FEEDFORWARD_STATIC_COEFFICIENT, FEEDFORWARD_VELOCITY_COEFFICIENT,
+                FEEDFORWARD_ACCELERATION_COEFFICIENT);
         this.kinematics = new DifferentialDriveKinematics(TRACK_WIDTH);
 
         /*
@@ -177,6 +244,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
     /*
      * Exposed control methods ------------------------------------------------
      */
+
+    /**
+     * Drive using speeds parameterized in a {@link ChassisSpeeds} object.
+     * 
+     * @param speeds the {@link ChassisSpeeds} object
+     */
+    public void parametricDrive(ChassisSpeeds speeds) {
+        DifferentialDriveWheelSpeeds wheelSpeeds = this.kinematics.toWheelSpeeds(speeds);
+
+        this.leftPIDController.setReference(this.feedforward.calculate(wheelSpeeds.leftMetersPerSecond),
+                ControlType.kVelocity);
+        this.rightPIDController.setReference(this.feedforward.calculate(wheelSpeeds.rightMetersPerSecond),
+                ControlType.kVelocity);
+    }
 
     public void arcadeDrive(double speed, double rotation) {
         this.driveTrain.arcadeDrive(speed, rotation, true);
