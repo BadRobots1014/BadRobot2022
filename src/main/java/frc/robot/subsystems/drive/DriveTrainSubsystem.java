@@ -5,6 +5,7 @@ import frc.robot.util.GyroUtil;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
@@ -171,20 +172,6 @@ public class DriveTrainSubsystem extends SubsystemBase {
     }
 
     /**
-     * Get the x position, as reported by {@link #odometry}, in meters.
-     */
-    private double getX() {
-        return this.odometry.getPoseMeters().getX();
-    }
-
-    /**
-     * Get the y position, as reported by {@link #odometry}, in meters.
-     */
-    private double getY() {
-        return this.odometry.getPoseMeters().getY();
-    }
-
-    /**
      * Set drive train speeds using feedforward control.
      * 
      * @param left  the speed of the left wheels, in m/s
@@ -338,6 +325,33 @@ public class DriveTrainSubsystem extends SubsystemBase {
         this.leftPIDController.setReference(0, ControlType.kDutyCycle);
         this.rightPIDController.setReference(0, ControlType.kDutyCycle);
         this.driveTrain.stopMotor();
+    }
+
+    /*
+     * Exposed odometry methods -----------------------------------------------
+     */
+
+    /**
+     * Get the position of the robot, in meters, in a {@link Pose2d} object.
+     * 
+     * @return the {@link Pose2d} object parameterizing the robot's position
+     */
+    public Pose2d getPose() {
+        return this.odometry.getPoseMeters();
+    }
+
+    /**
+     * Get the x position, as reported by {@link #odometry}, in meters.
+     */
+    public double getX() {
+        return this.odometry.getPoseMeters().getX();
+    }
+
+    /**
+     * Get the y position, as reported by {@link #odometry}, in meters.
+     */
+    public double getY() {
+        return this.odometry.getPoseMeters().getY();
     }
 
     /*
