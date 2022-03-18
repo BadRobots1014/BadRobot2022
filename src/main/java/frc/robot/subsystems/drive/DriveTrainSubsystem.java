@@ -97,6 +97,19 @@ public class DriveTrainSubsystem extends SubsystemBase {
      */
     private static final double FEEDFORWARD_ACCELERATION_COEFFICIENT = 0.58533;
 
+    /**
+     * The maximum speed of the robot when using feedforward control, in m/s.
+     */
+    private static final double MAX_SPEED = 2.80;
+
+    // TODO: Measure the actual maximum angular speed
+
+    /**
+     * The maximum rotational speed of the robot when using feedforward control,
+     * in rad/s.
+     */
+    private static final double MAX_ANGULAR_SPEED = 1.5 * Math.PI;
+
     /*
      * Speed controllers ------------------------------------------------------
      */
@@ -259,15 +272,52 @@ public class DriveTrainSubsystem extends SubsystemBase {
                 ControlType.kVelocity);
     }
 
+    /**
+     * Drive using arcade-drive, or using motion parameterized by percentage
+     * tangential (forwards and backwards) and rotational power, using feedforward
+     * control.
+     * 
+     * @param speed    the tangential power
+     * @param rotation the rotational power, positive is clockwise
+     * @requires (-1 <= speed <= 1) and (-1 <= rotation <= 1)
+     */
     public void arcadeDrive(double speed, double rotation) {
+        double tanSpeed = Math.pow(speed, 2) * MAX_SPEED;
+        double rotSpeed = -Math.pow(rotation, 2) * MAX_ANGULAR_SPEED;
+        this.parametricDrive(new ChassisSpeeds(tanSpeed, 0, rotSpeed));
+    }
+
+    /**
+     * Drive using arcade-drive, or using motion parameterized by percentage
+     * tangential (forwards and backwards) and rotational power, without feedforward
+     * control.
+     * 
+     * @param speed    the tangential power
+     * @param rotation the rotational power, positive is clockwise
+     * @requires (-1 <= speed <= 1) and (-1 <= rotation <= 1)
+     */
+    public void directArcadeDrive(double speed, double rotation) {
         this.driveTrain.arcadeDrive(speed, rotation, true);
     }
 
-    public void tankDrive(double leftSpeed, double rightSpeed) {
+    /**
+     * Drive using tank-drive, or motion parameterized by percentage power provided
+     * to left and right wheels, without feedforward control.
+     * 
+     * @param leftSpeed  the power provided to the left wheels
+     * @param rightSpeed the power provided to the right wheels
+     * @requires (-1 <= leftSpeed <= 1) and (-1 <= rightSpeed <= 1)
+     */
+    public void directTankDrive(double leftSpeed, double rightSpeed) {
         this.driveTrain.tankDrive(clampPower(leftSpeed), clampPower(rightSpeed), true);
     }
 
+    /**
+     * Stop all drive train motors.
+     */
     public void stop() {
+        this.leftPIDController.setReference(0, ControlType.kDutyCycle);
+        this.rightPIDController.setReference(0, ControlType.kDutyCycle);
         this.driveTrain.stopMotor();
     }
 
