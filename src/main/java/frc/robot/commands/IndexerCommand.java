@@ -19,13 +19,13 @@ public class IndexerCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.runLowerMotor(1);
+        m_subsystem.runLower(1);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_subsystem.stopLowerMotor();
+        m_subsystem.stopLower();
     }
 
     // Returns true when the command should end.

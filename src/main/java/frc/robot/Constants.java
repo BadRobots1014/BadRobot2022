@@ -75,17 +75,12 @@ public final class Constants {
         public static final double kPositionalI = 0;
         public static final double kPositionalD = 0;
     }
+    
     public final class GathererConstants {
         public static final int kCollectorSpeedController = 13;
         public static final int kGathererSpeedController = 14;
     }
 
-    public final class IndexerConstants {
-        public static final int kLowerIndexerSpeedController = 29;
-        public static final int kUpperIndexerSpeedController = 15;
-
-        public static final int kIndexerMaxSpeed = 1;
-    }
     public final class ClimberConstants {
         public static final int kRightClimberID = 34;
         public static final int kLeftClimberID = 35;

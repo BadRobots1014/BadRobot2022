@@ -83,14 +83,14 @@ public class ShootCommand extends CommandBase {
         this.shooter.run(this.power);
 
         if (this.timer.hasElapsed(WAIT_TIME)) {
-            this.indexer.runUpperMotor(1);
+            this.indexer.runUpper(1);
         }
     }
 
     @Override
     public void end(boolean interrupted) {
         this.shooter.stop();
-        this.indexer.stopUpperMotor();
+        this.indexer.stopUpper();
         System.out.println("Stopping everything");
     }
 
