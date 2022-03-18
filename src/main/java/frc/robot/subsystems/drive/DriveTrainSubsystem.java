@@ -250,6 +250,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
         this.shuffleTab.addNumber("Odometry X Position", this::getX);
         this.shuffleTab.addNumber("Odometry Y Position", this::getY);
+        this.shuffleTab.addNumber("Odometry Rotation", this::getRotation);
     }
 
     /*
@@ -342,6 +343,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     /**
      * Get the x position, as reported by {@link #odometry}, in meters.
+     * 
+     * @return the x position
      */
     public double getX() {
         return this.odometry.getPoseMeters().getX();
@@ -349,9 +352,20 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     /**
      * Get the y position, as reported by {@link #odometry}, in meters.
+     * 
+     * @return the y position
      */
     public double getY() {
         return this.odometry.getPoseMeters().getY();
+    }
+
+    /**
+     * Get the rotation, as reported by {@link #odometry}, in degrees.
+     * 
+     * @return the rotation
+     */
+    public double getRotation() {
+        return this.odometry.getPoseMeters().getRotation().getDegrees();
     }
 
     /*
