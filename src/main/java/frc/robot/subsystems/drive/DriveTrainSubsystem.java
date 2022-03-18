@@ -184,6 +184,17 @@ public class DriveTrainSubsystem extends SubsystemBase {
         return this.odometry.getPoseMeters().getY();
     }
 
+    /**
+     * Set drive train speeds using feedforward control.
+     * 
+     * @param left  the speed of the left wheels, in m/s
+     * @param right the speed of the right wheels, in m/s
+     */
+    private void setSpeeds(double left, double right) {
+        this.leftPIDController.setReference(this.feedforward.calculate(left), ControlType.kVelocity);
+        this.rightPIDController.setReference(this.feedforward.calculate(right), ControlType.kVelocity);
+    }
+
     /*
      * Constructor ------------------------------------------------------------
      */
@@ -265,11 +276,7 @@ public class DriveTrainSubsystem extends SubsystemBase {
      */
     public void parametricDrive(ChassisSpeeds speeds) {
         DifferentialDriveWheelSpeeds wheelSpeeds = this.kinematics.toWheelSpeeds(speeds);
-
-        this.leftPIDController.setReference(this.feedforward.calculate(wheelSpeeds.leftMetersPerSecond),
-                ControlType.kVelocity);
-        this.rightPIDController.setReference(this.feedforward.calculate(wheelSpeeds.rightMetersPerSecond),
-                ControlType.kVelocity);
+        this.setSpeeds(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
     }
 
     /**
@@ -285,6 +292,18 @@ public class DriveTrainSubsystem extends SubsystemBase {
         double tanSpeed = Math.pow(speed, 2) * MAX_SPEED;
         double rotSpeed = -Math.pow(rotation, 2) * MAX_ANGULAR_SPEED;
         this.parametricDrive(new ChassisSpeeds(tanSpeed, 0, rotSpeed));
+    }
+
+    /**
+     * Drive using tank-drive, or motion parameterized by percentage power provided
+     * to left and right wheels, using feedforward control.
+     * 
+     * @param leftSpeed  the power provided to the left wheels
+     * @param rightSpeed the power provided to the right wheels
+     * @requires (-1 <= leftSpeed <= 1) and (-1 <= rightSpeed <= 1)
+     */
+    public void tankDrive(double leftSpeed, double rightSpeed) {
+        this.setSpeeds(leftSpeed * MAX_SPEED, rightSpeed * MAX_SPEED);
     }
 
     /**
