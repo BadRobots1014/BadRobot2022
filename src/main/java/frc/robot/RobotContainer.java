@@ -298,8 +298,8 @@ public class RobotContainer {
 
         this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.75, "Far Forward");
         this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.75, "Far Backward");
-        this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.5, "Close Forward");
-        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.5, "Close Backward");
+        this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.6, "Close Forward");
+        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.6, "Close Backward");
 
         this.driveTrainSubsystem.setDefaultCommand(this.teleopDriveCmd);
 
