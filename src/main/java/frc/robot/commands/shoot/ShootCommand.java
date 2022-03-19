@@ -83,7 +83,7 @@ public class ShootCommand extends CommandBase {
 
         this.shuffleTab = Shuffleboard.getTab("Shooter");
         this.powerEntry = this.shuffleTab.add("Power: " + this.name, this.power).withWidget(BuiltInWidgets.kTextView)
-                .withProperties(Map.of("min", -1, "max", 1)).getEntry();
+                .getEntry();
 
         addRequirements(shooter, indexer);
     }
