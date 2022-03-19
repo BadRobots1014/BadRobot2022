@@ -17,19 +17,19 @@ import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
 import frc.robot.subsystems.gatherer.GathererSubsystem;
+import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbDownCommand;
-import frc.robot.commands.IndexerCommand;
-import frc.robot.commands.IndexerReverseCommand;
-import frc.robot.commands.UpperIndexerCommand;
-import frc.robot.commands.UpperIndexerReverseCommand;
 import frc.robot.commands.drive.FollowTargetCommand;
 import frc.robot.commands.drive.TeleopDriveCommand;
 import frc.robot.commands.gather.RequestDisengageGathererCommand;
 import frc.robot.commands.gather.RequestEngageGathererCommand;
+import frc.robot.commands.index.IndexerCommand;
+import frc.robot.commands.index.IndexerReverseCommand;
+import frc.robot.commands.index.UpperIndexerCommand;
+import frc.robot.commands.index.UpperIndexerReverseCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
