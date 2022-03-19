@@ -20,8 +20,10 @@ public class IndexerIntakingState implements IndexerState {
     public void execute() {
         if (this.subsystem.getUpper()) {
             this.subsystem.setState(this.subsystem.getState(State.FULL));
-        } else {
+        } else  if (this.subsystem.getLower()) {
             this.subsystem.runLower();
+        } else {
+            this.subsystem.setState(this.subsystem.getState(State.EMPTY));
         }
     }
 
