@@ -7,7 +7,7 @@ public class GathererStateRetracted implements GathererState {
     private GathererSubsystem subsystem;
 
     public GathererStateRetracted(GathererSubsystem subsystem) {
-        this.subsystem = subsystem;        
+        this.subsystem = subsystem;
     }
 
     private void stopMotors() {
@@ -22,7 +22,11 @@ public class GathererStateRetracted implements GathererState {
 
     @Override
     public void execute() {
-        // Do nothing.
+        if (this.subsystem.isArmAtRetractLimit()) {
+            this.stopMotors();
+        } else {
+            this.subsystem.retractArm();
+        }
     }
 
     @Override
@@ -39,5 +43,5 @@ public class GathererStateRetracted implements GathererState {
     public void onRequestDisengage() {
         // Do nothing.
     }
-    
+
 }

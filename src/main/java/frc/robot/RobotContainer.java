@@ -209,7 +209,7 @@ public class RobotContainer {
          * Gatherer bindings
          */
 
-        JoystickButton gatherButton = new JoystickButton(this.primaryController, ControllerConstants.kLowerButton);
+        JoystickButton gatherButton = new JoystickButton(this.primaryController, ControllerConstants.kGatherButton);
         gatherButton.whileHeld(this.reqEngageGathererCmd).whenReleased(this.reqDisengageGathererCmd);
 
         /*
