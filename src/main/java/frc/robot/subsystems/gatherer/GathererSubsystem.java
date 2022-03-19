@@ -1,6 +1,7 @@
 package frc.robot.subsystems.gatherer;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -51,6 +52,7 @@ public class GathererSubsystem extends SubsystemBase {
      * No-argument constructor.
      */
     public GathererSubsystem() {
+
         this.retractedState = new GathererStateRetracted(this);
         this.extendingState = new GathererStateExtending(this);
         this.extendedState = new GathererStateExtended(this);
@@ -59,6 +61,7 @@ public class GathererSubsystem extends SubsystemBase {
         this.state = this.retractedState;
 
         this.armMotor = new TalonSRX(GathererConstants.kGathererSpeedController);
+        this.armMotor.setNeutralMode(NeutralMode.Brake);
         this.collectorMotor = new TalonSRX(GathererConstants.kCollectorSpeedController);
 
         this.shuffleTab = Shuffleboard.getTab("Gatherer");
