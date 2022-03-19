@@ -296,10 +296,10 @@ public class RobotContainer {
         this.runUpperIndexerCmd = new UpperIndexerCommand(this.indexerSubsystem);
         this.runUpperIndexerBackCmd = new UpperIndexerReverseCommand(this.indexerSubsystem);
 
-        this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.5);
-        this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.5);
-        this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.25);
-        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.25);
+        this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.75);
+        this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.75);
+        this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.5);
+        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.5);
 
         this.driveTrainSubsystem.setDefaultCommand(this.teleopDriveCmd);
 

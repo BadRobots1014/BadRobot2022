@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 public class DriveTrainSubsystem extends SubsystemBase {
     private final CANSparkMax m_leftA = new CANSparkMax(DriveTrainConstants.kDriveTrainLeftAPort, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -22,6 +23,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
 
     public DriveTrainSubsystem() {
         m_leftA.setInverted(true);
+        m_rightA.setInverted(false);
+
+        m_leftB.setInverted(false);
+        m_rightB.setInverted(true);
+
+        m_leftA.setIdleMode(IdleMode.kBrake);
+        m_rightA.setIdleMode(IdleMode.kBrake);
+        m_leftB.setIdleMode(IdleMode.kBrake);
+        m_rightB.setIdleMode(IdleMode.kBrake);
 
         m_leftB.follow(m_leftA, false);
         m_rightB.follow(m_rightA, false);
