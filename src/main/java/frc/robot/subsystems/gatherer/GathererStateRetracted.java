@@ -11,8 +11,12 @@ public class GathererStateRetracted implements GathererState {
     }
 
     private void stopMotors() {
-        this.subsystem.stopArmMotor();
-        this.subsystem.stopCollector();
+        if (this.subsystem.isArmAtRetractLimit()) {
+            this.subsystem.stopArmMotor();
+            this.subsystem.stopCollector();
+        } else {
+            this.subsystem.retractArm();
+        }
     }
 
     @Override
