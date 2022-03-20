@@ -1,6 +1,7 @@
 package frc.robot.subsystems.indexer;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -77,6 +78,9 @@ public class IndexerSubsystem extends StatefulSubsystem<IndexerState> {
     public IndexerSubsystem() {
         this.lowerMotor = new TalonSRX(LOWER_MOTOR_PORT);
         this.upperMotor = new TalonSRX(UPPER_MOTOR_PORT);
+
+        this.lowerMotor.setNeutralMode(NeutralMode.Brake);
+        this.upperMotor.setNeutralMode(NeutralMode.Brake);
 
         this.lowerSensor = new DigitalInput(LOWER_SENSOR_PORT);
         this.upperSensor = new DigitalInput(UPPER_SENSOR_PORT);
