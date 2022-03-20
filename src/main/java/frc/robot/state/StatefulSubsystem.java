@@ -16,6 +16,9 @@ public abstract class StatefulSubsystem<SubsystemState extends State> extends Su
      * Protected members ------------------------------------------------------
      */
 
+    /**
+     * The current {@link State} of the subsystem.
+     */
     protected SubsystemState state;
 
     /*
@@ -60,5 +63,5 @@ public abstract class StatefulSubsystem<SubsystemState extends State> extends Su
     public void periodic() {
         this.state.execute();
     }
-    
+
 }
