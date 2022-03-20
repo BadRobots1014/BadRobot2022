@@ -6,8 +6,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.GathererConstants;
+import frc.robot.state.StatefulSubsystem;
 
 /**
  * Represents the gatherer subsystem and exposes methods to control it.
@@ -23,7 +23,7 @@ import frc.robot.Constants.GathererConstants;
  * @author Victor Chen <victorc.1@outlook.com>
  * @author Benjamin Gluck
  */
-public class GathererSubsystem extends SubsystemBase {
+public class GathererSubsystem extends StatefulSubsystem<GathererState> {
 
     /**
      * {@code GathererState}s that can be requested from a {@code GathererSubsystem}
@@ -36,17 +36,27 @@ public class GathererSubsystem extends SubsystemBase {
         RETRACTING
     }
 
+    /*
+     * Private members --------------------------------------------------------
+     */
+
+    private final TalonSRX armMotor;
+    private final TalonSRX collectorMotor;
+
     private final GathererState retractedState;
     private final GathererState extendingState;
     private final GathererState extendedState;
     private final GathererState retractingState;
 
-    private GathererState state;
-
-    private final TalonSRX armMotor;
-    private final TalonSRX collectorMotor;
+    /*
+     * Shuffleboard -----------------------------------------------------------
+     */
 
     private final ShuffleboardTab shuffleTab;
+
+    /*
+     * Constructor ------------------------------------------------------------
+     */
 
     /**
      * No-argument constructor.
@@ -69,23 +79,7 @@ public class GathererSubsystem extends SubsystemBase {
     }
 
     /*
-     * Helper methods ---------------------------------------------------------
-     */
-
-    /**
-     * Handles state changes by calling {@code prev.end()} and
-     * {@code next.initialize()}.
-     * 
-     * @param prev the previous state object
-     * @param next the next state object
-     */
-    private void onStateChange(GathererState prev, GathererState next) {
-        prev.end();
-        next.initialize();
-    }
-
-    /*
-     * Direct hardware control methods ----------------------------------------
+     * Exposed control methods ------------------------------------------------
      */
 
     public void extendArm() {
@@ -124,8 +118,24 @@ public class GathererSubsystem extends SubsystemBase {
         return this.armMotor.getSensorCollection().isRevLimitSwitchClosed();
     }
 
+    /**
+     * Request the gatherer to engage. The internal state machine of {@code this}
+     * will handle all further logic.
+     */
+    public void requestEngage() {
+        this.state.onRequestEngage();
+    }
+
+    /**
+     * Request the gatherer to disengage. The internal state machine of {@code this}
+     * will handle all further logic.
+     */
+    public void requestDisengage() {
+        this.state.onRequestDisengage();
+    }
+
     /*
-     * State setter and getter ------------------------------------------------
+     * State methods ----------------------------------------------------------
      */
 
     /**
@@ -148,45 +158,6 @@ public class GathererSubsystem extends SubsystemBase {
 
         // This line to make the Java compiler happy.
         return null;
-    }
-
-    /**
-     * Sets {@code this.state} to {@code state}.
-     * 
-     * @param state the new state
-     */
-    public void setState(GathererState state) {
-        this.onStateChange(this.state, state);
-        this.state = state;
-    }
-
-    /*
-     * Request methods --------------------------------------------------------
-     */
-
-    /**
-     * Request the gatherer to engage. The internal state machine of {@code this}
-     * will handle all further logic.
-     */
-    public void requestEngage() {
-        this.state.onRequestEngage();
-    }
-
-    /**
-     * Request the gatherer to disengage. The internal state machine of {@code this}
-     * will handle all further logic.
-     */
-    public void requestDisengage() {
-        this.state.onRequestDisengage();
-    }
-
-    /*
-     * SubsystemBase methods --------------------------------------------------
-     */
-
-    @Override
-    public void periodic() {
-        this.state.execute();
     }
 
 }

@@ -6,7 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.state.StatefulSubsystem;
 
 /**
  * Represents the indexer subsystem and exposes methods to control it.
@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * @author Leo Canales
  * @author Victor Chen <victorc.1@outlook.com>
  */
-public class IndexerSubsystem extends SubsystemBase {
-
+public class IndexerSubsystem extends StatefulSubsystem<IndexerState> {
+    
     /**
      * {@link IndexerState}s that can be requested from a {@link IndexerSubsystem}
      * using the {@link #getState} method.
@@ -64,29 +64,11 @@ public class IndexerSubsystem extends SubsystemBase {
     private final IndexerState outputtingState;
     private final IndexerState manualState;
 
-    private IndexerState state;
-
     /*
      * Shuffleboard -----------------------------------------------------------
      */
 
     private final ShuffleboardTab shuffleTab;
-
-    /*
-     * Helper methods ---------------------------------------------------------
-     */
-
-    /**
-     * Handles state changes by calling {@code prev.end()} and
-     * {@code next.initialize()}.
-     * 
-     * @param prev the previous state object
-     * @param next the next state object
-     */
-    private void onStateChange(IndexerState prev, IndexerState next) {
-        prev.end();
-        next.initialize();
-    }
 
     /*
      * Constructor ------------------------------------------------------------
@@ -174,7 +156,7 @@ public class IndexerSubsystem extends SubsystemBase {
     }
 
     /**
-     * Returns the state of the lower sensor. 
+     * Returns the state of the lower sensor.
      * 
      * @return [the sensor beam is obstructed]
      */
@@ -183,7 +165,7 @@ public class IndexerSubsystem extends SubsystemBase {
     }
 
     /**
-     * Returns the state of the upper sensor. 
+     * Returns the state of the upper sensor.
      * 
      * @return [the sensor beam is obstructed]
      */
@@ -192,14 +174,14 @@ public class IndexerSubsystem extends SubsystemBase {
     }
 
     /*
-     * State setter and getter ------------------------------------------------
+     * State methods ----------------------------------------------------------
      */
 
     /**
-     * Gets the corresponding {@code IndexerState} object used with {@code this}.
+     * Gets the corresponding {@link IndexerState} object used with {@code this}.
      * 
      * @param state the type of state object to retrieve
-     * @return the corresponding {@code IndexerState} object
+     * @return the corresponding {@link IndexerState} object
      */
     public IndexerState getState(State state) {
         switch (state) {
@@ -220,16 +202,6 @@ public class IndexerSubsystem extends SubsystemBase {
     }
 
     /**
-     * Sets {@code this.state} to {@code state}.
-     * 
-     * @param state the new state
-     */
-    public void setState(IndexerState state) {
-        this.onStateChange(this.state, state);
-        this.state = state;
-    }
-
-    /**
      * Resets {@code this.state} based on sensor readings.
      */
     public void rectifyState() {
@@ -238,15 +210,6 @@ public class IndexerSubsystem extends SubsystemBase {
         } else {
             this.setState(this.emptyState);
         }
-    }
-
-    /*
-     * Subsystem base ---------------------------------------------------------
-     */
-
-    @Override
-    public void periodic() {
-        this.state.execute();
     }
 
 }
