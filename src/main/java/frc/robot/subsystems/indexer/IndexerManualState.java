@@ -10,8 +10,7 @@ public class IndexerManualState implements IndexerState {
 
     @Override
     public void initialize() {
-        this.subsystem.stopUpper();
-        this.subsystem.stopLower();
+        this.subsystem.stop();
     }
 
     @Override
@@ -21,8 +20,7 @@ public class IndexerManualState implements IndexerState {
 
     @Override
     public void end() {
-        this.subsystem.stopUpper();
-        this.subsystem.stopLower();
+        // Nothing here.
     }
     
 }

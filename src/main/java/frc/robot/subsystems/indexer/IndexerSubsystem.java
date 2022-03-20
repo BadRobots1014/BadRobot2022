@@ -160,6 +160,14 @@ public class IndexerSubsystem extends StatefulSubsystem<IndexerState> {
     }
 
     /**
+     * Stops all motors.
+     */
+    public void stop() {
+        this.stopLower();
+        this.stopUpper();
+    }
+
+    /**
      * Returns the state of the lower sensor.
      * 
      * @return [the sensor beam is obstructed]

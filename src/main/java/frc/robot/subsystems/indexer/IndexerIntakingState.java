@@ -12,15 +12,14 @@ public class IndexerIntakingState implements IndexerState {
 
     @Override
     public void initialize() {
-        this.subsystem.stopUpper();
-        this.subsystem.stopLower();
+        this.subsystem.stop();
     }
 
     @Override
     public void execute() {
         if (this.subsystem.getUpper()) {
             this.subsystem.setState(this.subsystem.getState(State.FULL));
-        } else  if (this.subsystem.getLower()) {
+        } else if (this.subsystem.getLower()) {
             this.subsystem.runLower();
         } else {
             this.subsystem.setState(this.subsystem.getState(State.EMPTY));
@@ -29,7 +28,7 @@ public class IndexerIntakingState implements IndexerState {
 
     @Override
     public void end() {
-        this.subsystem.stopLower();
+        // Nothing here.
     }
     
 }

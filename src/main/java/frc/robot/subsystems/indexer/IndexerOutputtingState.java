@@ -12,8 +12,7 @@ public class IndexerOutputtingState implements IndexerState {
 
     @Override
     public void initialize() {
-        this.subsystem.stopUpper();
-        this.subsystem.stopLower();
+        this.subsystem.stop();
     }
 
     @Override
@@ -27,7 +26,7 @@ public class IndexerOutputtingState implements IndexerState {
 
     @Override
     public void end() {
-        this.subsystem.stopUpper();
+        // Nothing here.
     }
     
 }

@@ -10,8 +10,7 @@ public class IndexerFullState implements IndexerState {
 
     @Override
     public void initialize() {
-        this.subsystem.stopUpper();
-        this.subsystem.stopLower();
+        this.subsystem.stop();
     }
 
     @Override
