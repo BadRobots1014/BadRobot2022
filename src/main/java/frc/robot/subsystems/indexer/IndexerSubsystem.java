@@ -15,7 +15,7 @@ import frc.robot.state.StatefulSubsystem;
  * @author Victor Chen <victorc.1@outlook.com>
  */
 public class IndexerSubsystem extends StatefulSubsystem<IndexerState> {
-    
+
     /**
      * {@link IndexerState}s that can be requested from a {@link IndexerSubsystem}
      * using the {@link #getState} method.
@@ -195,10 +195,10 @@ public class IndexerSubsystem extends StatefulSubsystem<IndexerState> {
                 return this.outputtingState;
             case MANUAL:
                 return this.manualState;
+            default:
+                // This line to make the Java compiler happy.
+                return null;
         }
-
-        // This line to make the Java compiler happy.
-        return null;
     }
 
     /**

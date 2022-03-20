@@ -154,10 +154,10 @@ public class GathererSubsystem extends StatefulSubsystem<GathererState> {
                 return this.extendedState;
             case RETRACTING:
                 return this.retractingState;
+            default:
+                // This line to make the Java compiler happy.
+                return null;
         }
-
-        // This line to make the Java compiler happy.
-        return null;
     }
 
 }
