@@ -32,8 +32,13 @@ public final class Constants {
     public static final class ShooterConstants {
         public static final int kShooterPort = 7;
 
-        public static final double kGoalSpeed = 1000;
-        public static final double kMaxTolerance = 100;
+        //Make inversions here for forward/backward
+        //Positive = forward or toward gatherer
+        //Negative = backward or away from gatherer
+        public static final double farShotPower = 0.75;
+        public static final double farBackShotPower = -0.75;
+        public static final double closeShotPower = 0.6;
+        public static final double closeBackShotPower = -0.6;
     }
 
     /**

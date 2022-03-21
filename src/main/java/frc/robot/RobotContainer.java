@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.shoot.ShootCommand;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
@@ -296,10 +297,10 @@ public class RobotContainer {
         this.runUpperIndexerCmd = new UpperIndexerCommand(this.indexerSubsystem);
         this.runUpperIndexerBackCmd = new UpperIndexerReverseCommand(this.indexerSubsystem);
 
-        this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.75, "Far Forward");
-        this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.75, "Far Backward");
-        this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, 0.6, "Close Forward");
-        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, -0.6, "Close Backward");
+        this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.farShotPower, "Far Forward");
+        this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.farBackShotPower, "Far Backward");
+        this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.closeShotPower, "Close Forward");
+        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.closeBackShotPower, "Close Backward");
 
         this.driveTrainSubsystem.setDefaultCommand(this.teleopDriveCmd);
 
