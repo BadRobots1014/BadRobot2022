@@ -5,6 +5,7 @@ import frc.robot.subsystems.drive.DriveTrainSubsystem;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.drive.AnchorCommand;
 import frc.robot.commands.shoot.ShootCommand;
 
@@ -16,7 +17,7 @@ public class AutoShootCommand extends ParallelRaceGroup {
         IndexerSubsystem indexerSubsystem
         ) {
         super(
-                new ShootCommand(shooterSubsystem, indexerSubsystem, 0.5).withTimeout(2),
+                new ShootCommand(shooterSubsystem, indexerSubsystem, ShooterConstants.closeBackShotPower, "Dat boi").withTimeout(ShootCommand.WAIT_TIME*2),
                 new AnchorCommand(driveSubsystem, gyroSubsystem)
         );
     }

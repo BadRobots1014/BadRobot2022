@@ -21,7 +21,7 @@ public class ShootCommand extends CommandBase {
      * The amount of time, in seconds, to wait between activating the shooter motor
      * and activating the indexer motor.
      */
-    private static final double WAIT_TIME = 2.0;
+    public static final double WAIT_TIME = 2.0;
 
     /*
      * Private instance members -----------------------------------------------
