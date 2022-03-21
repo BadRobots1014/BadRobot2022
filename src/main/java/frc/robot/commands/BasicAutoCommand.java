@@ -2,13 +2,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
+import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.commands.drive.DriveDistanceCommand;
 import frc.robot.subsystems.GyroSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
-public class AutoStartRoutineCommand extends SequentialCommandGroup {
-    public AutoStartRoutineCommand (
+public class BasicAutoCommand extends SequentialCommandGroup {
+    public BasicAutoCommand (
         DriveTrainSubsystem driveSubsystem, 
         GyroSubsystem gyro, 
         ShooterSubsystem shooterSubsystem,
@@ -17,7 +18,7 @@ public class AutoStartRoutineCommand extends SequentialCommandGroup {
         addCommands(
             new AutoShootCommand(driveSubsystem, gyro, shooterSubsystem, indexerSubsystem),
             // TODO: set -5 to actual distance needed to get out of tarmac.
-            new DriveDistanceCommand(driveSubsystem, gyro, -5.0)
+            new DriveDistanceCommand(driveSubsystem, gyro, -DriveTrainConstants.autoDriveDistance)
         );
     }
 }
