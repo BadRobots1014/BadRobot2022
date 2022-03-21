@@ -1,6 +1,12 @@
 package frc.robot.commands.shoot;
 
+import java.util.Map;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -43,6 +49,15 @@ public class ShootCommand extends CommandBase {
     private final double power;
 
     /*
+     * Shuffleboard -----------------------------------------------------------
+     */
+
+    private final String name;
+
+    private final ShuffleboardTab shuffleTab;
+    private final NetworkTableEntry powerEntry;
+
+    /*
      * Constructor ------------------------------------------------------------
      */
 
@@ -53,15 +68,22 @@ public class ShootCommand extends CommandBase {
      * @param shooter the {@link ShooterSubsystem} controlled by this command
      * @param indexer the {@link IndexerSubsystem} controlled by this command
      * @param power   the percentage output to run the shooter at
+     * @param name    the name to display for this command in Shuffleboard
      * @requires {@code power} is in the range [-1.0, 1.0]
      */
-    public ShootCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, double power) {
+    public ShootCommand(ShooterSubsystem shooter, IndexerSubsystem indexer, double power, String name) {
         this.shooter = shooter;
         this.indexer = indexer;
 
         this.timer = new Timer();
 
         this.power = power;
+
+        this.name = name;
+
+        this.shuffleTab = Shuffleboard.getTab("Shooter");
+        this.powerEntry = this.shuffleTab.add("Power: " + this.name, this.power).withWidget(BuiltInWidgets.kTextView)
+                .getEntry();
 
         addRequirements(shooter, indexer);
     }
@@ -75,12 +97,12 @@ public class ShootCommand extends CommandBase {
         this.timer.reset();
         this.timer.start();
 
-        this.shooter.run(this.power);
+        this.shooter.run(this.powerEntry.getDouble(this.power));
     }
 
     @Override
     public void execute() {
-        this.shooter.run(this.power);
+        this.shooter.run(this.powerEntry.getDouble(this.power));
 
         if (this.timer.hasElapsed(WAIT_TIME)) {
             this.indexer.runUpperMotor(1);
