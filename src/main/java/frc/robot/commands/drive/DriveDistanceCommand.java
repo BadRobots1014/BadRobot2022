@@ -18,7 +18,7 @@ public class DriveDistanceCommand extends CommandBase {
     /**
      * The power to drive the robot at.
      */
-    private final double POWER = 1;
+    private final double POWER = 0.5;
 
     /**
      * The speed of the robot when driven at {@link #POWER}.
