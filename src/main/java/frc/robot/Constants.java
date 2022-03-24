@@ -80,7 +80,7 @@ public final class Constants {
         public static final double kPositionalI = 0;
         public static final double kPositionalD = 0;
 
-        public static final double autoDriveDistance = 5.0;
+        public static final double autoDriveDistance = 3.0;
     }
     public final class GathererConstants {
         public static final int kCollectorSpeedController = 13;
