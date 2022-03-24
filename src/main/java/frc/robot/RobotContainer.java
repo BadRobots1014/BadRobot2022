@@ -28,6 +28,8 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.IndexerReverseCommand;
+import frc.robot.commands.LeftClimbingCommand;
+import frc.robot.commands.RightClimbingCommand;
 import frc.robot.commands.UpperIndexerCommand;
 import frc.robot.commands.UpperIndexerReverseCommand;
 import frc.robot.commands.drive.FollowTargetCommand;
@@ -116,6 +118,8 @@ public class RobotContainer {
 
     private final ClimbCommand climbUpCommand;
     private final ClimbDownCommand climbDownCommand;
+    private final LeftClimbingCommand leftClimbCommand;
+    private final RightClimbingCommand rightClimbCommand;
 
     private final BasicAutoCommand basicAutoCommand;
     private final DriveOnlyAutoCommand driveOnlyAutoCommand;
@@ -161,6 +165,14 @@ public class RobotContainer {
         return this.primaryController.getY();
     }
 
+    private double getSecondaryLeftY() {
+        return this.secondaryController.getLeftY();
+    }
+
+    private double getSecondaryRightY() {
+        return this.secondaryController.getRightY();
+    }
+
     /**
      * Get the desired throttle value for use with {@link #teleopDriveCmd}.
      * 
@@ -189,6 +201,14 @@ public class RobotContainer {
      */
     private boolean getRightTrigger() {
         return this.secondaryController.getRightTriggerAxis() > TRIGGER_THRESHOLD;
+    }
+
+    private boolean getManualLeftLifterActive() {
+        return Math.abs(this.secondaryController.getLeftY()) > 0.1;
+    }
+
+    private boolean getManualRightLifterActive() {
+        return Math.abs(this.secondaryController.getRightY()) > 0.1;
     }
 
     /*
@@ -241,6 +261,12 @@ public class RobotContainer {
 
         Trigger shootBackTrigger = new Trigger(this::getRightTrigger);
         shootBackTrigger.whileActiveContinuous(this.shootBackCmd);
+
+        Trigger manualLeftClimberControl = new Trigger(this::getManualLeftLifterActive);
+        manualLeftClimberControl.whileActiveContinuous(this.leftClimbCommand);
+
+        Trigger manualRightClimberControl = new Trigger(this::getManualRightLifterActive);
+        manualRightClimberControl.whileActiveContinuous(this.rightClimbCommand);
 
         JoystickButton closeShootBumper = new JoystickButton(this.secondaryController,
                 XboxController.Button.kLeftBumper.value);
@@ -319,6 +345,8 @@ public class RobotContainer {
 
         this.climbDownCommand = new ClimbDownCommand(this.climberSubsystem);
         this.climbUpCommand = new ClimbCommand(this.climberSubsystem);
+        this.leftClimbCommand = new LeftClimbingCommand(this.climberSubsystem, this::getSecondaryLeftY);
+        this.rightClimbCommand = new RightClimbingCommand(this.climberSubsystem, this::getSecondaryRightY);
 
         this.basicAutoCommand = new BasicAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem, this.shooterSubsystem, this.indexerSubsystem);
         this.driveOnlyAutoCommand = new DriveOnlyAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem);

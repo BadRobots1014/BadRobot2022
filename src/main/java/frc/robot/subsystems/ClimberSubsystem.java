@@ -18,6 +18,14 @@ public class ClimberSubsystem extends SubsystemBase{
         m_rightMotor.set(ControlMode.PercentOutput, climbingPower);
     }
 
+    public void setLeftClimberPower(double climbingPower) {
+        m_leftMotor.set(ControlMode.PercentOutput, climbingPower);
+    }
+
+    public void setRightClimberPower(double climbingPower) {
+        m_rightMotor.set(ControlMode.PercentOutput, climbingPower);
+    }
+
     public void stopClimber() {
         m_leftMotor.set(ControlMode.PercentOutput, 0);
         m_rightMotor.set(ControlMode.PercentOutput, 0);
