@@ -9,7 +9,7 @@ import frc.robot.subsystems.GyroSubsystem;
  * This command is used to drive forward a set distance.
  * 
  */
-public class DriveDistanceCommand extends CommandBase {
+public class DriveTimeCommand extends CommandBase {
 
     /*
      * Private constants ------------------------------------------------------
@@ -23,7 +23,7 @@ public class DriveDistanceCommand extends CommandBase {
     /**
      * The speed of the robot when driven at {@link #POWER}.
      */
-    private final double SPEED = 5.0; // TODO: Measure what this should be
+    //private final double SPEED = 5.0;
 
     /*
      * Private members --------------------------------------------------------
@@ -51,31 +51,31 @@ public class DriveDistanceCommand extends CommandBase {
      * @return the amount of time it takes to move {@code distance} at {@code speed}
      * @requires distance >= 0 and speed > 0
      */
-    private static double calculateTime(double distance, double speed) {
-        return Math.abs(distance) / speed;
-    }
+    // private static double calculateTime(double distance, double speed) {
+    //     return Math.abs(distance) / speed;
+    // }
 
     /*
      * Constructor ------------------------------------------------------------
      */
 
     /**
-     * Constructs a new {@link DriveDistanceCommand}.
+     * Constructs a new {@link DriveTimeCommand}.
      * 
      * @param subsystem the {@link DriveTrainSubsystem} to control
      * @param gyro      the {@link GyroSubsystem} to read from
      * @param distance  the distance (in what units???) to move; positive is
      *                  forwards
      */
-    public DriveDistanceCommand(DriveTrainSubsystem drive, GyroSubsystem gyro, double distance) {
+    public DriveTimeCommand(DriveTrainSubsystem drive, GyroSubsystem gyro, double time) {
         this.drive = drive;
         this.gyro = gyro;
 
         this.timer = new Timer();
 
-        this.forwards = distance >= 0;
-        //this.time = calculateTime(distance, SPEED);
-        this.time = 2.0;
+        this.forwards = false;
+        this.time = time;
+        //this.time = 2.0;
 
         this.strategy = new DriveStraightStrategy(drive, gyro);
 

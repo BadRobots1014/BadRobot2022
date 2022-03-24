@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.shoot.ShootCommand;
+import frc.robot.commands.BackShootBackAutoCommand;
 import frc.robot.commands.BasicAutoCommand;
 import frc.robot.commands.DriveOnlyAutoCommand;
 import frc.robot.commands.ClimbCommand;
@@ -123,6 +124,7 @@ public class RobotContainer {
 
     private final BasicAutoCommand basicAutoCommand;
     private final DriveOnlyAutoCommand driveOnlyAutoCommand;
+    private final BackShootBackAutoCommand backShootBackAutoCommand;
 
     /*
      * Shuffleboard -----------------------------------------------------------
@@ -134,6 +136,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     private void createAutoChooser() {
+        autoChooser.setDefaultOption("Backup, Shoot, Backup", backShootBackAutoCommand);
         autoChooser.setDefaultOption("Shoot and backup", basicAutoCommand);
         autoChooser.addOption("Backup only", driveOnlyAutoCommand);
         //autoChooser.addOption("Complex Auto", );
@@ -350,6 +353,7 @@ public class RobotContainer {
 
         this.basicAutoCommand = new BasicAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem, this.shooterSubsystem, this.indexerSubsystem);
         this.driveOnlyAutoCommand = new DriveOnlyAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem);
+        this.backShootBackAutoCommand = new BackShootBackAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem, this.shooterSubsystem, this.indexerSubsystem);
 
         createAutoChooser();
 
