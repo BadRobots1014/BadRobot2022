@@ -16,6 +16,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.shoot.ShootCommand;
 import frc.robot.commands.BasicAutoCommand;
+import frc.robot.commands.DriveOnlyAutoCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.ClimbDownCommand;
 import frc.robot.subsystems.gatherer.GathererSubsystem;
@@ -117,6 +118,7 @@ public class RobotContainer {
     private final ClimbDownCommand climbDownCommand;
 
     private final BasicAutoCommand basicAutoCommand;
+    private final DriveOnlyAutoCommand driveOnlyAutoCommand;
 
     /*
      * Shuffleboard -----------------------------------------------------------
@@ -129,6 +131,7 @@ public class RobotContainer {
 
     private void createAutoChooser() {
         autoChooser.setDefaultOption("Shoot and backup", basicAutoCommand);
+        autoChooser.addOption("Backup only", driveOnlyAutoCommand);
         //autoChooser.addOption("Complex Auto", );
         SmartDashboard.putData(autoChooser);
     }
@@ -318,6 +321,7 @@ public class RobotContainer {
         this.climbUpCommand = new ClimbCommand(this.climberSubsystem);
 
         this.basicAutoCommand = new BasicAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem, this.shooterSubsystem, this.indexerSubsystem);
+        this.driveOnlyAutoCommand = new DriveOnlyAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem);
 
         createAutoChooser();
 

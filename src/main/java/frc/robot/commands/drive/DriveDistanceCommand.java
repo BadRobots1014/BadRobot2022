@@ -18,7 +18,7 @@ public class DriveDistanceCommand extends CommandBase {
     /**
      * The power to drive the robot at.
      */
-    private final double POWER = 1.0;
+    private final double POWER = 1;
 
     /**
      * The speed of the robot when driven at {@link #POWER}.
@@ -74,7 +74,8 @@ public class DriveDistanceCommand extends CommandBase {
         this.timer = new Timer();
 
         this.forwards = distance >= 0;
-        this.time = calculateTime(distance, SPEED);
+        //this.time = calculateTime(distance, SPEED);
+        this.time = 2.0;
 
         this.strategy = new DriveStraightStrategy(drive, gyro);
 
@@ -86,10 +87,12 @@ public class DriveDistanceCommand extends CommandBase {
         this.strategy.reset();
         this.timer.reset();
         this.timer.start();
+        // System.out.println("DEBUG: DriveDistance Init finished");
     }
 
     @Override
     public void execute() {
+        // System.out.println("DEBUG: DriveDistance Execute");
         if (this.forwards) {
             this.strategy.execute(0, POWER);
         } else {
@@ -99,6 +102,7 @@ public class DriveDistanceCommand extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        // System.out.println("DEBUG: DriveDistance End");
         this.drive.stop();
         this.timer.stop();
     }
