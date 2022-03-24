@@ -204,11 +204,11 @@ public class RobotContainer {
     }
 
     private boolean getManualLeftLifterActive() {
-        return Math.abs(this.secondaryController.getLeftY()) > 0.1;
+        return Math.abs(this.secondaryController.getLeftY()) > ControllerConstants.kDeadzoneRadius;
     }
 
     private boolean getManualRightLifterActive() {
-        return Math.abs(this.secondaryController.getRightY()) > 0.1;
+        return Math.abs(this.secondaryController.getRightY()) > ControllerConstants.kDeadzoneRadius;
     }
 
     /*
