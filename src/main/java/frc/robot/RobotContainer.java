@@ -137,7 +137,7 @@ public class RobotContainer {
 
     private void createAutoChooser() {
         autoChooser.setDefaultOption("Backup, Shoot, Backup", backShootBackAutoCommand);
-        autoChooser.setDefaultOption("Shoot and backup", basicAutoCommand);
+        autoChooser.addOption("Shoot and backup", basicAutoCommand);
         autoChooser.addOption("Backup only", driveOnlyAutoCommand);
         //autoChooser.addOption("Complex Auto", );
         SmartDashboard.putData(autoChooser);

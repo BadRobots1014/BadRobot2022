@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.drive.DriveTrainSubsystem;
-import frc.robot.Constants.DriveTrainConstants;
 import frc.robot.commands.drive.DriveTimeCommand;
 import frc.robot.subsystems.GyroSubsystem;
 

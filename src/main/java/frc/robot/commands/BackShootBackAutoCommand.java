@@ -16,7 +16,7 @@ public class BackShootBackAutoCommand extends SequentialCommandGroup {
         ) {
         addCommands(
             new DriveTimeCommand(driveSubsystem, gyro, 1.2),
-            new AutoShootCommand(driveSubsystem, gyro, shooterSubsystem, indexerSubsystem),
+            new AutoShootCommand(driveSubsystem, gyro, shooterSubsystem, indexerSubsystem, "BSB Auto"),
             new DriveTimeCommand(driveSubsystem, gyro, .8)
         );
     }
