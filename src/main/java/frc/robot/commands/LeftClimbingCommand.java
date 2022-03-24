@@ -23,7 +23,9 @@ public class LeftClimbingCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.setLeftClimberPower(joystick.getAsDouble());
+        //System.out.println("Left climber execute");
+        double joystickScale = joystick.getAsDouble() * -0.5;
+        m_subsystem.setLeftClimberPower(joystickScale);
     }
 
     // Called once the command ends or is interrupted.

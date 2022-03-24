@@ -207,11 +207,11 @@ public class RobotContainer {
     }
 
     private boolean getManualLeftLifterActive() {
-        return Math.abs(this.secondaryController.getLeftY()) > 0.1;
+        return Math.abs(this.secondaryController.getLeftY()) > ControllerConstants.kDeadzoneRadius;
     }
 
     private boolean getManualRightLifterActive() {
-        return Math.abs(this.secondaryController.getRightY()) > 0.1;
+        return Math.abs(this.secondaryController.getRightY()) > ControllerConstants.kDeadzoneRadius;
     }
 
     /*
@@ -265,12 +265,6 @@ public class RobotContainer {
         Trigger shootBackTrigger = new Trigger(this::getRightTrigger);
         shootBackTrigger.whileActiveContinuous(this.shootBackCmd);
 
-        Trigger manualLeftClimberControl = new Trigger(this::getManualLeftLifterActive);
-        manualLeftClimberControl.whileActiveContinuous(this.leftClimbCommand);
-
-        Trigger manualRightClimberControl = new Trigger(this::getManualRightLifterActive);
-        manualRightClimberControl.whileActiveContinuous(this.rightClimbCommand);
-
         JoystickButton closeShootBumper = new JoystickButton(this.secondaryController,
                 XboxController.Button.kLeftBumper.value);
         closeShootBumper.whileHeld(this.closeShootCmd);
@@ -286,6 +280,11 @@ public class RobotContainer {
         runClimberButton.whileHeld(this.climbUpCommand);
         final JoystickButton runClimberDownButton = new JoystickButton(this.secondaryController, XboxController.Button.kBack.value);
         runClimberDownButton.whileHeld(this.climbDownCommand);
+        Trigger manualLeftClimberControl = new Trigger(this::getManualLeftLifterActive);
+        manualLeftClimberControl.whileActiveContinuous(this.leftClimbCommand);
+
+        Trigger manualRightClimberControl = new Trigger(this::getManualRightLifterActive);
+        manualRightClimberControl.whileActiveContinuous(this.rightClimbCommand);
 
     }
 
