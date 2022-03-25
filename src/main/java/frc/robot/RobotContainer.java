@@ -238,6 +238,7 @@ public class RobotContainer {
 
         JoystickButton gatherButton = new JoystickButton(this.primaryController, ControllerConstants.kGatherButton);
         gatherButton.whileHeld(this.reqEngageGathererCmd).whenReleased(this.reqDisengageGathererCmd);
+        gatherButton.whileHeld(this.runIndexerCmd);
 
         /*
          * Indexer bindings
@@ -262,16 +263,16 @@ public class RobotContainer {
         Trigger shootTrigger = new Trigger(this::getLeftTrigger);
         shootTrigger.whileActiveContinuous(this.shootCmd);
 
-        Trigger shootBackTrigger = new Trigger(this::getRightTrigger);
-        shootBackTrigger.whileActiveContinuous(this.shootBackCmd);
+        // Trigger shootBackTrigger = new Trigger(this::getRightTrigger);
+        // shootBackTrigger.whileActiveContinuous(this.shootBackCmd);
 
         JoystickButton closeShootBumper = new JoystickButton(this.secondaryController,
                 XboxController.Button.kLeftBumper.value);
         closeShootBumper.whileHeld(this.closeShootCmd);
 
-        JoystickButton closeShootBackBumper = new JoystickButton(this.secondaryController,
-                XboxController.Button.kRightBumper.value);
-        closeShootBackBumper.whileHeld(this.closeShootBackCmd);
+        // JoystickButton closeShootBackBumper = new JoystickButton(this.secondaryController,
+        //         XboxController.Button.kRightBumper.value);
+        // closeShootBackBumper.whileHeld(this.closeShootBackCmd);
 
         /*
          * Climber bindings
