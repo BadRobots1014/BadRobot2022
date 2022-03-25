@@ -293,10 +293,10 @@ public class RobotContainer {
         Trigger manualRightClimberControl = new Trigger(this::getManualRightLifterActive);
         manualRightClimberControl.whileActiveContinuous(this.rightClimbCommand);
 
-        final JoystickButton lockClimberButton = new JoystickButton(this.primaryController, ControllerConstants.kLockClimberButton);
-        lockClimberButton.whileHeld(this.lockClimberCommand);
-        final JoystickButton unwindLockButton = new JoystickButton(this.primaryController, ControllerConstants.kUnwindClimberButton);
-        unwindLockButton.whileHeld(this.unwindLockCommand);
+        // final JoystickButton lockClimberButton = new JoystickButton(this.primaryController, ControllerConstants.kLockClimberButton);
+        // lockClimberButton.whileHeld(this.lockClimberCommand);
+        // final JoystickButton unwindLockButton = new JoystickButton(this.primaryController, ControllerConstants.kUnwindClimberButton);
+        // unwindLockButton.whileHeld(this.unwindLockCommand);
 
     }
 

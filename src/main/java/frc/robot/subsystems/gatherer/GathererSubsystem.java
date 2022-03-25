@@ -63,6 +63,7 @@ public class GathererSubsystem extends SubsystemBase {
         this.armMotor = new TalonSRX(GathererConstants.kGathererSpeedController);
         this.armMotor.setNeutralMode(NeutralMode.Brake);
         this.collectorMotor = new TalonSRX(GathererConstants.kCollectorSpeedController);
+        this.collectorMotor.setInverted(true);
 
         this.shuffleTab = Shuffleboard.getTab("Gatherer");
         this.shuffleTab.addString("State", () -> this.state.getClass().toString());
