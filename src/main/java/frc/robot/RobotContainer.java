@@ -283,12 +283,14 @@ public class RobotContainer {
         runClimberButton.whileHeld(this.climbUpCommand);
         final JoystickButton runClimberDownButton = new JoystickButton(this.secondaryController, XboxController.Button.kBack.value);
         runClimberDownButton.whileHeld(this.climbDownCommand);
-        runClimberDownButton.whileHeld(this.lockClimberCommand);
 
         Trigger manualLeftClimberControl = new Trigger(this::getManualLeftLifterActive);
         manualLeftClimberControl.whileActiveContinuous(this.leftClimbCommand);
         Trigger manualRightClimberControl = new Trigger(this::getManualRightLifterActive);
         manualRightClimberControl.whileActiveContinuous(this.rightClimbCommand);
+
+        final JoystickButton lockClimberButton = new JoystickButton(this.primaryController, ControllerConstants.kLockClimberButton);
+        lockClimberButton.whileHeld(this.lockClimberCommand);
 
     }
 
