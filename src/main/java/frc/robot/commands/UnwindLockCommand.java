@@ -2,11 +2,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberSubsystem;
 
-public class LockClimberCommand extends CommandBase {
+public class UnwindLockCommand extends CommandBase {
 
     private final ClimberSubsystem m_subsystem;
     
-    public LockClimberCommand(ClimberSubsystem subsystem) {
+    public UnwindLockCommand(ClimberSubsystem subsystem) {
         m_subsystem = subsystem;
         addRequirements(subsystem);
     }
@@ -19,7 +19,7 @@ public class LockClimberCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.lockClimber();
+        m_subsystem.unwindLock();
     }
 
     // Called once the command ends or is interrupted.

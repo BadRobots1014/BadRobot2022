@@ -40,7 +40,12 @@ public class ClimberSubsystem extends SubsystemBase{
         m_rightLock.set(ControlMode.PercentOutput, m_lockPower);
     }
 
-    public void unlockClimber() {
+    public void unwindLock() {
+        m_leftLock.set(ControlMode.PercentOutput, -m_lockPower);
+        m_rightLock.set(ControlMode.PercentOutput, -m_lockPower);
+    }
+
+    public void stopLock() {
         m_leftLock.set(ControlMode.PercentOutput, 0);
         m_rightLock.set(ControlMode.PercentOutput, 0);
     }
