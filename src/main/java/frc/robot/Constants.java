@@ -35,9 +35,9 @@ public final class Constants {
         //Make inversions here for forward/backward
         //Positive = forward or toward gatherer
         //Negative = backward or away from gatherer
-        public static final double farShotPower = 0.75;
-        public static final double farBackShotPower = -0.75;
-        public static final double closeShotPower = 0.68;
+        public static final double farShotPower = 0.6;
+        public static final double farBackShotPower = -0.6;
+        public static final double closeShotPower = 0.51;
         public static final double closeBackShotPower = -0.5;
     }
 
