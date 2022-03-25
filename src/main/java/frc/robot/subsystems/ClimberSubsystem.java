@@ -10,7 +10,6 @@ public class ClimberSubsystem extends SubsystemBase{
     private final TalonSRX m_rightMotor = new TalonSRX(ClimberConstants.kRightClimberID);
 
     public ClimberSubsystem () {
-        
     }
 
     public void setClimberPower(double climbingPower) {

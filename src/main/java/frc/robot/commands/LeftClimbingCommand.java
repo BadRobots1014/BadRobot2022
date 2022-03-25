@@ -12,7 +12,7 @@ public class LeftClimbingCommand extends CommandBase {
     public LeftClimbingCommand(ClimberSubsystem subsystem, DoubleSupplier joystickIn) {
         m_subsystem = subsystem;
         joystick = joystickIn;
-        addRequirements(subsystem);
+        addRequirements(m_subsystem);
     }
 
     // Called when the command is initially scheduled.

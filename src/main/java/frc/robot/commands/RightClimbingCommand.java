@@ -12,7 +12,7 @@ public class RightClimbingCommand extends CommandBase {
     public RightClimbingCommand(ClimberSubsystem subsystem, DoubleSupplier joystickIn) {
         m_subsystem = subsystem;
         joystick = joystickIn;
-        addRequirements(subsystem);
+        addRequirements(m_subsystem);
     }
 
     // Called when the command is initially scheduled.
