@@ -73,7 +73,7 @@ public class DriveTimeCommand extends CommandBase {
 
         this.timer = new Timer();
 
-        this.forwards = false;
+        this.forwards = true;
         this.time = time;
         //this.time = 2.0;
 
