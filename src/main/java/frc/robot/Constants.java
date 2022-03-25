@@ -96,6 +96,9 @@ public final class Constants {
     public final class ClimberConstants {
         public static final int kRightClimberID = 34;
         public static final int kLeftClimberID = 35;
+        public static final int kRightClimbLockID = ;
+        public static final int kLeftClimbLockID = ;
+        public static final double kLockPower = ;
         public static final double climberUpSpeed = 0.5;
         public static final double climberDownSpeed = -0.25;
     }

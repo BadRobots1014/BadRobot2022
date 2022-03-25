@@ -30,6 +30,7 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.IndexerReverseCommand;
 import frc.robot.commands.LeftClimbingCommand;
+import frc.robot.commands.LockClimberCommand;
 import frc.robot.commands.RightClimbingCommand;
 import frc.robot.commands.UpperIndexerCommand;
 import frc.robot.commands.UpperIndexerReverseCommand;
@@ -119,6 +120,7 @@ public class RobotContainer {
 
     private final ClimbCommand climbUpCommand;
     private final ClimbDownCommand climbDownCommand;
+    private final LockClimberCommand lockClimberCommand;
     private final LeftClimbingCommand leftClimbCommand;
     private final RightClimbingCommand rightClimbCommand;
 
@@ -281,9 +283,10 @@ public class RobotContainer {
         runClimberButton.whileHeld(this.climbUpCommand);
         final JoystickButton runClimberDownButton = new JoystickButton(this.secondaryController, XboxController.Button.kBack.value);
         runClimberDownButton.whileHeld(this.climbDownCommand);
+        runClimberDownButton.whileHeld(this.lockClimberCommand);
+
         Trigger manualLeftClimberControl = new Trigger(this::getManualLeftLifterActive);
         manualLeftClimberControl.whileActiveContinuous(this.leftClimbCommand);
-
         Trigger manualRightClimberControl = new Trigger(this::getManualRightLifterActive);
         manualRightClimberControl.whileActiveContinuous(this.rightClimbCommand);
 
@@ -350,6 +353,7 @@ public class RobotContainer {
         this.climbUpCommand = new ClimbCommand(this.climberSubsystem);
         this.leftClimbCommand = new LeftClimbingCommand(this.climberSubsystem, this::getSecondaryLeftY);
         this.rightClimbCommand = new RightClimbingCommand(this.climberSubsystem, this::getSecondaryRightY);
+        this.lockClimberCommand = new LockClimberCommand(this.climberSubsystem);
 
         this.basicAutoCommand = new BasicAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem, this.shooterSubsystem, this.indexerSubsystem);
         this.driveOnlyAutoCommand = new DriveOnlyAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem);
