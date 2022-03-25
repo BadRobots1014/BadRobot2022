@@ -18,7 +18,7 @@ public class AutoShootCommand extends ParallelRaceGroup {
         String name
         ) {
         super(
-                new ShootCommand(shooterSubsystem, indexerSubsystem, ShooterConstants.closeBackShotPower, name).withTimeout(ShootCommand.WAIT_TIME*2),
+                new ShootCommand(shooterSubsystem, indexerSubsystem, ShooterConstants.closeShotPower, name).withTimeout(ShootCommand.WAIT_TIME*2),
                 new AnchorCommand(driveSubsystem, gyroSubsystem)
         );
     }

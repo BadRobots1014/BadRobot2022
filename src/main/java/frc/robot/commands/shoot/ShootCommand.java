@@ -1,7 +1,5 @@
 package frc.robot.commands.shoot;
 
-import java.util.Map;
-
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;

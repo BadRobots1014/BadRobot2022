@@ -17,7 +17,7 @@ public class BasicAutoCommand extends SequentialCommandGroup {
         addCommands(
             new AutoShootCommand(driveSubsystem, gyro, shooterSubsystem, indexerSubsystem, "Basic Auto"),
             // TODO: set -5 to actual distance needed to get out of tarmac.
-            new DriveTimeCommand(driveSubsystem, gyro, 2.0)
+            new DriveTimeCommand(driveSubsystem, gyro, -2.0)
         );
     }
 }

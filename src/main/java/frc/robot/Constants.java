@@ -37,7 +37,7 @@ public final class Constants {
         //Negative = backward or away from gatherer
         public static final double farShotPower = 0.6;
         public static final double farBackShotPower = -0.6;
-        public static final double closeShotPower = 0.51;
+        public static final double closeShotPower = 0.55;
         public static final double closeBackShotPower = -0.5;
     }
 
