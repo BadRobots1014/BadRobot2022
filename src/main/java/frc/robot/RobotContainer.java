@@ -32,6 +32,7 @@ import frc.robot.commands.IndexerReverseCommand;
 import frc.robot.commands.LeftClimbingCommand;
 import frc.robot.commands.LockClimberCommand;
 import frc.robot.commands.RightClimbingCommand;
+import frc.robot.commands.UnwindLockCommand;
 import frc.robot.commands.UpperIndexerCommand;
 import frc.robot.commands.UpperIndexerReverseCommand;
 import frc.robot.commands.drive.FollowTargetCommand;
@@ -121,6 +122,7 @@ public class RobotContainer {
     private final ClimbCommand climbUpCommand;
     private final ClimbDownCommand climbDownCommand;
     private final LockClimberCommand lockClimberCommand;
+    private final UnwindLockCommand unwindLockCommand;
     private final LeftClimbingCommand leftClimbCommand;
     private final RightClimbingCommand rightClimbCommand;
 
@@ -281,8 +283,10 @@ public class RobotContainer {
          */
         final JoystickButton runClimberButton = new JoystickButton(this.secondaryController, XboxController.Button.kStart.value);
         runClimberButton.whileHeld(this.climbUpCommand);
+        //runClimberButton.whileHeld(this.unwindLockCommand);
         final JoystickButton runClimberDownButton = new JoystickButton(this.secondaryController, XboxController.Button.kBack.value);
         runClimberDownButton.whileHeld(this.climbDownCommand);
+        //runClimberDownButton.whileHeld(this.lockClimberCommand);
 
         Trigger manualLeftClimberControl = new Trigger(this::getManualLeftLifterActive);
         manualLeftClimberControl.whileActiveContinuous(this.leftClimbCommand);
@@ -291,6 +295,8 @@ public class RobotContainer {
 
         final JoystickButton lockClimberButton = new JoystickButton(this.primaryController, ControllerConstants.kLockClimberButton);
         lockClimberButton.whileHeld(this.lockClimberCommand);
+        final JoystickButton unwindLockButton = new JoystickButton(this.primaryController, ControllerConstants.kUnwindClimberButton);
+        unwindLockButton.whileHeld(this.unwindLockCommand);
 
     }
 
@@ -356,6 +362,7 @@ public class RobotContainer {
         this.leftClimbCommand = new LeftClimbingCommand(this.climberSubsystem, this::getSecondaryLeftY);
         this.rightClimbCommand = new RightClimbingCommand(this.climberSubsystem, this::getSecondaryRightY);
         this.lockClimberCommand = new LockClimberCommand(this.climberSubsystem);
+        this.unwindLockCommand = new UnwindLockCommand(this.climberSubsystem);
 
         this.basicAutoCommand = new BasicAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem, this.shooterSubsystem, this.indexerSubsystem);
         this.driveOnlyAutoCommand = new DriveOnlyAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem);
