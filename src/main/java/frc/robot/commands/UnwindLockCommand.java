@@ -19,13 +19,13 @@ public class UnwindLockCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_subsystem.unwindLock();
+        // m_subsystem.unwindLock();
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_subsystem.stopLock();
+        // m_subsystem.stopLock();
     }
 
     // Returns true when the command should end.

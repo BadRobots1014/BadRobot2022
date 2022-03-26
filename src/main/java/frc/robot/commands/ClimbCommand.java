@@ -34,8 +34,4 @@ public class ClimbCommand extends CommandBase {
     public boolean isFinished() {
         return false;
     }
-
-    public void onInterupt() {
-        m_subsystem.stopClimber();
-    }
 }

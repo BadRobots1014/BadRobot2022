@@ -8,13 +8,13 @@ import frc.robot.Constants.ClimberConstants;
 public class ClimberSubsystem extends SubsystemBase{
     private final TalonSRX m_leftClimb = new TalonSRX(ClimberConstants.kLeftClimberID);
     private final TalonSRX m_rightClimb = new TalonSRX(ClimberConstants.kRightClimberID);
-    private final TalonSRX m_leftLock = new TalonSRX(ClimberConstants.kLeftClimbLockID);
-    private final TalonSRX m_rightLock =  new TalonSRX(ClimberConstants.kRightClimbLockID);
-    private final double m_lockPower = ClimberConstants.kLockPower;
+    // private final TalonSRX m_leftLock = new TalonSRX(ClimberConstants.kLeftClimbLockID);
+    // private final TalonSRX m_rightLock =  new TalonSRX(ClimberConstants.kRightClimbLockID);
+    // private final double m_lockPower = ClimberConstants.kLockPower;
 
     public ClimberSubsystem () {
-        m_rightLock.setInverted(true);
-        m_leftLock.setInverted(true);
+        // m_rightLock.setInverted(true);
+        // m_leftLock.setInverted(true);
     }
 
     public void setClimberPower(double climbingPower) {
@@ -35,19 +35,19 @@ public class ClimberSubsystem extends SubsystemBase{
         m_rightClimb.set(ControlMode.PercentOutput, 0);
     }
 
-    public void lockClimber() {
-        m_leftLock.set(ControlMode.PercentOutput, m_lockPower);
-        m_rightLock.set(ControlMode.PercentOutput, m_lockPower);
-    }
+    // public void lockClimber() {
+    //     m_leftLock.set(ControlMode.PercentOutput, m_lockPower);
+    //     m_rightLock.set(ControlMode.PercentOutput, m_lockPower);
+    // }
 
-    public void unwindLock() {
-        m_leftLock.set(ControlMode.PercentOutput, -m_lockPower);
-        m_rightLock.set(ControlMode.PercentOutput, -m_lockPower);
-    }
+    // public void unwindLock() {
+    //     m_leftLock.set(ControlMode.PercentOutput, -m_lockPower);
+    //     m_rightLock.set(ControlMode.PercentOutput, -m_lockPower);
+    // }
 
-    public void stopLock() {
-        m_leftLock.set(ControlMode.PercentOutput, 0);
-        m_rightLock.set(ControlMode.PercentOutput, 0);
-    }
+    // public void stopLock() {
+    //     m_leftLock.set(ControlMode.PercentOutput, 0);
+    //     m_rightLock.set(ControlMode.PercentOutput, 0);
+    // }
 
 }
