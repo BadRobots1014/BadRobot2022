@@ -36,8 +36,8 @@ public class IndexerSubsystem extends StatefulSubsystem<IndexerState> {
     private static final int LOWER_MOTOR_PORT = 29;
     private static final int UPPER_MOTOR_PORT = 15;
 
-    private static final int LOWER_SENSOR_PORT = 0;
-    private static final int UPPER_SENSOR_PORT = 1;
+    private static final int LOWER_SENSOR_PORT = 10;
+    private static final int UPPER_SENSOR_PORT = 12;
 
     /**
      * The maximum percent output of the lower motor.
@@ -76,6 +76,7 @@ public class IndexerSubsystem extends StatefulSubsystem<IndexerState> {
      */
 
     public IndexerSubsystem() {
+
         this.lowerMotor = new TalonSRX(LOWER_MOTOR_PORT);
         this.upperMotor = new TalonSRX(UPPER_MOTOR_PORT);
 
