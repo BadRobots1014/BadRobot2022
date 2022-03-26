@@ -30,9 +30,9 @@ import frc.robot.subsystems.IndexerSubsystem;
 import frc.robot.commands.IndexerCommand;
 import frc.robot.commands.IndexerReverseCommand;
 import frc.robot.commands.LeftClimbingCommand;
-import frc.robot.commands.LockClimberCommand;
+// import frc.robot.commands.LockClimberCommand;
 import frc.robot.commands.RightClimbingCommand;
-import frc.robot.commands.UnwindLockCommand;
+// import frc.robot.commands.UnwindLockCommand;
 import frc.robot.commands.UpperIndexerCommand;
 import frc.robot.commands.UpperIndexerReverseCommand;
 import frc.robot.commands.drive.FollowTargetCommand;
@@ -115,14 +115,14 @@ public class RobotContainer {
     private final UpperIndexerReverseCommand runUpperIndexerBackCmd;
 
     private final ShootCommand shootCmd;
-    private final ShootCommand shootBackCmd;
+    // private final ShootCommand shootBackCmd;
     private final ShootCommand closeShootCmd;
-    private final ShootCommand closeShootBackCmd;
+    // private final ShootCommand closeShootBackCmd;
 
     private final ClimbCommand climbUpCommand;
     private final ClimbDownCommand climbDownCommand;
-    private final LockClimberCommand lockClimberCommand;
-    private final UnwindLockCommand unwindLockCommand;
+    // private final LockClimberCommand lockClimberCommand;
+    // private final UnwindLockCommand unwindLockCommand;
     private final LeftClimbingCommand leftClimbCommand;
     private final RightClimbingCommand rightClimbCommand;
 
@@ -351,9 +351,9 @@ public class RobotContainer {
         this.runUpperIndexerBackCmd = new UpperIndexerReverseCommand(this.indexerSubsystem);
 
         this.shootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.farShotPower, "Far Forward");
-        this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.farBackShotPower, "Far Backward");
+        // this.shootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.farBackShotPower, "Far Backward");
         this.closeShootCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.closeShotPower, "Close Forward");
-        this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.closeBackShotPower, "Close Backward");
+        // this.closeShootBackCmd = new ShootCommand(this.shooterSubsystem, this.indexerSubsystem, ShooterConstants.closeBackShotPower, "Close Backward");
 
         this.driveTrainSubsystem.setDefaultCommand(this.teleopDriveCmd);
 
@@ -361,8 +361,8 @@ public class RobotContainer {
         this.climbUpCommand = new ClimbCommand(this.climberSubsystem);
         this.leftClimbCommand = new LeftClimbingCommand(this.climberSubsystem, this::getSecondaryLeftY);
         this.rightClimbCommand = new RightClimbingCommand(this.climberSubsystem, this::getSecondaryRightY);
-        this.lockClimberCommand = new LockClimberCommand(this.climberSubsystem);
-        this.unwindLockCommand = new UnwindLockCommand(this.climberSubsystem);
+        // this.lockClimberCommand = new LockClimberCommand(this.climberSubsystem);
+        // this.unwindLockCommand = new UnwindLockCommand(this.climberSubsystem);
 
         this.basicAutoCommand = new BasicAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem, this.shooterSubsystem, this.indexerSubsystem);
         this.driveOnlyAutoCommand = new DriveOnlyAutoCommand(this.driveTrainSubsystem, this.gyroSubsystem);

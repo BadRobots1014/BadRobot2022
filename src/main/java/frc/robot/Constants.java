@@ -60,8 +60,8 @@ public final class Constants {
         // Upper indexer is in RobotConatiner as it is second controller
 
         public static final int kClimbingButton = 8;
-        public static final int kLockClimberButton = 7;
-        public static final int kUnwindClimberButton = 6;
+        // public static final int kLockClimberButton = 7;
+        // public static final int kUnwindClimberButton = 6;
 
         public static final double kDeadzoneRadius = .2;
         public static final double kDriveStraightRegionHalfBaseLength = .2;
