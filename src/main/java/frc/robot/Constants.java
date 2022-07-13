@@ -93,6 +93,9 @@ public final class Constants {
         public static final int kLowerIndexerSpeedController = 29;
         public static final int kUpperIndexerSpeedController = 15;
 
+        public static final int kLowerIndexerSensor = 10;
+        public static final int KUpperIndexerSensor = 12;
+
         public static final int kIndexerMaxSpeed = 1;
     }
     public final class ClimberConstants {
