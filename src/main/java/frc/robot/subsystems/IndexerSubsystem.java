@@ -38,4 +38,12 @@ public class IndexerSubsystem extends SubsystemBase {
         m_upperMotor.set(ControlMode.PercentOutput, 0);
         System.out.println("Stopped upper motor");
     }
+
+    public boolean getLowerSensor() {
+        return m_lowerSensor.get();
+    }
+
+    public boolean getUpperSensor() {
+        return m_upperSensor.get();
+    }
 }
