@@ -6,6 +6,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
 public class IndexerSubsystem extends SubsystemBase {
     private final TalonSRX m_lowerMotor = new TalonSRX(IndexerConstants.kLowerIndexerSpeedController);
     private final TalonSRX m_upperMotor = new TalonSRX(IndexerConstants.kUpperIndexerSpeedController);
@@ -14,9 +17,17 @@ public class IndexerSubsystem extends SubsystemBase {
     private final DigitalInput m_upperSensor = new DigitalInput(IndexerConstants.KUpperIndexerSensor);
 
     private String m_state;
+    public boolean m_shotRequested;
+
+    private final ShuffleboardTab tab;
 
     public IndexerSubsystem() {
         m_state = "empty";
+        m_shotRequested = false;
+
+        this.tab = Shuffleboard.getTab("Indexer");
+        this.tab.addBoolean("Lower Sensor", m_lowerSensor.get());
+        this.tab.addBoolean("Upper Sensor", m_upperSensor.get());
     }
 
     public void runLowerMotor(double power) {
@@ -39,11 +50,34 @@ public class IndexerSubsystem extends SubsystemBase {
         System.out.println("Stopped upper motor");
     }
 
-    public boolean getLowerSensor() {
+    public boolean lowerSensorOn() {
         return m_lowerSensor.get();
     }
 
-    public boolean getUpperSensor() {
+    public boolean upperSensorOn() {
         return m_upperSensor.get();
+    }
+
+    public void checkState() {
+        if (m_state.equals("empty")) {
+            if (lowerSensorOn()) {
+                m_state = "emptyIntaking";
+            }
+        }
+        else if (m_state.equals("emptyIntaking")) {
+            if (upperSensorOn()) {
+                m_state = "topLoaded";
+            }
+        }
+        else if (m_state.equals("topLoaded")) {
+            if (m_shotRequested) {
+                m_state = "singleShotRequested";
+            }
+            else if (lowerSensorOn()) {
+                m_state = "topLoadedIntaking";
+            }
+        }
+        else if (m_state.equals("topLoadedIntaking")) {
+        }
     }
 }
