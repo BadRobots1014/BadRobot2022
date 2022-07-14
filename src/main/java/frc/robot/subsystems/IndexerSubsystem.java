@@ -1,4 +1,6 @@
 package frc.robot.subsystems;
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -15,6 +17,8 @@ public class IndexerSubsystem extends SubsystemBase {
 
     private final DigitalInput m_lowerSensor = new DigitalInput(IndexerConstants.kLowerIndexerSensor);
     private final DigitalInput m_upperSensor = new DigitalInput(IndexerConstants.KUpperIndexerSensor);
+    private final BooleanSupplier m_lowerSensorSupplier = () -> m_lowerSensor.get();
+    private final BooleanSupplier m_upperSensorSupplier = () -> m_upperSensor.get();
 
     private String m_state;
     public boolean m_shotRequested;
@@ -24,6 +28,7 @@ public class IndexerSubsystem extends SubsystemBase {
     public IndexerSubsystem() {
         m_state = "empty";
         m_shotRequested = false;
+        BooleanSupplier
 
         this.tab = Shuffleboard.getTab("Indexer");
         this.tab.addBoolean("Lower Sensor", m_lowerSensor.get());
