@@ -27,12 +27,17 @@ public class IndexerSubsystem extends SubsystemBase {
 
     public IndexerSubsystem() {
         m_state = "empty";
+        checkState();
         m_shotRequested = false;
-        BooleanSupplier
 
         this.tab = Shuffleboard.getTab("Indexer");
-        this.tab.addBoolean("Lower Sensor", m_lowerSensor.get());
-        this.tab.addBoolean("Upper Sensor", m_upperSensor.get());
+        this.tab.addBoolean("Lower Sensor", m_lowerSensorSupplier);
+        this.tab.addBoolean("Upper Sensor", m_upperSensorSupplier);
+        this.tab.addString("State", () -> m_state);
+    }
+
+    public void periodic() {
+        checkState();
     }
 
     public void runLowerMotor(double power) {
@@ -73,16 +78,23 @@ public class IndexerSubsystem extends SubsystemBase {
             if (upperSensorOn()) {
                 m_state = "topLoaded";
             }
+            //TODO Stop if the ball rolls out?
         }
         else if (m_state.equals("topLoaded")) {
             if (m_shotRequested) {
-                m_state = "singleShotRequested";
+                m_state = "topLoadedShotReq";
             }
             else if (lowerSensorOn()) {
                 m_state = "topLoadedIntaking";
             }
         }
         else if (m_state.equals("topLoadedIntaking")) {
+            if (!lowerSensorOn()) {
+                m_state = "topLoaded";
+            }
+            //Time passes: m_state = "fullLoaded";
+        }
+        else if (m_state.equals("fullLoaded")) {
         }
     }
 }
