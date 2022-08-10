@@ -97,6 +97,8 @@ public final class Constants {
         public static final int KUpperIndexerSensor = 12;
 
         public static final int kIndexerMaxSpeed = 1;
+
+        public static final double kIndexTime = 0.5;
     }
     public final class ClimberConstants {
         public static final int kRightClimberID = 34;

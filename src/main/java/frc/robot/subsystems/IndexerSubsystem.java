@@ -22,15 +22,12 @@ public class IndexerSubsystem extends SubsystemBase {
     private final BooleanSupplier m_upperSensorSupplier = () -> m_upperSensor.get();
 
     private String m_state;
-    public boolean m_shotRequested;
     private Timer m_timer;
 
     private final ShuffleboardTab tab;
 
     public IndexerSubsystem() {
-        m_state = "empty";
-        checkState();
-        m_shotRequested = false;
+        overideState("empty");
         m_timer = new Timer();
 
         this.tab = Shuffleboard.getTab("Indexer");
@@ -46,29 +43,28 @@ public class IndexerSubsystem extends SubsystemBase {
 
     public void runLowerMotor(double power) {
         m_lowerMotor.set(ControlMode.PercentOutput, IndexerConstants.kIndexerMaxSpeed * power);
-        System.out.println("Running lower motor");
+        //System.out.println("Running lower motor");
     }
 
     public void stopLowerMotor() {
         m_lowerMotor.set(ControlMode.PercentOutput, 0);
-        System.out.println("Stopped lower motor");
+        //System.out.println("Stopped lower motor");
     }
 
     public void runUpperMotor(double power) {
         m_upperMotor.set(ControlMode.PercentOutput, -IndexerConstants.kIndexerMaxSpeed * power);
-        System.out.println("Running upper motor");
+        //System.out.println("Running upper motor");
     }
 
     public void stopUpperMotor() {
         m_upperMotor.set(ControlMode.PercentOutput, 0);
-        System.out.println("Stopped upper motor");
+        //System.out.println("Stopped upper motor");
     }
 
     public void stopAll() {
         m_upperMotor.set(ControlMode.PercentOutput, 0);
-        System.out.println("Stopped upper motor");
         m_lowerMotor.set(ControlMode.PercentOutput, 0);
-        System.out.println("Stopped lower motor");
+        //System.out.println("Stopped indexer motors");
     }
 
     public boolean lowerSensorOn() {
@@ -88,17 +84,31 @@ public class IndexerSubsystem extends SubsystemBase {
             break;
             case "emptyIntaking":
                 if (upperSensorOn()) {
-                    m_state = "topLoaded";
+                    m_state = "emptyIntaking2"; //TODO Run the rest of the way up
+                    m_timer.reset();
+                    m_timer.start();
                 }
                 //TODO Stop if the ball rolls out? (Not for now)
             break;
-            case "toploaded":
+            case "emptyIntaking2":
+                if (m_timer.hasElapsed(IndexerConstants.kIndexTime/2)) {
+                    m_timer.stop();
+                    m_state = "topLoaded"; //TODO Run the rest of the way up
+                }
+                //TODO Stop if the ball rolls out? (Not for now)
+            break;
+            case "fullLoadedDelay":
+                if (m_timer.hasElapsed(IndexerConstants.kIndexTime*2)) {
+                    m_timer.stop();
+                    m_state = "emptyIntaking"; //TODO Run the rest of the way up
+                }
+            break;
+            case "topLoaded":
                 if (!upperSensorOn()) {
                     m_state = "empty";
                 }
                 else if (lowerSensorOn()) {
                     m_state = "topLoadedIntaking";
-                    m_timer.stop();
                     m_timer.reset();
                     m_timer.start();
                 }
@@ -108,14 +118,14 @@ public class IndexerSubsystem extends SubsystemBase {
                     m_timer.stop();
                     m_state = "topLoaded";
                 }
-                else if (m_timer.hasElapsed(2.0)) {
+                else if (m_timer.hasElapsed(IndexerConstants.kIndexTime)) {
                     m_timer.stop();
                     m_state = "fullLoaded";
                 }
             break;
             case "fullLoaded":
                 if (!upperSensorOn()) {
-                    m_state = "emptyIntaking";
+                    m_state = "fullLoadedDelay";
                 }
                 else if (!lowerSensorOn()) {
                     m_state = "topLoaded";
@@ -145,9 +155,11 @@ public class IndexerSubsystem extends SubsystemBase {
             case "empty":
             case "topLoaded":
             case "fullLoaded":
+            case "fullLoadedDelay":
                 stopLowerMotor();
             break;
             case "emptyIntaking":
+            case "emptyIntaking2":
             case "topLoadedIntaking":
                 runLowerMotor(1);
             break;
