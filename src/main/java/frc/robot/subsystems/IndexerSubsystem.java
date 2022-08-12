@@ -93,9 +93,8 @@ public class IndexerSubsystem extends SubsystemBase {
             case "emptyIntaking2":
                 if (m_timer.hasElapsed(IndexerConstants.kIndexTime/2)) {
                     m_timer.stop();
-                    m_state = "topLoaded"; //TODO Run the rest of the way up
+                    m_state = "topLoaded";
                 }
-                //TODO Stop if the ball rolls out? (Not for now)
             break;
             case "fullLoadedDelay":
                 if (m_timer.hasElapsed(IndexerConstants.kIndexTime*2)) {
@@ -126,6 +125,8 @@ public class IndexerSubsystem extends SubsystemBase {
             case "fullLoaded":
                 if (!upperSensorOn()) {
                     m_state = "fullLoadedDelay";
+                    m_timer.reset();
+                    m_timer.start();
                 }
                 else if (!lowerSensorOn()) {
                     m_state = "topLoaded";

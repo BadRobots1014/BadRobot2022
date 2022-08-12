@@ -98,7 +98,7 @@ public final class Constants {
 
         public static final int kIndexerMaxSpeed = 1;
 
-        public static final double kIndexTime = 0.5;
+        public static final double kIndexTime = 0.51;
     }
     public final class ClimberConstants {
         public static final int kRightClimberID = 34;
