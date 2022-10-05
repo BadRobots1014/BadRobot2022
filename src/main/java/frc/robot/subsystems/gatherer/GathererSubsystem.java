@@ -90,15 +90,15 @@ public class GathererSubsystem extends SubsystemBase {
      */
 
     public void extendArm() {
-        this.armMotor.set(ControlMode.PercentOutput, -0.20);
+        //this.armMotor.set(ControlMode.PercentOutput, -0.20);
     }
 
     public void retractArm() {
-        this.armMotor.set(ControlMode.PercentOutput, 0.20);
+        //this.armMotor.set(ControlMode.PercentOutput, 0.20);
     }
 
     public void stopArmMotor() {
-        this.armMotor.set(ControlMode.PercentOutput, 0);
+        //this.armMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public void runCollector() {

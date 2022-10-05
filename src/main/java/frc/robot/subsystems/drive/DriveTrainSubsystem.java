@@ -7,15 +7,18 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.CANSparkMax.IdleMode;
+// import com.revrobotics.TalonSRX;
+// import com.revrobotics.TalonSRXLowLevel;
+// import com.revrobotics.TalonSRX.IdleMode;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-    private final CANSparkMax m_leftA = new CANSparkMax(DriveTrainConstants.kDriveTrainLeftAPort, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_leftB = new CANSparkMax(DriveTrainConstants.kDriveTrainLeftBPort, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_rightA = new CANSparkMax(DriveTrainConstants.kDriveTrainRightAPort, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private final CANSparkMax m_rightB = new CANSparkMax(DriveTrainConstants.kDriveTrainRightBPort, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private final TalonSRX m_leftA = new TalonSRX(DriveTrainConstants.kDriveTrainLeftAPort);
+    private final TalonSRX m_leftB = new TalonSRX(DriveTrainConstants.kDriveTrainLeftBPort);
+    private final TalonSRX m_rightA = new TalonSRX(DriveTrainConstants.kDriveTrainRightAPort);
+    private final TalonSRX m_rightB = new TalonSRX(DriveTrainConstants.kDriveTrainRightBPort);
 
     private final DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftA, m_rightA);
 

@@ -69,10 +69,10 @@ public final class Constants {
     }
 
     public final class DriveTrainConstants {
-        public static final int kDriveTrainLeftAPort = 12;
-        public static final int kDriveTrainLeftBPort = 4;
-        public static final int kDriveTrainRightAPort = 2;
-        public static final int kDriveTrainRightBPort = 3;
+        public static final int kDriveTrainLeftAPort = 10;
+        public static final int kDriveTrainLeftBPort = 11;
+        public static final int kDriveTrainRightAPort = 13;
+        public static final int kDriveTrainRightBPort = 14;
 
         public static final double kRotationalP = .03;
         public static final double kRotationalI = 0;
@@ -85,16 +85,16 @@ public final class Constants {
         public static final double autoDriveDistance = 20.0;
     }
     public final class GathererConstants {
-        public static final int kCollectorSpeedController = 13;
-        public static final int kGathererSpeedController = 14;
+        public static final int kCollectorSpeedController = -1;
+        public static final int kGathererSpeedController = -1;
     }
 
     public final class IndexerConstants {
         public static final int kLowerIndexerSpeedController = 29;
         public static final int kUpperIndexerSpeedController = 15;
 
-        public static final int kLowerIndexerSensor = 10;
-        public static final int KUpperIndexerSensor = 12;
+        public static final int kLowerIndexerSensor = 27;
+        public static final int KUpperIndexerSensor = 30;
 
         public static final int kIndexerMaxSpeed = 1;
 
