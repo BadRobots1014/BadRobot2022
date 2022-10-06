@@ -35,6 +35,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
         m_leftB.follow(m_leftA);
         m_rightB.follow(m_rightA);
 
+        // Initialize m_driveTrain here instead of when it's declared above because of this from the docs:
+        //   "If a motor needs to be inverted, do so before passing it in."
         m_driveTrain = new DifferentialDrive(m_leftA, m_rightA);
 
         m_tab.addNumber("Left Power", m_leftA::get);
