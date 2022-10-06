@@ -7,20 +7,16 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
-// import com.revrobotics.TalonSRX;
-// import com.revrobotics.TalonSRXLowLevel;
-// import com.revrobotics.TalonSRX.IdleMode;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class DriveTrainSubsystem extends SubsystemBase {
-    private final TalonSRX m_leftA = new TalonSRX(DriveTrainConstants.kDriveTrainLeftAPort);
-    private final TalonSRX m_leftB = new TalonSRX(DriveTrainConstants.kDriveTrainLeftBPort);
-    private final TalonSRX m_rightA = new TalonSRX(DriveTrainConstants.kDriveTrainRightAPort);
-    private final TalonSRX m_rightB = new TalonSRX(DriveTrainConstants.kDriveTrainRightBPort);
+    private final WPI_TalonSRX m_leftA = new WPI_TalonSRX(DriveTrainConstants.kDriveTrainLeftAPort);
+    private final WPI_TalonSRX m_leftB = new WPI_TalonSRX(DriveTrainConstants.kDriveTrainLeftBPort);
+    private final WPI_TalonSRX m_rightA = new WPI_TalonSRX(DriveTrainConstants.kDriveTrainRightAPort);
+    private final WPI_TalonSRX m_rightB = new WPI_TalonSRX(DriveTrainConstants.kDriveTrainRightBPort);
 
-    private final DifferentialDrive m_driveTrain = new DifferentialDrive(m_leftA, m_rightA);
+    private final DifferentialDrive m_driveTrain;
 
     private final ShuffleboardTab m_tab = Shuffleboard.getTab("Drivetrain");
 
@@ -31,13 +27,15 @@ public class DriveTrainSubsystem extends SubsystemBase {
         m_leftB.setInverted(false);
         m_rightB.setInverted(true);
 
-        m_leftA.setIdleMode(IdleMode.kBrake);
-        m_rightA.setIdleMode(IdleMode.kBrake);
-        m_leftB.setIdleMode(IdleMode.kBrake);
-        m_rightB.setIdleMode(IdleMode.kBrake);
+        m_leftA.setNeutralMode(NeutralMode.Brake);
+        m_rightA.setNeutralMode(NeutralMode.Brake);
+        m_leftB.setNeutralMode(NeutralMode.Brake);
+        m_rightB.setNeutralMode(NeutralMode.Brake);
 
-        m_leftB.follow(m_leftA, false);
-        m_rightB.follow(m_rightA, false);
+        m_leftB.follow(m_leftA);
+        m_rightB.follow(m_rightA);
+
+        m_driveTrain = new DifferentialDrive(m_leftA, m_rightA);
 
         m_tab.addNumber("Left Power", m_leftA::get);
         m_tab.addNumber("Right Power", m_rightA::get);
