@@ -34,6 +34,7 @@ public class IndexerSubsystem extends SubsystemBase {
         this.tab.addBoolean("Lower Sensor", m_lowerSensorSupplier);
         this.tab.addBoolean("Upper Sensor", m_upperSensorSupplier);
         this.tab.addString("State", () -> m_state);
+        this.tab.addBoolean("Time Elapsed", () -> m_timer.hasElapsed(5));
     }
 
     public void periodic() {
@@ -83,10 +84,16 @@ public class IndexerSubsystem extends SubsystemBase {
                 }
             break;
             case "emptyIntaking":
+                m_timer.reset();
+                m_timer.start();
                 if (upperSensorOn()) {
                     m_state = "emptyIntaking2"; //TODO Run the rest of the way up
                     m_timer.reset();
                     m_timer.start();
+                }
+                else if (m_timer.hasElapsed(5) && !lowerSensorOn()) {
+                    m_timer.stop();
+                    m_state = "empty";
                 }
                 //TODO Stop if the ball rolls out? (Not for now)
             break;
