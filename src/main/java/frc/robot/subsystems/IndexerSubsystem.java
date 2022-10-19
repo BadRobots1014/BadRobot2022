@@ -91,9 +91,9 @@ public class IndexerSubsystem extends SubsystemBase {
                     m_timer.reset();
                     m_timer.start();
                 }
-                else if (m_timer.hasElapsed(5) && !lowerSensorOn()) {
+                else if (m_timer.hasElapsed(5)) {
                     m_timer.stop();
-                    m_state = "empty";
+                    jumpState();
                 }
                 //TODO Stop if the ball rolls out? (Not for now)
             break;
