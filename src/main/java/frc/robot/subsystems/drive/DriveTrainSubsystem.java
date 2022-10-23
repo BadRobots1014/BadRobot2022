@@ -24,8 +24,8 @@ public class DriveTrainSubsystem extends SubsystemBase {
         m_leftA.setInverted(true);
         m_rightA.setInverted(false);
 
-        m_leftB.setInverted(false);
-        m_rightB.setInverted(true);
+        m_leftB.setInverted(true);
+        m_rightB.setInverted(false);
 
         m_leftA.setNeutralMode(NeutralMode.Brake);
         m_rightA.setNeutralMode(NeutralMode.Brake);
