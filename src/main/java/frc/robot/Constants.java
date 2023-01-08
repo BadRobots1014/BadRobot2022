@@ -30,7 +30,7 @@ public final class Constants {
      * Constants related to the shooter.
      */
     public static final class ShooterConstants {
-        public static final int kShooterPort = 7;
+        public static final int kShooterPort = 12;
 
         //Make inversions here for forward/backward
         //Positive = forward or toward gatherer
